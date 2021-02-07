@@ -121,11 +121,6 @@ func (c *Client) queueProcessor() {
 		}
 
 		// add item to pvr
-		slug := s.TitleSlug
-		if slug == "" {
-			slug = movie.Slug
-		}
-
 		c.log.Debug().
 			Str("feed_title", item.Title).
 			Str("trakt_title", movie.Title).
@@ -133,6 +128,11 @@ func (c *Client) queueProcessor() {
 			Str("trakt_tmdb_id", movie.TmdbId).
 			Int("trakt_year", movie.Year).
 			Msg("Sending movie to pvr")
+
+		if s.TitleSlug != "" {
+			// use slug from pvr search
+			movie.Slug = s.TitleSlug
+		}
 
 		if err := c.AddMediaItem(movie); err != nil {
 			c.log.Error().
