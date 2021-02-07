@@ -99,7 +99,7 @@ func (c *Client) queueProcessor() {
 
 		if s.Id > 0 {
 			// item already existed in pvr
-			c.log.Info().
+			c.log.Debug().
 				Str("pvr_title", s.Title).
 				Int("pvr_year", s.Year).
 				Int("pvr_tvdb_id", s.TvdbId).
@@ -116,10 +116,31 @@ func (c *Client) queueProcessor() {
 			slug = show.Slug
 		}
 
-		c.log.Info().
+		c.log.Debug().
 			Str("feed_title", item.Title).
 			Str("trakt_title", show.Title).
 			Str("trakt_tvdb_id", show.TvdbId).
-			Msg("Sending show to PVR")
+			Int("trakt_year", show.Year).
+			Msg("Sending show to pvr")
+
+		if err := c.AddMediaItem(show); err != nil {
+			c.log.Error().
+				Err(err).
+				Str("feed_title", item.Title).
+				Str("trakt_title", show.Title).
+				Str("trakt_tvdb_id", show.TvdbId).
+				Int("trakt_year", show.Year).
+				Msg("Failed adding item to pvr")
+		}
+
+		// add item to perm cache (item was added to pvr)
+		c.cachePerm[cacheKey] = 1
+
+		c.log.Info().
+			Err(err).
+			Str("trakt_title", show.Title).
+			Str("trakt_tvdb_id", show.TvdbId).
+			Int("trakt_year", show.Year).
+			Msg("Added item to pvr")
 	}
 }
