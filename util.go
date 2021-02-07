@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"path"
+	"strconv"
 	"strings"
 )
 
@@ -21,4 +22,12 @@ func URLWithQuery(base string, q url.Values) (string, error) {
 
 	u.RawQuery = q.Encode()
 	return u.String(), nil
+}
+
+func Atoi(val string, defaultVal int) int {
+	n, err := strconv.Atoi(val)
+	if err != nil {
+		return defaultVal
+	}
+	return n
 }

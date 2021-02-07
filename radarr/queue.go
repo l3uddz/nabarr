@@ -56,6 +56,15 @@ func (c *Client) queueProcessor() {
 			continue
 		}
 
+		// validate tmdbId was found
+		if movie.TmdbId == "" || movie.TmdbId == "0" {
+			c.log.Warn().
+				Str("feed_title", item.Title).
+				Str("feed_imdb_id", item.ImdbId).
+				Msg("Item had no tmdbId on trakt")
+			continue
+		}
+
 		// trakt expression check
 		ignore, err := c.ShouldIgnore(movie)
 		if err != nil {
@@ -103,6 +112,7 @@ func (c *Client) queueProcessor() {
 				Str("pvr_title", s.Title).
 				Int("pvr_year", s.Year).
 				Str("pvr_imdb_id", s.ImdbId).
+				Int("pvr_tmdb_id", s.TmdbId).
 				Msg("Item already existed in pvr")
 
 			// add item to perm cache (items already in pvr)
@@ -120,6 +130,7 @@ func (c *Client) queueProcessor() {
 			Str("feed_title", item.Title).
 			Str("trakt_title", movie.Title).
 			Str("trakt_imdb_id", movie.ImdbId).
+			Str("trakt_tmdb_id", movie.TmdbId).
 			Int("trakt_year", movie.Year).
 			Msg("Sending movie to pvr")
 
@@ -129,6 +140,7 @@ func (c *Client) queueProcessor() {
 				Str("feed_title", item.Title).
 				Str("trakt_title", movie.Title).
 				Str("trakt_imdb_id", movie.ImdbId).
+				Str("trakt_tmdb_id", movie.TmdbId).
 				Int("trakt_year", movie.Year).
 				Msg("Failed adding item to pvr")
 		}
@@ -140,6 +152,7 @@ func (c *Client) queueProcessor() {
 			Err(err).
 			Str("trakt_title", movie.Title).
 			Str("trakt_imdb_id", movie.ImdbId).
+			Str("trakt_tmdb_id", movie.TmdbId).
 			Int("trakt_year", movie.Year).
 			Msg("Added item to pvr")
 	}

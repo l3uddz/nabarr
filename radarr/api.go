@@ -119,6 +119,7 @@ func (c *Client) AddMediaItem(item *nabarr.MediaItem) error {
 			IgnoreEpisodesWithFiles:    false,
 			IgnoreEpisodesWithoutFiles: false,
 		},
+		TmdbId: nabarr.Atoi(item.TmdbId, 0),
 		ImdbId: item.ImdbId,
 	}
 
