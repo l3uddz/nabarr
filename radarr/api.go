@@ -7,6 +7,7 @@ import (
 	"github.com/l3uddz/nabarr"
 	"github.com/lucperkins/rek"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -68,9 +69,19 @@ func (c *Client) getQualityProfileId(profileName string) (int, error) {
 }
 
 func (c *Client) lookupMediaItem(item *nabarr.MediaItem) (*lookupRequest, error) {
+	// determine metadata id to use
+	mdType := "imdb"
+	mdId := item.ImdbId
+
+	if item.TmdbId != "" && item.TmdbId != "0" {
+		// radarr prefers tmdb
+		mdType = "tmdb"
+		mdId = item.TmdbId
+	}
+
 	// prepare request
 	reqUrl, err := nabarr.URLWithQuery(nabarr.JoinURL(c.apiURL, "/movie/lookup"),
-		url.Values{"term": []string{fmt.Sprintf("imdb:%s", item.ImdbId)}})
+		url.Values{"term": []string{fmt.Sprintf("%s:%s", mdType, mdId)}})
 	if err != nil {
 		return nil, fmt.Errorf("generate movie lookup request url: %w", err)
 	}
@@ -95,12 +106,19 @@ func (c *Client) lookupMediaItem(item *nabarr.MediaItem) (*lookupRequest, error)
 
 	// find movie
 	for _, s := range *b {
-		if s.ImdbId == item.ImdbId {
-			return &s, nil
+		switch mdType {
+		case "tmdb":
+			if strconv.Itoa(s.TmdbId) == item.TmdbId {
+				return &s, nil
+			}
+		default:
+			if s.ImdbId == item.ImdbId {
+				return &s, nil
+			}
 		}
 	}
 
-	return nil, fmt.Errorf("movie lookup imdbId: %v: %w", item.ImdbId, ErrItemNotFound)
+	return nil, fmt.Errorf("movie lookup %sId: %v: %w", mdType, mdId, ErrItemNotFound)
 }
 
 func (c *Client) AddMediaItem(item *nabarr.MediaItem) error {

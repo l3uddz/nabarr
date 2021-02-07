@@ -68,9 +68,10 @@ func New(c nabarr.PvrConfig, t *trakt.Client) (*Client, error) {
 	}
 
 	// setup cache
-	if err := cl.cacheTemp.SetTTL(7 * (24 * time.Hour)); err != nil {
+	if err := cl.cacheTemp.SetTTL(24 * time.Hour); err != nil {
 		return nil, fmt.Errorf("set cache ttl: %w", err)
 	}
+	cl.cacheTemp.SkipTTLExtensionOnHit(false)
 
 	// compile expressions
 	if err := cl.compileExpressions(c.Filters); err != nil {

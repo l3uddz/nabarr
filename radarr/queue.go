@@ -40,7 +40,7 @@ func (c *Client) queueProcessor() {
 		movie, err := c.t.GetMovie(item)
 		if err != nil {
 			if errors.Is(err, trakt.ErrItemNotFound) {
-				c.log.Warn().
+				c.log.Debug().
 					Err(err).
 					Str("feed_title", item.Title).
 					Str("feed_imdb_id", item.ImdbId).

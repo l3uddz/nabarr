@@ -81,6 +81,7 @@ type MediaItem struct {
 	Year          int
 	Runtime       int
 	Rating        float64
+	Votes         int
 	Status        string
 	Genres        []string
 	Languages     []string
