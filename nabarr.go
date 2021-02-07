@@ -68,22 +68,23 @@ func (t *Time) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 }
 
 type MediaItem struct {
-	TvdbId    string
-	TmdbId    string
-	ImdbId    string
-	Slug      string
-	FeedTitle string
-	Title     string
-	Summary   string
-	Country   []string
-	Network   string
-	Date      time.Time
-	Year      int
-	Runtime   int
-	Rating    float64
-	Status    string
-	Genres    []string
-	Languages []string
+	TvdbId        string
+	TmdbId        string
+	ImdbId        string
+	Slug          string
+	FeedTitle     string
+	Title         string
+	Summary       string
+	Country       []string
+	Network       string
+	Date          time.Time
+	Year          int
+	Runtime       int
+	Rating        float64
+	Status        string
+	Genres        []string
+	Languages     []string
+	AiredEpisodes int
 }
 
 type ExprEnv struct {

@@ -20,7 +20,9 @@ type Client struct {
 	apiHeaders map[string]string
 	apiTimeout time.Duration
 
-	cache *ttlcache.Cache
+	cacheTemp *ttlcache.Cache
+	cachePerm map[string]int
+
 	queue chan *nabarr.FeedItem
 
 	t           *trakt.Client
@@ -52,7 +54,9 @@ func New(c nabarr.PvrConfig, t *trakt.Client) (*Client, error) {
 		pvrType:    "sonarr",
 		rootFolder: c.RootFolder,
 
-		cache: ttlcache.NewCache(),
+		cacheTemp: ttlcache.NewCache(),
+		cachePerm: make(map[string]int, 0),
+
 		queue: make(chan *nabarr.FeedItem, 1024),
 
 		apiURL:     apiURL,
@@ -64,7 +68,7 @@ func New(c nabarr.PvrConfig, t *trakt.Client) (*Client, error) {
 	}
 
 	// setup cache
-	if err := cl.cache.SetTTL(7 * (24 * time.Hour)); err != nil {
+	if err := cl.cacheTemp.SetTTL(7 * (24 * time.Hour)); err != nil {
 		return nil, fmt.Errorf("set cache ttl: %w", err)
 	}
 

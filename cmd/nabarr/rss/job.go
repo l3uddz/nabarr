@@ -24,11 +24,12 @@ func (c *Client) AddJob(feed feedItem) error {
 
 	// add pvrs
 	for _, p := range feed.Pvrs {
-		if po, exists := c.pvrs[p]; !exists {
+		po, exists := c.pvrs[p]
+		if !exists {
 			return fmt.Errorf("pvr object does not exist: %v", p)
-		} else {
-			job.pvrs[p] = po
 		}
+
+		job.pvrs[p] = po
 	}
 
 	// schedule job

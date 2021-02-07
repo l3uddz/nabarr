@@ -25,10 +25,16 @@ func (c *Client) queueProcessor() {
 
 		// check cache / add item to cache
 		cacheKey := fmt.Sprintf("tvdb_%s", item.TvdbId)
-		if _, err := c.cache.Get(cacheKey); err == nil {
+		if _, exists := c.cachePerm[cacheKey]; exists {
+			// item already exists in pvr
 			continue
 		}
-		_ = c.cache.Set(cacheKey, nil)
+
+		if _, err := c.cacheTemp.Get(cacheKey); err == nil {
+			// item processed before
+			continue
+		}
+		_ = c.cacheTemp.Set(cacheKey, nil)
 
 		// trakt search item
 		show, err := c.t.GetShow(item)
@@ -98,6 +104,9 @@ func (c *Client) queueProcessor() {
 				Int("pvr_year", s.Year).
 				Int("pvr_tvdb_id", s.TvdbId).
 				Msg("Item already existed in pvr")
+
+			// add item to perm cache (items already in pvr)
+			c.cachePerm[cacheKey] = 1
 			continue
 		}
 
