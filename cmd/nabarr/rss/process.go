@@ -36,7 +36,14 @@ func (j *rssJob) process() error {
 
 func (j *rssJob) queueItemWithPvrs(item *nabarr.FeedItem) {
 	for _, pvr := range j.pvrs {
-		pvr.QueueFeedItem(item)
+		switch {
+		case item.TvdbId != "" && pvr.Type() == "sonarr":
+			// tvdbId is present, queue with sonarr
+			pvr.QueueFeedItem(item)
+		case item.ImdbId != "" && pvr.Type() == "radarr":
+			// imdbId is present, queue with radarr
+			pvr.QueueFeedItem(item)
+		}
 	}
 }
 
@@ -66,7 +73,7 @@ func (j *rssJob) getFeed() ([]nabarr.FeedItem, error) {
 	}
 
 	// sort response items
-	sort.Slice(b.Channel.Items, func(i, j int) bool {
+	sort.SliceStable(b.Channel.Items, func(i, j int) bool {
 		return b.Channel.Items[i].PubDate.After(b.Channel.Items[j].PubDate.Time)
 	})
 
