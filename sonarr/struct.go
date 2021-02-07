@@ -9,12 +9,6 @@ type qualityProfile struct {
 	Id   int
 }
 
-type series struct {
-	Title  string
-	Status string
-	TvdbId int
-}
-
 type lookupRequest struct {
 	Id        int    `json:"id,omitempty"`
 	Title     string `json:"title"`
