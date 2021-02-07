@@ -16,6 +16,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # dependencies
+      - name: dependencies
+        run: |
+          curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sudo sh -s -- -b /usr/local/bin
+
       # checkout
       - name: checkout
         uses: actions/checkout@v2
