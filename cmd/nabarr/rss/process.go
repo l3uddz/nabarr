@@ -102,7 +102,11 @@ func (j *rssJob) getFeed() ([]nabarr.FeedItem, error) {
 			case "tvdb", "tvdbid":
 				b.Channel.Items[p].TvdbId = a.Value
 			case "imdb", "imdbid":
-				b.Channel.Items[p].ImdbId = a.Value
+				if strings.HasSuffix(a.Value, "tt") {
+					b.Channel.Items[p].ImdbId = a.Value
+				} else {
+					b.Channel.Items[p].ImdbId = fmt.Sprintf("tt%s", a.Value)
+				}
 			}
 		}
 

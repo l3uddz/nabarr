@@ -3,6 +3,7 @@ package pvr
 import (
 	"errors"
 	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/radarr"
 	"github.com/l3uddz/nabarr/sonarr"
 	"github.com/l3uddz/nabarr/trakt"
 	"strings"
@@ -20,8 +21,8 @@ func NewPVR(c nabarr.PvrConfig, t *trakt.Client) (PVR, error) {
 	switch strings.ToLower(c.Type) {
 	case "sonarr":
 		return sonarr.New(c, t)
-		//case "radarr":
-		//	return radarr.New(c)
+	case "radarr":
+		return radarr.New(c, t)
 	}
 
 	return nil, errors.New("unknown pvr")

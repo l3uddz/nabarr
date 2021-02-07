@@ -20,9 +20,9 @@ type FeedItem struct {
 
 	// attributes
 	Language string
-	TvdbId   string
+	TvdbId   string `xml:"tvdb,omitempty"`
 	TvMazeId string
-	ImdbId   string
+	ImdbId   string `xml:"imdb,omitempty"`
 
 	Attributes []struct {
 		XMLName xml.Name
