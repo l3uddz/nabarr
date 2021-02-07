@@ -21,6 +21,12 @@ builds:
     flags:
       - -trimpath
 
+# Archive
+archives:
+  -
+    name_template: "{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format: "binary"
+
 # Checksum
 checksum:
   name_template: "checksums.txt"

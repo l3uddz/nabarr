@@ -7,7 +7,7 @@ GO_FILES       := $(shell find . -path ./vendor -prune -or -type f -name '*.go' 
 GIT_COMMIT     := $(shell git rev-parse --short HEAD)
 TIMESTAMP      := $(shell date +%s)
 VERSION        ?= 0.0.0-dev
-CGO            := 1
+CGO            := 0
 
 # Deps
 .PHONY: check_goreleaser
