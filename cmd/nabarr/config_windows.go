@@ -1,10 +1,9 @@
-// +build !windows
-
 package main
 
 import (
+	"errors"
+	"fmt"
 	"github.com/kirsle/configdir"
-	"golang.org/x/sys/unix"
 	"os"
 	"path/filepath"
 )
@@ -42,5 +41,20 @@ func getBinaryPath() string {
 
 func dirIsWriteable(dir string) error {
 	// credits: https://stackoverflow.com/questions/20026320/how-to-tell-if-folder-exists-and-is-writable
-	return unix.Access(dir, unix.W_OK)
+	info, err := os.Stat(dir)
+	if err != nil {
+		return errors.New("path does not exist")
+	}
+
+	if !info.IsDir() {
+		return errors.New("path is not a directory")
+	}
+
+	// Check if the user bit is enabled in file permission
+	if info.Mode().Perm()&(1<<(uint(7))) == 0 {
+		fmt.Println("Write permission bit is not set on this file for user")
+		return errors.New("write permission not set for user")
+	}
+
+	return nil
 }
