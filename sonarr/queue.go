@@ -24,17 +24,19 @@ func (c *Client) queueProcessor() {
 		}
 
 		// check cache / add item to cache
+		pvrCacheBucket := fmt.Sprintf("pvr_%s_%s", c.Type(), c.name)
 		cacheKey := fmt.Sprintf("tvdb_%s", item.TvdbId)
-		if _, exists := c.cachePerm[cacheKey]; exists {
-			// item already exists in pvr
+		if _, err := c.cache.Get(pvrCacheBucket, cacheKey); err == nil {
+			// item already exists in the cache (was previously looked up or exists in the pvr)
 			continue
+		} else {
+			// item did not exist in the cache, lets insert a temp cache entry
+			if err := c.cache.Put(pvrCacheBucket, cacheKey, nil, c.cacheTempDuration); err != nil {
+				c.log.Error().
+					Err(err).
+					Msg("Failed storing item in temp cache")
+			}
 		}
-
-		if _, err := c.cacheTemp.Get(cacheKey); err == nil {
-			// item processed before
-			continue
-		}
-		_ = c.cacheTemp.Set(cacheKey, nil)
 
 		// trakt search item
 		show, err := c.t.GetShow(item)
@@ -113,7 +115,11 @@ func (c *Client) queueProcessor() {
 				Msg("Item already existed in pvr")
 
 			// add item to perm cache (items already in pvr)
-			c.cachePerm[cacheKey] = 1
+			if err := c.cache.Put(pvrCacheBucket, cacheKey, nil, 0); err != nil {
+				c.log.Error().
+					Err(err).
+					Msg("Failed storing item in perm cache")
+			}
 			continue
 		}
 
@@ -143,7 +149,11 @@ func (c *Client) queueProcessor() {
 		}
 
 		// add item to perm cache (item was added to pvr)
-		c.cachePerm[cacheKey] = 1
+		if err := c.cache.Put(pvrCacheBucket, cacheKey, nil, 0); err != nil {
+			c.log.Error().
+				Err(err).
+				Msg("Failed storing item in perm cache")
+		}
 
 		c.log.Info().
 			Err(err).

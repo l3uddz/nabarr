@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/alecthomas/kong"
 	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/l3uddz/nabarr/cmd/nabarr/rss"
 	"github.com/l3uddz/nabarr/trakt"
@@ -33,6 +34,7 @@ var (
 
 		// flags
 		Config    string `type:"path" default:"${config_file}" env:"APP_CONFIG" help:"Config file path"`
+		Cache     string `type:"path" default:"${cache_file}" env:"APP_CACHE" help:"Cache file path"`
 		Log       string `type:"path" default:"${log_file}" env:"APP_LOG" help:"Log file path"`
 		Verbosity int    `type:"counter" default:"0" short:"v" env:"APP_VERBOSITY" help:"Log level verbosity"`
 	}
@@ -56,6 +58,7 @@ func main() {
 		kong.Vars{
 			"version":     fmt.Sprintf("%s (%s@%s)", Version, GitCommit, Timestamp),
 			"config_file": filepath.Join(defaultConfigPath(), "config.yml"),
+			"cache_file":  filepath.Join(defaultConfigPath(), "cache"),
 			"token_file":  filepath.Join(defaultConfigPath(), "token.json"),
 			"log_file":    filepath.Join(defaultConfigPath(), "activity.log"),
 		},
@@ -108,6 +111,21 @@ func main() {
 			Msg("Failed decoding config")
 	}
 
+	// cache
+	c, err := cache.New(cli.Cache)
+	if err != nil {
+		log.Fatal().
+			Err(err).
+			Msg("Failed initialising cache")
+	}
+	defer func() {
+		if err := c.Close(); err != nil {
+			log.Error().
+				Err(err).
+				Msg("Failed closing cache gracefully")
+		}
+	}()
+
 	// trakt
 	log.Trace().Msg("Initialising trakt")
 	t := trakt.New(&cfg.Trakt)
@@ -116,7 +134,7 @@ func main() {
 	log.Trace().Msg("Initialising pvrs")
 	pvrs := make(map[string]pvr.PVR, 0)
 	for _, p := range cfg.Pvrs {
-		pvr, err := pvr.NewPVR(p, t)
+		po, err := pvr.NewPVR(p, t, c)
 		if err != nil {
 			log.Fatal().
 				Err(err).
@@ -124,7 +142,7 @@ func main() {
 				Msg("Failed initialising pvr")
 		}
 
-		pvrs[p.Name] = pvr
+		pvrs[p.Name] = po
 	}
 
 	// rss

@@ -3,7 +3,6 @@ module github.com/l3uddz/nabarr
 go 1.14
 
 require (
-	github.com/ReneKroon/ttlcache/v2 v2.3.0
 	github.com/alecthomas/kong v0.2.12
 	github.com/antonmedv/expr v1.8.9
 	github.com/blang/semver v3.5.1+incompatible
@@ -15,7 +14,9 @@ require (
 	github.com/rhysd/go-github-selfupdate v1.2.3
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.20.0
+	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/ulikunitz/xz v0.5.10 // indirect
+	github.com/xujiajun/nutsdb v0.5.0
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/ratelimit v0.1.0
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777 // indirect

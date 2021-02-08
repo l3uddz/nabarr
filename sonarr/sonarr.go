@@ -2,9 +2,9 @@ package sonarr
 
 import (
 	"fmt"
-	"github.com/ReneKroon/ttlcache/v2"
 	"github.com/antonmedv/expr/vm"
 	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/trakt"
 	"github.com/rs/zerolog"
 	"strings"
@@ -12,7 +12,9 @@ import (
 )
 
 type Client struct {
-	pvrType          string
+	pvrType string
+	name    string
+
 	rootFolder       string
 	qualityProfileId int
 
@@ -20,8 +22,8 @@ type Client struct {
 	apiHeaders map[string]string
 	apiTimeout time.Duration
 
-	cacheTemp *ttlcache.Cache
-	cachePerm map[string]int
+	cache             *cache.Client
+	cacheTempDuration time.Duration
 
 	queue chan *nabarr.FeedItem
 
@@ -30,11 +32,16 @@ type Client struct {
 	ignoresExpr []*vm.Program
 }
 
-func New(c nabarr.PvrConfig, t *trakt.Client) (*Client, error) {
+func New(c nabarr.PvrConfig, t *trakt.Client, cc *cache.Client) (*Client, error) {
 	l := nabarr.GetLogger(c.Verbosity).With().
 		Str("pvr_name", c.Name).
 		Str("pvr_type", c.Type).
 		Logger()
+
+	// set config defaults (if not set)
+	if c.Cache.TemporaryDuration == 0 {
+		c.Cache.TemporaryDuration = 24 * time.Hour
+	}
 
 	// set api url
 	apiURL := ""
@@ -51,11 +58,13 @@ func New(c nabarr.PvrConfig, t *trakt.Client) (*Client, error) {
 
 	// create client
 	cl := &Client{
-		pvrType:    "sonarr",
+		pvrType: "sonarr",
+		name:    strings.ToLower(c.Name),
+
 		rootFolder: c.RootFolder,
 
-		cacheTemp: ttlcache.NewCache(),
-		cachePerm: make(map[string]int, 0),
+		cache:             cc,
+		cacheTempDuration: c.Cache.TemporaryDuration,
 
 		queue: make(chan *nabarr.FeedItem, 1024),
 
@@ -66,12 +75,6 @@ func New(c nabarr.PvrConfig, t *trakt.Client) (*Client, error) {
 		t:   t,
 		log: l,
 	}
-
-	// setup cache
-	if err := cl.cacheTemp.SetTTL(24 * time.Hour); err != nil {
-		return nil, fmt.Errorf("set cache ttl: %w", err)
-	}
-	cl.cacheTemp.SkipTTLExtensionOnHit(false)
 
 	// compile expressions
 	if err := cl.compileExpressions(c.Filters); err != nil {

@@ -1,5 +1,7 @@
 package nabarr
 
+import "time"
+
 type PvrConfig struct {
 	Name           string     `yaml:"name"`
 	Type           string     `yaml:"type"`
@@ -8,7 +10,10 @@ type PvrConfig struct {
 	QualityProfile string     `yaml:"quality_profile"`
 	RootFolder     string     `yaml:"root_folder"`
 	Filters        PvrFilters `yaml:"filters"`
-
+	Cache          struct {
+		TemporaryDuration time.Duration `yaml:"temp_duration"`
+		PersistExisting   bool          `yaml:"persist_existing"`
+	} `yaml:"cache"`
 	Verbosity string `yaml:"verbosity,omitempty"`
 }
 
