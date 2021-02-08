@@ -30,15 +30,15 @@ func (c *Client) queueProcessor() {
 			// item already exists in the cache
 			switch string(cacheValue) {
 			case c.name:
-				// item existed in the pvr
+				// perm cache entry, item exists in the pvr
 				continue
 			case c.cacheFiltersHash:
-				// temporary cache entry for the same filters
+				// temp cache entry, item recently checked with the same filters
 				continue
 			}
 		}
 
-		// insert temporary cache entry
+		// insert temp cache entry
 		if err := c.cache.Put(pvrCacheBucket, cacheKey, []byte(c.cacheFiltersHash), c.cacheTempDuration); err != nil {
 			c.log.Error().
 				Err(err).
