@@ -44,6 +44,7 @@ func (c *Client) queueProcessor() {
 					Err(err).
 					Str("feed_title", item.Title).
 					Str("feed_imdb_id", item.ImdbId).
+					Str("feed_name", item.Feed).
 					Msg("Item was not found on trakt")
 				continue
 			}
@@ -52,6 +53,7 @@ func (c *Client) queueProcessor() {
 				Err(err).
 				Str("feed_title", item.Title).
 				Str("feed_imdb_id", item.ImdbId).
+				Str("feed_name", item.Feed).
 				Msg("Failed finding item on trakt")
 			continue
 		}
@@ -61,6 +63,7 @@ func (c *Client) queueProcessor() {
 			c.log.Warn().
 				Str("feed_title", item.Title).
 				Str("feed_imdb_id", item.ImdbId).
+				Str("feed_name", item.Feed).
 				Msg("Item had no tmdbId on trakt")
 			continue
 		}
@@ -73,6 +76,7 @@ func (c *Client) queueProcessor() {
 				Str("feed_title", item.Title).
 				Str("trakt_title", movie.Title).
 				Str("trakt_imdb_id", movie.ImdbId).
+				Str("feed_name", item.Feed).
 				Msg("Failed checking movie against ignore filters")
 			continue
 		}
@@ -82,6 +86,7 @@ func (c *Client) queueProcessor() {
 				Str("feed_title", item.Title).
 				Str("trakt_title", movie.Title).
 				Str("trakt_imdb_id", movie.ImdbId).
+				Str("feed_name", item.Feed).
 				Msg("Show matched ignore filters")
 			continue
 		}
@@ -95,6 +100,7 @@ func (c *Client) queueProcessor() {
 					Err(err).
 					Str("feed_title", item.Title).
 					Str("feed_imdb_id", item.ImdbId).
+					Str("feed_name", item.Feed).
 					Msg("Item was not found via pvr lookup")
 				continue
 			}
@@ -103,6 +109,7 @@ func (c *Client) queueProcessor() {
 				Err(err).
 				Str("feed_title", item.Title).
 				Str("feed_imdb_id", item.ImdbId).
+				Str("feed_name", item.Feed).
 				Msg("Failed finding item via pvr lookup")
 		}
 
@@ -113,6 +120,7 @@ func (c *Client) queueProcessor() {
 				Int("pvr_year", s.Year).
 				Str("pvr_imdb_id", s.ImdbId).
 				Int("pvr_tmdb_id", s.TmdbId).
+				Str("feed_name", item.Feed).
 				Msg("Item already existed in pvr")
 
 			// add item to perm cache (items already in pvr)
@@ -127,6 +135,7 @@ func (c *Client) queueProcessor() {
 			Str("trakt_imdb_id", movie.ImdbId).
 			Str("trakt_tmdb_id", movie.TmdbId).
 			Int("trakt_year", movie.Year).
+			Str("feed_name", item.Feed).
 			Msg("Sending movie to pvr")
 
 		if s.TitleSlug != "" {
@@ -142,6 +151,7 @@ func (c *Client) queueProcessor() {
 				Str("trakt_imdb_id", movie.ImdbId).
 				Str("trakt_tmdb_id", movie.TmdbId).
 				Int("trakt_year", movie.Year).
+				Str("feed_name", item.Feed).
 				Msg("Failed adding item to pvr")
 		}
 
@@ -154,6 +164,7 @@ func (c *Client) queueProcessor() {
 			Str("trakt_imdb_id", movie.ImdbId).
 			Str("trakt_tmdb_id", movie.TmdbId).
 			Int("trakt_year", movie.Year).
-			Msg("Added item to pvr")
+			Str("feed_name", item.Feed).
+			Msg("Added item")
 	}
 }

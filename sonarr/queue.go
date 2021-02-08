@@ -44,6 +44,7 @@ func (c *Client) queueProcessor() {
 					Err(err).
 					Str("feed_title", item.Title).
 					Str("feed_tvdb_id", item.TvdbId).
+					Str("feed_name", item.Feed).
 					Msg("Item was not found on trakt")
 				continue
 			}
@@ -52,6 +53,7 @@ func (c *Client) queueProcessor() {
 				Err(err).
 				Str("feed_title", item.Title).
 				Str("feed_tvdb_id", item.TvdbId).
+				Str("feed_name", item.Feed).
 				Msg("Failed finding item on trakt")
 			continue
 		}
@@ -64,6 +66,7 @@ func (c *Client) queueProcessor() {
 				Str("feed_title", item.Title).
 				Str("trakt_title", show.Title).
 				Str("trakt_tvdb_id", show.TvdbId).
+				Str("feed_name", item.Feed).
 				Msg("Failed checking show against ignore filters")
 			continue
 		}
@@ -73,6 +76,7 @@ func (c *Client) queueProcessor() {
 				Str("feed_title", item.Title).
 				Str("trakt_title", show.Title).
 				Str("trakt_tvdb_id", show.TvdbId).
+				Str("feed_name", item.Feed).
 				Msg("Show matched ignore filters")
 			continue
 		}
@@ -86,6 +90,7 @@ func (c *Client) queueProcessor() {
 					Err(err).
 					Str("feed_title", item.Title).
 					Str("feed_tvdb_id", item.TvdbId).
+					Str("feed_name", item.Feed).
 					Msg("Item was not found via pvr lookup")
 				continue
 			}
@@ -94,6 +99,7 @@ func (c *Client) queueProcessor() {
 				Err(err).
 				Str("feed_title", item.Title).
 				Str("feed_tvdb_id", item.TvdbId).
+				Str("feed_name", item.Feed).
 				Msg("Failed finding item via pvr lookup")
 		}
 
@@ -103,6 +109,7 @@ func (c *Client) queueProcessor() {
 				Str("pvr_title", s.Title).
 				Int("pvr_year", s.Year).
 				Int("pvr_tvdb_id", s.TvdbId).
+				Str("feed_name", item.Feed).
 				Msg("Item already existed in pvr")
 
 			// add item to perm cache (items already in pvr)
@@ -116,6 +123,7 @@ func (c *Client) queueProcessor() {
 			Str("trakt_title", show.Title).
 			Str("trakt_tvdb_id", show.TvdbId).
 			Int("trakt_year", show.Year).
+			Str("feed_name", item.Feed).
 			Msg("Sending show to pvr")
 
 		if s.TitleSlug != "" {
@@ -130,6 +138,7 @@ func (c *Client) queueProcessor() {
 				Str("trakt_title", show.Title).
 				Str("trakt_tvdb_id", show.TvdbId).
 				Int("trakt_year", show.Year).
+				Str("feed_name", item.Feed).
 				Msg("Failed adding item to pvr")
 		}
 
@@ -141,6 +150,7 @@ func (c *Client) queueProcessor() {
 			Str("trakt_title", show.Title).
 			Str("trakt_tvdb_id", show.TvdbId).
 			Int("trakt_year", show.Year).
-			Msg("Added item to pvr")
+			Str("feed_name", item.Feed).
+			Msg("Added item")
 	}
 }

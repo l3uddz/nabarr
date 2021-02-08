@@ -18,6 +18,9 @@ type FeedItem struct {
 	GUID     string `xml:"guid,omitempty"`
 	PubDate  Time   `xml:"pubDate,omitempty"`
 
+	// set by processor
+	Feed string
+
 	// attributes
 	Language string
 	TvdbId   string `xml:"tvdb,omitempty"`

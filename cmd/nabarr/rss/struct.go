@@ -20,6 +20,7 @@ type Config struct {
 }
 
 type rssJob struct {
+	name string
 	log  zerolog.Logger
 	url  string
 	pvrs map[string]pvr.PVR

@@ -12,7 +12,7 @@ import (
 
 func (j *rssJob) process() error {
 	// retrieve feed items
-	j.log.Debug().Msg("Refreshing feed items")
+	j.log.Debug().Msg("Refreshing")
 	items, err := j.getFeed()
 	if err != nil {
 		return fmt.Errorf("get feed: %w", err)
@@ -20,7 +20,7 @@ func (j *rssJob) process() error {
 
 	// add feed items to pvrs
 	if len(items) == 0 {
-		j.log.Debug().Msg("Refreshed feed, no items to queue")
+		j.log.Debug().Msg("Refreshed, no items to queue")
 		return nil
 	}
 
@@ -30,7 +30,7 @@ func (j *rssJob) process() error {
 
 	j.log.Info().
 		Int("count", len(items)).
-		Msg("Queued feed items")
+		Msg("Queued items")
 	return nil
 }
 
@@ -112,6 +112,7 @@ func (j *rssJob) getFeed() ([]nabarr.FeedItem, error) {
 
 		// validate item
 		if b.Channel.Items[p].TvdbId != "" || b.Channel.Items[p].ImdbId != "" {
+			b.Channel.Items[p].Feed = j.name
 			items = append(items, b.Channel.Items[p])
 		}
 	}

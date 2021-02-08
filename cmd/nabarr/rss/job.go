@@ -14,7 +14,8 @@ func (c *Client) AddJob(feed feedItem) error {
 
 	// create job
 	job := &rssJob{
-		log:  c.log.With().Str("name", feed.Name).Logger(),
+		name: feed.Name,
+		log:  c.log.With().Str("feed_name", feed.Name).Logger(),
 		url:  feed.URL,
 		pvrs: make(map[string]pvr.PVR, 0),
 
@@ -41,7 +42,7 @@ func (c *Client) AddJob(feed feedItem) error {
 		job.jobID = id
 	}
 
-	job.log.Info().Msg("Initialised feed")
+	job.log.Info().Msg("Initialised")
 	return nil
 }
 

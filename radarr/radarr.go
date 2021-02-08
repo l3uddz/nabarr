@@ -32,8 +32,8 @@ type Client struct {
 
 func New(c nabarr.PvrConfig, t *trakt.Client) (*Client, error) {
 	l := nabarr.GetLogger(c.Verbosity).With().
-		Str("name", c.Name).
-		Str("type", c.Type).
+		Str("pvr_name", c.Name).
+		Str("pvr_type", c.Type).
 		Logger()
 
 	// set api url
@@ -95,8 +95,8 @@ func New(c nabarr.PvrConfig, t *trakt.Client) (*Client, error) {
 	go cl.queueProcessor()
 
 	cl.log.Info().
-		Str("version", ss.Version).
-		Msg("Initialised PVR")
+		Str("pvr_version", ss.Version).
+		Msg("Initialised")
 	return cl, nil
 }
 
