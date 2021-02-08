@@ -24,6 +24,7 @@ type Client struct {
 
 	cache             *cache.Client
 	cacheTempDuration time.Duration
+	cacheFiltersHash  string
 
 	queue chan *nabarr.FeedItem
 
@@ -65,6 +66,7 @@ func New(c nabarr.PvrConfig, t *trakt.Client, cc *cache.Client) (*Client, error)
 
 		cache:             cc,
 		cacheTempDuration: c.Cache.TemporaryDuration,
+		cacheFiltersHash:  nabarr.AsSHA256(c.Filters),
 
 		queue: make(chan *nabarr.FeedItem, 1024),
 

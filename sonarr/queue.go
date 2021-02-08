@@ -26,16 +26,23 @@ func (c *Client) queueProcessor() {
 		// check cache / add item to cache
 		pvrCacheBucket := fmt.Sprintf("pvr_%s_%s", c.Type(), c.name)
 		cacheKey := fmt.Sprintf("tvdb_%s", item.TvdbId)
-		if _, err := c.cache.Get(pvrCacheBucket, cacheKey); err == nil {
-			// item already exists in the cache (was previously looked up or exists in the pvr)
-			continue
-		} else {
-			// item did not exist in the cache, lets insert a temp cache entry
-			if err := c.cache.Put(pvrCacheBucket, cacheKey, nil, c.cacheTempDuration); err != nil {
-				c.log.Error().
-					Err(err).
-					Msg("Failed storing item in temp cache")
+		if cacheValue, err := c.cache.Get(pvrCacheBucket, cacheKey); err == nil {
+			// item already exists in the cache
+			switch string(cacheValue) {
+			case c.name:
+				// item existed in the pvr
+				continue
+			case c.cacheFiltersHash:
+				// temporary cache entry for the same filters
+				continue
 			}
+		}
+
+		// insert temporary cache entry
+		if err := c.cache.Put(pvrCacheBucket, cacheKey, []byte(c.cacheFiltersHash), c.cacheTempDuration); err != nil {
+			c.log.Error().
+				Err(err).
+				Msg("Failed storing item in temp cache")
 		}
 
 		// trakt search item
@@ -115,7 +122,7 @@ func (c *Client) queueProcessor() {
 				Msg("Item already existed in pvr")
 
 			// add item to perm cache (items already in pvr)
-			if err := c.cache.Put(pvrCacheBucket, cacheKey, nil, 0); err != nil {
+			if err := c.cache.Put(pvrCacheBucket, cacheKey, []byte(c.name), 0); err != nil {
 				c.log.Error().
 					Err(err).
 					Msg("Failed storing item in perm cache")
@@ -149,7 +156,7 @@ func (c *Client) queueProcessor() {
 		}
 
 		// add item to perm cache (item was added to pvr)
-		if err := c.cache.Put(pvrCacheBucket, cacheKey, nil, 0); err != nil {
+		if err := c.cache.Put(pvrCacheBucket, cacheKey, []byte(c.name), 0); err != nil {
 			c.log.Error().
 				Err(err).
 				Msg("Failed storing item in perm cache")
