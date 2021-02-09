@@ -51,7 +51,7 @@ func (c *Client) queueProcessor() {
 			if errors.Is(err, trakt.ErrItemNotFound) {
 				c.log.Debug().
 					Err(err).
-					Str("feed_title", item.Title).
+					Str("feed_title", movie.FeedTitle).
 					Str("feed_imdb_id", item.ImdbId).
 					Str("feed_name", item.Feed).
 					Msg("Item was not found on trakt")
@@ -60,7 +60,7 @@ func (c *Client) queueProcessor() {
 
 			c.log.Error().
 				Err(err).
-				Str("feed_title", item.Title).
+				Str("feed_title", movie.FeedTitle).
 				Str("feed_imdb_id", item.ImdbId).
 				Str("feed_name", item.Feed).
 				Msg("Failed finding item on trakt")
@@ -70,7 +70,7 @@ func (c *Client) queueProcessor() {
 		// validate tmdbId was found
 		if movie.TmdbId == "" || movie.TmdbId == "0" {
 			c.log.Warn().
-				Str("feed_title", item.Title).
+				Str("feed_title", movie.FeedTitle).
 				Str("feed_imdb_id", item.ImdbId).
 				Str("feed_name", item.Feed).
 				Msg("Item had no tmdbId on trakt")
@@ -82,7 +82,7 @@ func (c *Client) queueProcessor() {
 		if err != nil {
 			c.log.Error().
 				Err(err).
-				Str("feed_title", item.Title).
+				Str("feed_title", movie.FeedTitle).
 				Str("trakt_title", movie.Title).
 				Str("trakt_imdb_id", movie.ImdbId).
 				Str("feed_name", item.Feed).
@@ -92,7 +92,7 @@ func (c *Client) queueProcessor() {
 
 		if ignore {
 			c.log.Trace().
-				Str("feed_title", item.Title).
+				Str("feed_title", movie.FeedTitle).
 				Str("trakt_title", movie.Title).
 				Str("trakt_imdb_id", movie.ImdbId).
 				Str("feed_name", item.Feed).
@@ -107,7 +107,7 @@ func (c *Client) queueProcessor() {
 				// the item was not found
 				c.log.Warn().
 					Err(err).
-					Str("feed_title", item.Title).
+					Str("feed_title", movie.FeedTitle).
 					Str("feed_imdb_id", item.ImdbId).
 					Str("feed_name", item.Feed).
 					Msg("Item was not found via pvr lookup")
@@ -116,7 +116,7 @@ func (c *Client) queueProcessor() {
 
 			c.log.Error().
 				Err(err).
-				Str("feed_title", item.Title).
+				Str("feed_title", movie.FeedTitle).
 				Str("feed_imdb_id", item.ImdbId).
 				Str("feed_name", item.Feed).
 				Msg("Failed finding item via pvr lookup")
@@ -143,7 +143,7 @@ func (c *Client) queueProcessor() {
 
 		// add item to pvr
 		c.log.Debug().
-			Str("feed_title", item.Title).
+			Str("feed_title", movie.FeedTitle).
 			Str("trakt_title", movie.Title).
 			Str("trakt_imdb_id", movie.ImdbId).
 			Str("trakt_tmdb_id", movie.TmdbId).
@@ -159,7 +159,7 @@ func (c *Client) queueProcessor() {
 		if err := c.AddMediaItem(movie); err != nil {
 			c.log.Error().
 				Err(err).
-				Str("feed_title", item.Title).
+				Str("feed_title", movie.FeedTitle).
 				Str("trakt_title", movie.Title).
 				Str("trakt_imdb_id", movie.ImdbId).
 				Str("trakt_tmdb_id", movie.TmdbId).

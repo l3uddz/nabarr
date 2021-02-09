@@ -51,7 +51,7 @@ func (c *Client) queueProcessor() {
 			if errors.Is(err, trakt.ErrItemNotFound) {
 				c.log.Debug().
 					Err(err).
-					Str("feed_title", item.Title).
+					Str("feed_title", show.FeedTitle).
 					Str("feed_tvdb_id", item.TvdbId).
 					Str("feed_name", item.Feed).
 					Msg("Item was not found on trakt")
@@ -60,7 +60,7 @@ func (c *Client) queueProcessor() {
 
 			c.log.Error().
 				Err(err).
-				Str("feed_title", item.Title).
+				Str("feed_title", show.FeedTitle).
 				Str("feed_tvdb_id", item.TvdbId).
 				Str("feed_name", item.Feed).
 				Msg("Failed finding item on trakt")
@@ -72,7 +72,7 @@ func (c *Client) queueProcessor() {
 		if err != nil {
 			c.log.Error().
 				Err(err).
-				Str("feed_title", item.Title).
+				Str("feed_title", show.FeedTitle).
 				Str("trakt_title", show.Title).
 				Str("trakt_tvdb_id", show.TvdbId).
 				Str("feed_name", item.Feed).
@@ -82,7 +82,7 @@ func (c *Client) queueProcessor() {
 
 		if ignore {
 			c.log.Trace().
-				Str("feed_title", item.Title).
+				Str("feed_title", show.FeedTitle).
 				Str("trakt_title", show.Title).
 				Str("trakt_tvdb_id", show.TvdbId).
 				Str("feed_name", item.Feed).
@@ -97,7 +97,7 @@ func (c *Client) queueProcessor() {
 				// the item was not found
 				c.log.Warn().
 					Err(err).
-					Str("feed_title", item.Title).
+					Str("feed_title", show.FeedTitle).
 					Str("feed_tvdb_id", item.TvdbId).
 					Str("feed_name", item.Feed).
 					Msg("Item was not found via pvr lookup")
@@ -106,7 +106,7 @@ func (c *Client) queueProcessor() {
 
 			c.log.Error().
 				Err(err).
-				Str("feed_title", item.Title).
+				Str("feed_title", show.FeedTitle).
 				Str("feed_tvdb_id", item.TvdbId).
 				Str("feed_name", item.Feed).
 				Msg("Failed finding item via pvr lookup")
@@ -132,7 +132,7 @@ func (c *Client) queueProcessor() {
 
 		// add item to pvr
 		c.log.Debug().
-			Str("feed_title", item.Title).
+			Str("feed_title", show.FeedTitle).
 			Str("trakt_title", show.Title).
 			Str("trakt_tvdb_id", show.TvdbId).
 			Int("trakt_year", show.Year).
@@ -147,7 +147,7 @@ func (c *Client) queueProcessor() {
 		if err := c.AddMediaItem(show); err != nil {
 			c.log.Error().
 				Err(err).
-				Str("feed_title", item.Title).
+				Str("feed_title", show.FeedTitle).
 				Str("trakt_title", show.Title).
 				Str("trakt_tvdb_id", show.TvdbId).
 				Int("trakt_year", show.Year).
