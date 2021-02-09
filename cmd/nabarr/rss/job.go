@@ -40,9 +40,8 @@ func (c *Client) AddJob(feed feedItem) error {
 	} else {
 		job.jobID = id
 	}
-	job.log.Info().Msg("Initialised")
 
-	c.feeds[feed.Name] = feed.URL
+	job.log.Info().Msg("Initialised")
 	return nil
 }
 

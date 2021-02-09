@@ -12,7 +12,6 @@ type Client struct {
 	cron *cron.Cron
 	pvrs map[string]pvr.PVR
 
-	feeds map[string]string
 	log   zerolog.Logger
 }
 
@@ -23,7 +22,6 @@ func New(c Config, pvrs map[string]pvr.PVR) *Client {
 		)),
 		pvrs: pvrs,
 
-		feeds: make(map[string]string, 0),
 		log:   nabarr.GetLogger(c.Verbosity).With().Logger(),
 	}
 }
@@ -36,20 +34,6 @@ func (c *Client) Stop() {
 	ctx := c.cron.Stop()
 	select {
 	case <-ctx.Done():
-		c.log.Info().
-			Strs("feed_names", c.feedNames()).
-			Msg("Gracefully stopped")
 	case <-time.After(5 * time.Second):
-		c.log.Warn().
-			Strs("feed_names", c.feedNames()).
-			Msg("Forcefully stopped")
 	}
-}
-
-func (c *Client) feedNames() []string {
-	feeds := make([]string, 0)
-	for f, _ := range c.feeds {
-		feeds = append(feeds, f)
-	}
-	return feeds
 }

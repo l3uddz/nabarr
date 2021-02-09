@@ -18,7 +18,6 @@ func (c *Client) Start() {
 func (c *Client) Stop() {
 	c.queue <- nil
 	c.wg.Wait()
-	c.log.Info().Msg("Gracefully stopped")
 }
 
 func (c *Client) queueProcessor() {
