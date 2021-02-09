@@ -81,7 +81,7 @@ func (c *Client) queueProcessor() {
 		}
 
 		if ignore {
-			c.log.Trace().
+			c.log.Debug().
 				Str("feed_title", show.FeedTitle).
 				Str("trakt_title", show.Title).
 				Str("trakt_tvdb_id", show.TvdbId).

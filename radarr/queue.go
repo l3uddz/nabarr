@@ -91,7 +91,7 @@ func (c *Client) queueProcessor() {
 		}
 
 		if ignore {
-			c.log.Trace().
+			c.log.Debug().
 				Str("feed_title", movie.FeedTitle).
 				Str("trakt_title", movie.Title).
 				Str("trakt_imdb_id", movie.ImdbId).
