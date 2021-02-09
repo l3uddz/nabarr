@@ -68,7 +68,7 @@ func (c *Client) queueProcessor() {
 		}
 
 		// trakt expression check
-		ignore, err := c.ShouldIgnore(show)
+		ignore, filter, err := c.ShouldIgnore(show)
 		if err != nil {
 			c.log.Error().
 				Err(err).
@@ -76,6 +76,7 @@ func (c *Client) queueProcessor() {
 				Str("trakt_title", show.Title).
 				Str("trakt_tvdb_id", show.TvdbId).
 				Str("feed_name", item.Feed).
+				Str("ignore_filter", filter).
 				Msg("Failed checking show against ignore filters")
 			continue
 		}
@@ -86,6 +87,7 @@ func (c *Client) queueProcessor() {
 				Str("trakt_title", show.Title).
 				Str("trakt_tvdb_id", show.TvdbId).
 				Str("feed_name", item.Feed).
+				Str("ignore_filter", filter).
 				Msg("Show matched ignore filters")
 			continue
 		}

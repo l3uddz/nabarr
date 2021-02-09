@@ -2,7 +2,6 @@ package radarr
 
 import (
 	"fmt"
-	"github.com/antonmedv/expr/vm"
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/trakt"
@@ -30,7 +29,7 @@ type Client struct {
 
 	t           *trakt.Client
 	log         zerolog.Logger
-	ignoresExpr []*vm.Program
+	ignoresExpr []*nabarr.ExprProgram
 }
 
 func New(c nabarr.PvrConfig, t *trakt.Client, cc *cache.Client) (*Client, error) {

@@ -13,7 +13,7 @@ import (
 type PVR interface {
 	Type() string
 	AddMediaItem(*nabarr.MediaItem) error
-	ShouldIgnore(*nabarr.MediaItem) (bool, error)
+	ShouldIgnore(*nabarr.MediaItem) (bool, string, error)
 	QueueFeedItem(*nabarr.FeedItem)
 }
 

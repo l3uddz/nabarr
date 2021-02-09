@@ -2,6 +2,7 @@ package nabarr
 
 import (
 	"encoding/xml"
+	"github.com/antonmedv/expr/vm"
 	"github.com/pkg/errors"
 	"time"
 )
@@ -91,12 +92,28 @@ type MediaItem struct {
 	AiredEpisodes int
 }
 
+type ExprProgram struct {
+	expression string
+	Program    *vm.Program
+}
+
+func (p *ExprProgram) String() string {
+	return p.expression
+}
+
+func NewExprProgram(expression string, vm *vm.Program) *ExprProgram {
+	return &ExprProgram{
+		expression: expression,
+		Program:    vm,
+	}
+}
+
 type ExprEnv struct {
 	MediaItem
 	Now func() time.Time
 }
 
-func GetExprEnv(media *MediaItem) *ExprEnv {
+func NewExprEnv(media *MediaItem) *ExprEnv {
 	return &ExprEnv{
 		MediaItem: *media,
 		Now:       func() time.Time { return time.Now().UTC() },

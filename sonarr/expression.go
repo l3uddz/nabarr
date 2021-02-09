@@ -17,30 +17,30 @@ func (c *Client) compileExpressions(filters nabarr.PvrFilters) error {
 			return fmt.Errorf("ignore expression: %v: %w", ignoreExpr, err)
 		}
 
-		c.ignoresExpr = append(c.ignoresExpr, program)
+		c.ignoresExpr = append(c.ignoresExpr, nabarr.NewExprProgram(ignoreExpr, program))
 	}
 
 	return nil
 }
 
-func (c *Client) ShouldIgnore(mediaItem *nabarr.MediaItem) (bool, error) {
-	exprItem := nabarr.GetExprEnv(mediaItem)
+func (c *Client) ShouldIgnore(mediaItem *nabarr.MediaItem) (bool, string, error) {
+	exprItem := nabarr.NewExprEnv(mediaItem)
 
 	for _, expression := range c.ignoresExpr {
-		result, err := expr.Run(expression, exprItem)
+		result, err := expr.Run(expression.Program, exprItem)
 		if err != nil {
-			return true, fmt.Errorf("checking ignore expression: %w", err)
+			return true, expression.String(), fmt.Errorf("checking ignore expression: %w", err)
 		}
 
 		expResult, ok := result.(bool)
 		if !ok {
-			return true, errors.New("type assert ignore expression result")
+			return true, expression.String(), errors.New("type assert ignore expression result")
 		}
 
 		if expResult {
-			return true, nil
+			return true, expression.String(), nil
 		}
 	}
 
-	return false, nil
+	return false, "", nil
 }
