@@ -19,13 +19,13 @@ type PVR interface {
 	QueueFeedItem(*nabarr.FeedItem)
 }
 
-func NewPVR(c nabarr.PvrConfig, t *trakt.Client, cc *cache.Client) (PVR, error) {
+func NewPVR(c nabarr.PvrConfig, mode string, t *trakt.Client, cc *cache.Client) (PVR, error) {
 	// return pvr object
 	switch strings.ToLower(c.Type) {
 	case "sonarr":
-		return sonarr.New(c, t, cc)
+		return sonarr.New(c, mode, t, cc)
 	case "radarr":
-		return radarr.New(c, t, cc)
+		return radarr.New(c, mode, t, cc)
 	}
 
 	return nil, errors.New("unknown pvr")

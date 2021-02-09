@@ -15,6 +15,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type config struct {
@@ -37,6 +38,13 @@ var (
 		Cache     string `type:"path" default:"${cache_file}" env:"APP_CACHE" help:"Cache file path"`
 		Log       string `type:"path" default:"${log_file}" env:"APP_LOG" help:"Log file path"`
 		Verbosity int    `type:"counter" default:"0" short:"v" env:"APP_VERBOSITY" help:"Log level verbosity"`
+
+		// commands
+		Run  struct{} `cmd help:"Run"`
+		Test struct {
+			Pvr string `type:"string" required:"1" help:"PVR to test item against" placeholder:"sonarr"`
+			Id  string `type:"string" required:"1" help:"Metadata ID of item to test" placeholder:"tvdb:121361"`
+		} `cmd help:"Test your filters and stop"`
 	}
 )
 
@@ -67,6 +75,11 @@ func main() {
 	if err := ctx.Validate(); err != nil {
 		fmt.Println("Failed parsing cli:", err)
 		return
+	}
+
+	if ctx.Command() == "test" && cli.Verbosity == 0 {
+		// default to debug verbosity in test mode
+		cli.Verbosity = 1
 	}
 
 	// logger
@@ -133,39 +146,73 @@ func main() {
 	log.Trace().Msg("Initialising pvrs")
 	pvrs := make(map[string]pvr.PVR, 0)
 	for _, p := range cfg.Pvrs {
-		// init pvr
-		po, err := pvr.NewPVR(p, t, c)
-		if err != nil {
-			log.Fatal().
-				Err(err).
-				Str("pvr", p.Name).
-				Msg("Failed initialising pvr")
-		}
+		if ctx.Command() == "run" || (ctx.Command() == "test" && strings.EqualFold(cli.Test.Pvr, p.Name)) {
+			// init pvr
+			po, err := pvr.NewPVR(p, ctx.Command(), t, c)
+			if err != nil {
+				log.Fatal().
+					Err(err).
+					Str("pvr", p.Name).
+					Msg("Failed initialising pvr")
+			}
 
-		// start pvr processor
-		po.Start()
+			// start pvr processor
+			po.Start()
 
-		// add pvr to map
-		pvrs[p.Name] = po
-	}
-
-	// rss
-	log.Trace().Msg("Initialising rss")
-	r := rss.New(cfg.Rss, pvrs)
-	for _, feed := range cfg.Rss.Feeds {
-		if err := r.AddJob(feed); err != nil {
-			log.Fatal().
-				Err(err).
-				Msg("Failed initialising rss")
+			// add pvr to map
+			pvrs[p.Name] = po
 		}
 	}
-	r.Start()
 
-	// wait for shutdown signal
-	waitShutdown()
+	// run mode (start rss scheduler and wait for shutdown signal)
+	if ctx.Command() == "run" {
+		// rss
+		log.Trace().Msg("Initialising rss")
+		r := rss.New(cfg.Rss, pvrs)
+		for _, feed := range cfg.Rss.Feeds {
+			if err := r.AddJob(feed); err != nil {
+				log.Fatal().
+					Err(err).
+					Msg("Failed initialising rss")
+			}
+		}
+		r.Start()
 
-	// stop feed scheduler
-	r.Stop()
+		// wait for shutdown signal
+		waitShutdown()
+
+		// stop feed scheduler
+		r.Stop()
+	} else {
+		// test mode
+		idParts := strings.Split(cli.Test.Id, ":")
+		if len(idParts) < 2 {
+			log.Fatal().
+				Str("id", cli.Test.Id).
+				Msg("An invalid id was provided")
+		}
+
+		// prepare test item
+		testItem := new(nabarr.FeedItem)
+		switch strings.ToLower(idParts[0]) {
+		case "imdb":
+			testItem.Title = "Test.Mode.2021.BluRay.1080p.TrueHD.Atmos.7.1.AVC.HYBRID.REMUX-FraMeSToR"
+			testItem.ImdbId = idParts[1]
+		case "tvdb":
+			testItem.Title = "Test.Mode.S01E01.1080p.DTS-HD.MA.5.1.AVC.REMUX-FraMeSToR"
+			testItem.TvdbId = idParts[1]
+		default:
+			log.Fatal().
+				Str("agent", idParts[0]).
+				Str("id", idParts[1]).
+				Msg("Unsupported agent was provided")
+		}
+
+		// queue test item
+		for _, p := range pvrs {
+			p.QueueFeedItem(testItem)
+		}
+	}
 
 	// stop pvr queue processors
 	for _, p := range pvrs {

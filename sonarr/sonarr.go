@@ -12,8 +12,9 @@ import (
 )
 
 type Client struct {
-	pvrType string
-	name    string
+	pvrType  string
+	name     string
+	testMode bool
 
 	rootFolder       string
 	qualityProfileId int
@@ -27,14 +28,14 @@ type Client struct {
 	cacheFiltersHash  string
 
 	queue chan *nabarr.FeedItem
-	wg    *sync.WaitGroup
+	wg    sync.WaitGroup
 
 	t           *trakt.Client
 	log         zerolog.Logger
 	ignoresExpr []*nabarr.ExprProgram
 }
 
-func New(c nabarr.PvrConfig, t *trakt.Client, cc *cache.Client) (*Client, error) {
+func New(c nabarr.PvrConfig, mode string, t *trakt.Client, cc *cache.Client) (*Client, error) {
 	l := nabarr.GetLogger(c.Verbosity).With().
 		Str("pvr_name", c.Name).
 		Str("pvr_type", c.Type).
@@ -60,8 +61,9 @@ func New(c nabarr.PvrConfig, t *trakt.Client, cc *cache.Client) (*Client, error)
 
 	// create client
 	cl := &Client{
-		pvrType: "sonarr",
-		name:    strings.ToLower(c.Name),
+		pvrType:  "sonarr",
+		name:     strings.ToLower(c.Name),
+		testMode: strings.EqualFold(mode, "test"),
 
 		rootFolder: c.RootFolder,
 
@@ -70,7 +72,7 @@ func New(c nabarr.PvrConfig, t *trakt.Client, cc *cache.Client) (*Client, error)
 		cacheFiltersHash:  nabarr.AsSHA256(c.Filters),
 
 		queue: make(chan *nabarr.FeedItem, 1024),
-		wg:    &sync.WaitGroup{},
+		wg:    sync.WaitGroup{},
 
 		apiURL:     apiURL,
 		apiHeaders: apiHeaders,

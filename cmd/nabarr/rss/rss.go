@@ -12,7 +12,7 @@ type Client struct {
 	cron *cron.Cron
 	pvrs map[string]pvr.PVR
 
-	log   zerolog.Logger
+	log zerolog.Logger
 }
 
 func New(c Config, pvrs map[string]pvr.PVR) *Client {
@@ -22,7 +22,7 @@ func New(c Config, pvrs map[string]pvr.PVR) *Client {
 		)),
 		pvrs: pvrs,
 
-		log:   nabarr.GetLogger(c.Verbosity).With().Logger(),
+		log: nabarr.GetLogger(c.Verbosity).With().Logger(),
 	}
 }
 
