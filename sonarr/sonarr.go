@@ -7,6 +7,7 @@ import (
 	"github.com/l3uddz/nabarr/trakt"
 	"github.com/rs/zerolog"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -26,6 +27,7 @@ type Client struct {
 	cacheFiltersHash  string
 
 	queue chan *nabarr.FeedItem
+	wg    *sync.WaitGroup
 
 	t           *trakt.Client
 	log         zerolog.Logger
@@ -68,6 +70,7 @@ func New(c nabarr.PvrConfig, t *trakt.Client, cc *cache.Client) (*Client, error)
 		cacheFiltersHash:  nabarr.AsSHA256(c.Filters),
 
 		queue: make(chan *nabarr.FeedItem, 1024),
+		wg:    &sync.WaitGroup{},
 
 		apiURL:     apiURL,
 		apiHeaders: apiHeaders,
@@ -94,9 +97,6 @@ func New(c nabarr.PvrConfig, t *trakt.Client, cc *cache.Client) (*Client, error)
 	} else {
 		cl.qualityProfileId = qid
 	}
-
-	// start queue queueProcessor
-	go cl.queueProcessor()
 
 	cl.log.Info().
 		Str("pvr_version", ss.Version).

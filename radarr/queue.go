@@ -11,7 +11,20 @@ func (c *Client) QueueFeedItem(item *nabarr.FeedItem) {
 	c.queue <- item
 }
 
+func (c *Client) Start() {
+	go c.queueProcessor()
+}
+
+func (c *Client) Stop() {
+	c.queue <- nil
+	c.wg.Wait()
+	c.log.Info().Msg("Gracefully stopped")
+}
+
 func (c *Client) queueProcessor() {
+	c.wg.Add(1)
+	defer c.wg.Done()
+
 	for item := range c.queue {
 		// stop processing
 		if item == nil {

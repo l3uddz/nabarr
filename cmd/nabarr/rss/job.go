@@ -29,7 +29,6 @@ func (c *Client) AddJob(feed feedItem) error {
 		if !exists {
 			return fmt.Errorf("pvr object does not exist: %v", p)
 		}
-
 		job.pvrs[p] = po
 	}
 
@@ -41,8 +40,9 @@ func (c *Client) AddJob(feed feedItem) error {
 	} else {
 		job.jobID = id
 	}
-
 	job.log.Info().Msg("Initialised")
+
+	c.feeds[feed.Name] = feed.URL
 	return nil
 }
 

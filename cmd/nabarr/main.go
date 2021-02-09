@@ -133,6 +133,7 @@ func main() {
 	log.Trace().Msg("Initialising pvrs")
 	pvrs := make(map[string]pvr.PVR, 0)
 	for _, p := range cfg.Pvrs {
+		// init pvr
 		po, err := pvr.NewPVR(p, t, c)
 		if err != nil {
 			log.Fatal().
@@ -141,6 +142,10 @@ func main() {
 				Msg("Failed initialising pvr")
 		}
 
+		// start pvr processor
+		po.Start()
+
+		// add pvr to map
 		pvrs[p.Name] = po
 	}
 
@@ -158,4 +163,12 @@ func main() {
 
 	// wait for shutdown signal
 	waitShutdown()
+
+	// stop feed scheduler
+	r.Stop()
+
+	// stop pvr queue processors
+	for _, p := range pvrs {
+		p.Stop()
+	}
 }

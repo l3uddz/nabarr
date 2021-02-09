@@ -14,6 +14,8 @@ type PVR interface {
 	Type() string
 	AddMediaItem(*nabarr.MediaItem) error
 	ShouldIgnore(*nabarr.MediaItem) (bool, string, error)
+	Start()
+	Stop()
 	QueueFeedItem(*nabarr.FeedItem)
 }
 

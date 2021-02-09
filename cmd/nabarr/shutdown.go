@@ -14,10 +14,4 @@ func waitShutdown() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	log.Warn().Msg("Shutting down...")
-
-	shutdown()
-}
-
-func shutdown() {
-	// any graceful shutdown here
 }
