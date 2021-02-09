@@ -51,7 +51,7 @@ func (c *Client) queueProcessor() {
 			if errors.Is(err, trakt.ErrItemNotFound) {
 				c.log.Debug().
 					Err(err).
-					Str("feed_title", movie.FeedTitle).
+					Str("feed_title", item.Title).
 					Str("feed_imdb_id", item.ImdbId).
 					Str("feed_name", item.Feed).
 					Msg("Item was not found on trakt")
@@ -60,7 +60,7 @@ func (c *Client) queueProcessor() {
 
 			c.log.Error().
 				Err(err).
-				Str("feed_title", movie.FeedTitle).
+				Str("feed_title", item.Title).
 				Str("feed_imdb_id", item.ImdbId).
 				Str("feed_name", item.Feed).
 				Msg("Failed finding item on trakt")
