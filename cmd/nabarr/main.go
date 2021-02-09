@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/alecthomas/kong"
+	"github.com/goccy/go-yaml"
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
@@ -11,7 +12,6 @@ import (
 	"github.com/natefinch/lumberjack"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"gopkg.in/yaml.v2"
 	"io"
 	"os"
 	"path/filepath"
@@ -102,13 +102,12 @@ func main() {
 	defer file.Close()
 
 	cfg := config{}
-	decoder := yaml.NewDecoder(file)
-	decoder.SetStrict(true)
+	decoder := yaml.NewDecoder(file, yaml.Strict())
 	err = decoder.Decode(&cfg)
 	if err != nil {
+		log.Error().Msg("Failed decoding configuration")
 		log.Fatal().
-			Err(err).
-			Msg("Failed decoding config")
+			Msg(err.Error())
 	}
 
 	// cache
