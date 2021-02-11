@@ -7,6 +7,7 @@ import (
 	"github.com/l3uddz/nabarr/radarr"
 	"github.com/l3uddz/nabarr/sonarr"
 	"github.com/l3uddz/nabarr/trakt"
+	"github.com/lefelys/state"
 	"strings"
 )
 
@@ -14,8 +15,7 @@ type PVR interface {
 	Type() string
 	AddMediaItem(*nabarr.MediaItem) error
 	ShouldIgnore(*nabarr.MediaItem) (bool, string, error)
-	Start()
-	Stop()
+	Start() state.State
 	QueueFeedItem(*nabarr.FeedItem)
 }
 

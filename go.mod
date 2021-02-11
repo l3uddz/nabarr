@@ -9,6 +9,7 @@ require (
 	github.com/goccy/go-yaml v1.8.8
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
+	github.com/lefelys/state v1.1.0
 	github.com/lucperkins/rek v0.1.3
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/pkg/errors v0.9.1

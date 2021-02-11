@@ -4,6 +4,7 @@ import (
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
+	"github.com/lefelys/state"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog"
 	"time"
@@ -31,14 +32,31 @@ func New(c Config, cc *cache.Client, cfh string, pvrs map[string]pvr.PVR) *Clien
 	}
 }
 
-func (c *Client) Start() {
+func (c *Client) Start() state.State {
 	c.cron.Start()
-}
 
-func (c *Client) Stop() {
-	ctx := c.cron.Stop()
-	select {
-	case <-ctx.Done():
-	case <-time.After(5 * time.Second):
-	}
+	st, tail := state.WithShutdown()
+	ticker := time.NewTicker(1 * time.Second)
+
+	go func() {
+		for {
+			select {
+			case <-tail.End():
+				ticker.Stop()
+
+				// shutdown cron
+				ctx := c.cron.Stop()
+				select {
+				case <-ctx.Done():
+				case <-time.After(5 * time.Second):
+				}
+
+				tail.Done()
+				return
+			case <-ticker.C:
+			}
+		}
+	}()
+
+	return st
 }

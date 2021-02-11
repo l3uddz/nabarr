@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/alecthomas/kong"
 	"github.com/goccy/go-yaml"
@@ -9,6 +10,7 @@ import (
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/l3uddz/nabarr/cmd/nabarr/rss"
 	"github.com/l3uddz/nabarr/trakt"
+	"github.com/lefelys/state"
 	"github.com/natefinch/lumberjack"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -145,10 +147,15 @@ func main() {
 	log.Trace().Msg("Initialising trakt")
 	t := trakt.New(&cfg.Trakt)
 
+	// states
+	pvrStates := make([]state.State, 0)
+	otherStates := make([]state.State, 0)
+
 	// pvrs
 	log.Trace().Msg("Initialising pvrs")
 	cacheFiltersHash := ""
 	pvrs := make(map[string]pvr.PVR, 0)
+
 	for _, p := range cfg.Pvrs {
 		if ctx.Command() == "run" || (ctx.Command() == "test" && strings.EqualFold(cli.Test.Pvr, p.Name)) {
 			// init pvr
@@ -161,7 +168,7 @@ func main() {
 			}
 
 			// start pvr processor
-			po.Start()
+			pvrStates = append(pvrStates, po.Start())
 
 			// add pvr to map
 			pvrs[p.Name] = po
@@ -183,13 +190,10 @@ func main() {
 					Msg("Failed initialising rss")
 			}
 		}
-		r.Start()
+		otherStates = append(otherStates, r.Start())
 
 		// wait for shutdown signal
 		waitShutdown()
-
-		// stop feed scheduler
-		r.Stop()
 	} else {
 		// test mode
 		idParts := strings.Split(cli.Test.Id, ":")
@@ -221,8 +225,13 @@ func main() {
 		}
 	}
 
-	// stop pvr queue processors
-	for _, p := range pvrs {
-		p.Stop()
+	appCtx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+
+	appState := state.Merge(pvrStates...).DependsOn(state.Merge(otherStates...))
+	if err := appState.Shutdown(appCtx); err != nil {
+		log.Fatal().
+			Err(err).
+			Msg("Failed gracefully shutting down")
 	}
 }
