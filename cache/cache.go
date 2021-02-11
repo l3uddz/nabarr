@@ -35,3 +35,5 @@ func New(path string) (*Client, error) {
 func (c *Client) Close() error {
 	return c.db.Close()
 }
+
+// todo: scheduled database cleanup, see https://github.com/xujiajun/nutsdb#merge-operation

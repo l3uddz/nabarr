@@ -4,12 +4,17 @@ import (
 	"fmt"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/robfig/cron/v3"
+	"time"
 )
 
 func (c *Client) AddJob(feed feedItem) error {
 	// prepare job
 	if feed.Cron == "" {
 		feed.Cron = "*/15 * * * *"
+	}
+
+	if feed.CacheDuration == 0 {
+		feed.CacheDuration = (24 * time.Hour) * 28
 	}
 
 	// create job
@@ -24,7 +29,7 @@ func (c *Client) AddJob(feed feedItem) error {
 
 		cron:             c.cron,
 		cache:            c.cache,
-		cacheDuration:    c.cacheDuration,
+		cacheDuration:    feed.CacheDuration,
 		cacheFiltersHash: c.cacheFiltersHash,
 	}
 

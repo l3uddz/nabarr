@@ -12,7 +12,6 @@ import (
 type Client struct {
 	cron             *cron.Cron
 	cache            *cache.Client
-	cacheDuration    time.Duration
 	cacheFiltersHash string
 	pvrs             map[string]pvr.PVR
 
@@ -25,7 +24,6 @@ func New(c Config, cc *cache.Client, cfh string, pvrs map[string]pvr.PVR) *Clien
 			cron.Recover(cron.DefaultLogger),
 		)),
 		cache:            cc,
-		cacheDuration:    24 * time.Hour,
 		cacheFiltersHash: cfh,
 		pvrs:             pvrs,
 

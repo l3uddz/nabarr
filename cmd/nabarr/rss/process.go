@@ -88,18 +88,11 @@ func (j *rssJob) getFeed() ([]nabarr.FeedItem, error) {
 		// guid seen before?
 		cacheKey := fmt.Sprintf("%s_%s", j.name, i.GUID)
 		if cacheValue, err := j.cache.Get(j.name, cacheKey); err == nil {
-			// item has been seen before, update ttl and move on
 			if string(cacheValue) == j.cacheFiltersHash {
-				// item was already checked with our filters, no need to re-process
-				if err := j.cache.Put(j.name, cacheKey, []byte(j.cacheFiltersHash), j.cacheDuration); err != nil {
-					j.log.Error().
-						Err(err).
-						Str("guid", i.GUID).
-						Msg("Failed updating item in temp cache")
-				}
+				// item has been seen before and the filters have not changed
 				continue
 			}
-			// item was checked before, however, it was not checked with the latest filters
+			// item has been seen, however the filters have changed since it was last seen, re-process
 		}
 
 		// process feed item attributes

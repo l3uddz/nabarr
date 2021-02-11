@@ -9,10 +9,11 @@ import (
 )
 
 type feedItem struct {
-	Name string   `yaml:"name"`
-	URL  string   `yaml:"url"`
-	Cron string   `yaml:"cron"`
-	Pvrs []string `yaml:"pvrs"`
+	Name          string        `yaml:"name"`
+	URL           string        `yaml:"url"`
+	Cron          string        `yaml:"cron"`
+	CacheDuration time.Duration `yaml:"cache_duration"`
+	Pvrs          []string      `yaml:"pvrs"`
 }
 
 type Config struct {
