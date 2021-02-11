@@ -12,7 +12,6 @@ type PvrConfig struct {
 	Filters        PvrFilters `yaml:"filters"`
 	Cache          struct {
 		TemporaryDuration time.Duration `yaml:"temp_duration"`
-		PersistExisting   bool          `yaml:"persist_existing"`
 	} `yaml:"cache"`
 	Verbosity string `yaml:"verbosity,omitempty"`
 }
