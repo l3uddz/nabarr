@@ -232,6 +232,6 @@ func main() {
 	if err := appState.Shutdown(appCtx); err != nil {
 		log.Fatal().
 			Err(err).
-			Msg("Failed gracefully shutting down")
+			Msg("Failed shutting down gracefully")
 	}
 }
