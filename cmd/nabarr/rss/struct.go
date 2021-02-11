@@ -1,9 +1,11 @@
 package rss
 
 import (
+	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog"
+	"time"
 )
 
 type feedItem struct {
@@ -27,8 +29,10 @@ type rssJob struct {
 
 	attempts int
 	errors   []error
-	lastGUID string
 
-	cron  *cron.Cron
-	jobID cron.EntryID
+	cron             *cron.Cron
+	cache            *cache.Client
+	cacheDuration    time.Duration
+	cacheFiltersHash string
+	jobID            cron.EntryID
 }

@@ -78,20 +78,28 @@ func (j *rssJob) getFeed() ([]nabarr.FeedItem, error) {
 	})
 
 	// process feed items
-	lastGUIDMet := false
 	for p, i := range b.Channel.Items {
 		// ignore items
 		if i.GUID == "" {
 			// items must always have a guid
 			continue
-		} else if lastGUIDMet {
-			// we have already reached last guid
-			continue
 		}
 
-		if j.lastGUID != "" && strings.EqualFold(i.GUID, j.lastGUID) {
-			lastGUIDMet = true
-			continue
+		// guid seen before?
+		cacheKey := fmt.Sprintf("%s_%s", j.name, i.GUID)
+		if cacheValue, err := j.cache.Get(j.name, cacheKey); err == nil {
+			// item has been seen before, update ttl and move on
+			if string(cacheValue) == j.cacheFiltersHash {
+				// item was already checked with our filters, no need to re-process
+				if err := j.cache.Put(j.name, cacheKey, []byte(j.cacheFiltersHash), j.cacheDuration); err != nil {
+					j.log.Error().
+						Err(err).
+						Str("guid", i.GUID).
+						Msg("Failed updating item in temp cache")
+				}
+				continue
+			}
+			// item was checked before, however, it was not checked with the latest filters
 		}
 
 		// process feed item attributes
@@ -111,13 +119,22 @@ func (j *rssJob) getFeed() ([]nabarr.FeedItem, error) {
 		}
 
 		// validate item
-		if b.Channel.Items[p].TvdbId != "" || b.Channel.Items[p].ImdbId != "" {
-			b.Channel.Items[p].Feed = j.name
-			items = append(items, b.Channel.Items[p])
+		if b.Channel.Items[p].TvdbId == "" && b.Channel.Items[p].ImdbId == "" {
+			continue
+		}
+
+		// add validated item for processing
+		b.Channel.Items[p].Feed = j.name
+		items = append(items, b.Channel.Items[p])
+
+		// add item to temp cache (to prevent re-processing)
+		if err := j.cache.Put(j.name, cacheKey, []byte(j.cacheFiltersHash), j.cacheDuration); err != nil {
+			j.log.Error().
+				Err(err).
+				Str("guid", i.GUID).
+				Msg("Failed storing item in temp cache")
 		}
 	}
 
-	// set last guid
-	j.lastGUID = b.Channel.Items[0].GUID
 	return items, nil
 }

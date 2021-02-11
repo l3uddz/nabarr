@@ -147,6 +147,7 @@ func main() {
 
 	// pvrs
 	log.Trace().Msg("Initialising pvrs")
+	cacheFiltersHash := ""
 	pvrs := make(map[string]pvr.PVR, 0)
 	for _, p := range cfg.Pvrs {
 		if ctx.Command() == "run" || (ctx.Command() == "test" && strings.EqualFold(cli.Test.Pvr, p.Name)) {
@@ -164,6 +165,9 @@ func main() {
 
 			// add pvr to map
 			pvrs[p.Name] = po
+
+			// add cacheFiltersHash
+			cacheFiltersHash += nabarr.AsSHA256(p.Filters)
 		}
 	}
 
@@ -171,7 +175,7 @@ func main() {
 	if ctx.Command() == "run" {
 		// rss
 		log.Trace().Msg("Initialising rss")
-		r := rss.New(cfg.Rss, pvrs)
+		r := rss.New(cfg.Rss, c, cacheFiltersHash, pvrs)
 		for _, feed := range cfg.Rss.Feeds {
 			if err := r.AddJob(feed); err != nil {
 				log.Fatal().

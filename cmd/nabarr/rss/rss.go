@@ -2,6 +2,7 @@ package rss
 
 import (
 	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog"
@@ -9,18 +10,24 @@ import (
 )
 
 type Client struct {
-	cron *cron.Cron
-	pvrs map[string]pvr.PVR
+	cron             *cron.Cron
+	cache            *cache.Client
+	cacheDuration    time.Duration
+	cacheFiltersHash string
+	pvrs             map[string]pvr.PVR
 
 	log zerolog.Logger
 }
 
-func New(c Config, pvrs map[string]pvr.PVR) *Client {
+func New(c Config, cc *cache.Client, cfh string, pvrs map[string]pvr.PVR) *Client {
 	return &Client{
 		cron: cron.New(cron.WithChain(
 			cron.Recover(cron.DefaultLogger),
 		)),
-		pvrs: pvrs,
+		cache:            cc,
+		cacheDuration:    24 * time.Hour,
+		cacheFiltersHash: cfh,
+		pvrs:             pvrs,
 
 		log: nabarr.GetLogger(c.Verbosity).With().Logger(),
 	}

@@ -21,6 +21,11 @@ func (c *Client) AddJob(feed feedItem) error {
 
 		attempts: 0,
 		errors:   make([]error, 0),
+
+		cron:             c.cron,
+		cache:            c.cache,
+		cacheDuration:    c.cacheDuration,
+		cacheFiltersHash: c.cacheFiltersHash,
 	}
 
 	// add pvrs
