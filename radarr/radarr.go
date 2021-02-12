@@ -40,8 +40,8 @@ func New(c nabarr.PvrConfig, mode string, t *trakt.Client, cc *cache.Client) (*C
 		Logger()
 
 	// set config defaults (if not set)
-	if c.Cache.TemporaryDuration == 0 {
-		c.Cache.TemporaryDuration = 24 * time.Hour
+	if c.CacheDuration == 0 {
+		c.CacheDuration = 24 * time.Hour
 	}
 
 	// set api url
@@ -66,7 +66,7 @@ func New(c nabarr.PvrConfig, mode string, t *trakt.Client, cc *cache.Client) (*C
 		rootFolder: c.RootFolder,
 
 		cache:             cc,
-		cacheTempDuration: c.Cache.TemporaryDuration,
+		cacheTempDuration: c.CacheDuration,
 		cacheFiltersHash:  nabarr.AsSHA256(c.Filters),
 
 		queue: make(chan *nabarr.FeedItem, 1024),

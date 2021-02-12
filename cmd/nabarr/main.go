@@ -149,7 +149,7 @@ func main() {
 
 	// states
 	pvrStates := make([]state.State, 0)
-	otherStates := make([]state.State, 0)
+	rssState := state.Empty()
 
 	// pvrs
 	log.Trace().Msg("Initialising pvrs")
@@ -190,7 +190,7 @@ func main() {
 					Msg("Failed initialising rss")
 			}
 		}
-		otherStates = append(otherStates, r.Start())
+		rssState = r.Start()
 
 		// wait for shutdown signal
 		waitShutdown()
@@ -225,10 +225,11 @@ func main() {
 		}
 	}
 
+	// shutdown
 	appCtx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
-	appState := state.Merge(pvrStates...).DependsOn(state.Merge(otherStates...))
+	appState := state.Merge(pvrStates...).DependsOn(rssState)
 	if err := appState.Shutdown(appCtx); err != nil {
 		log.Fatal().
 			Err(err).
