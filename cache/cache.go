@@ -1,15 +1,19 @@
 package cache
 
 import (
+	"context"
 	"fmt"
 	"github.com/l3uddz/nabarr"
+	"github.com/lefelys/state"
 	"github.com/rs/zerolog"
 	"github.com/xujiajun/nutsdb"
+	"time"
 )
 
 type Client struct {
 	log zerolog.Logger
 
+	st state.State
 	db *nutsdb.DB
 }
 
@@ -27,13 +31,56 @@ func New(path string) (*Client, error) {
 		return nil, fmt.Errorf("open: %w", err)
 	}
 
+	log := nabarr.GetLogger("trace").With().Logger()
+
+	// start cleaner
+	st, tail := state.WithShutdown()
+	ticker := time.NewTicker(24 * time.Hour)
+	go func() {
+		for {
+			select {
+			case <-tail.End():
+				ticker.Stop()
+				tail.Done()
+				return
+			case <-ticker.C:
+				// clean cache
+				err := db.Update(func(tx *nutsdb.Tx) error {
+					return db.Merge()
+				})
+
+				switch {
+				case err == nil:
+					log.Info().Msg("Cleaned cache")
+				case err.Error() == "the number of files waiting to be merged is at least 2":
+				// there were no data files to be merged
+				default:
+					// unexpected error
+					log.Error().
+						Err(err).
+						Msg("Failed cleaning cache")
+				}
+			}
+		}
+	}()
+
 	return &Client{
-		log: nabarr.GetLogger("trace").With().Logger(),
+		log: log,
+		st:  st,
 		db:  db,
 	}, nil
 }
+
 func (c *Client) Close() error {
+	// shutdown cleaner
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+	if err := c.st.Shutdown(ctx); err != nil {
+		c.log.Error().
+			Err(err).
+			Msg("Failed closing cache cleaner")
+	}
+
+	// close cache
 	return c.db.Close()
 }
-
-// todo: scheduled database cleanup, see https://github.com/xujiajun/nutsdb#merge-operation
