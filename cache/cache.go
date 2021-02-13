@@ -78,7 +78,7 @@ func (c *Client) Close() error {
 	if err := c.st.Shutdown(ctx); err != nil {
 		c.log.Error().
 			Err(err).
-			Msg("Failed closing cache cleaner")
+			Msg("Failed shutting down cache cleaner gracefully")
 	}
 
 	// close cache
