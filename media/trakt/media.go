@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
 	"net/url"
 )
@@ -13,14 +13,9 @@ var (
 	ErrItemNotFound = errors.New("not found")
 )
 
-func (c *Client) GetShow(item *nabarr.FeedItem) (*nabarr.MediaItem, error) {
-	// validate item has a valid id
-	if item.TvdbId == "" {
-		return nil, fmt.Errorf("no tvdbId for: %v", item.Title)
-	}
-
+func (c *Client) GetShow(tvdbId string) (*Show, error) {
 	// prepare request
-	reqUrl, err := nabarr.URLWithQuery(nabarr.JoinURL(c.apiURL, fmt.Sprintf("/search/tvdb/%s", item.TvdbId)),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, fmt.Sprintf("/search/tvdb/%s", tvdbId)),
 		url.Values{
 			"type":     []string{"show"},
 			"extended": []string{"full"}})
@@ -46,27 +41,22 @@ func (c *Client) GetShow(item *nabarr.FeedItem) (*nabarr.MediaItem, error) {
 	}
 
 	// decode response
-	b := new([]struct{ Show show })
+	b := new([]struct{ Show Show })
 	if err := json.NewDecoder(resp.Body()).Decode(b); err != nil {
 		return nil, fmt.Errorf("decode show response: %w", err)
 	}
 
 	if len(*b) < 1 {
-		return nil, fmt.Errorf("show with tvdbId: %v: %w", item.TvdbId, ErrItemNotFound)
+		return nil, fmt.Errorf("show with tvdbId: %v: %w", tvdbId, ErrItemNotFound)
 	}
 
 	// translate response
-	return (*b)[0].Show.ToMediaItem(item), nil
+	return &(*b)[0].Show, nil
 }
 
-func (c *Client) GetMovie(item *nabarr.FeedItem) (*nabarr.MediaItem, error) {
-	// validate item has a valid id
-	if item.ImdbId == "" {
-		return nil, fmt.Errorf("no imdbId for: %v", item.Title)
-	}
-
+func (c *Client) GetMovie(imdbId string) (*Movie, error) {
 	// prepare request
-	reqUrl, err := nabarr.URLWithQuery(nabarr.JoinURL(c.apiURL, fmt.Sprintf("/search/imdb/%s", item.ImdbId)),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, fmt.Sprintf("/search/imdb/%s", imdbId)),
 		url.Values{
 			"type":     []string{"movie"},
 			"extended": []string{"full"}})
@@ -92,15 +82,15 @@ func (c *Client) GetMovie(item *nabarr.FeedItem) (*nabarr.MediaItem, error) {
 	}
 
 	// decode response
-	b := new([]struct{ Movie movie })
+	b := new([]struct{ Movie Movie })
 	if err := json.NewDecoder(resp.Body()).Decode(b); err != nil {
 		return nil, fmt.Errorf("decode movie response: %w", err)
 	}
 
 	if len(*b) < 1 {
-		return nil, fmt.Errorf("movie with imdbId: %v: %w", item.ImdbId, ErrItemNotFound)
+		return nil, fmt.Errorf("movie with imdbId: %v: %w", imdbId, ErrItemNotFound)
 	}
 
 	// translate response
-	return (*b)[0].Movie.ToMediaItem(item), nil
+	return &(*b)[0].Movie, nil
 }

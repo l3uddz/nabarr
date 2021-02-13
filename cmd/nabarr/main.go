@@ -8,8 +8,9 @@ import (
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
-	"github.com/l3uddz/nabarr/cmd/nabarr/rss"
-	"github.com/l3uddz/nabarr/trakt"
+	"github.com/l3uddz/nabarr/media"
+	"github.com/l3uddz/nabarr/rss"
+	"github.com/l3uddz/nabarr/util"
 	"github.com/lefelys/state"
 	"github.com/natefinch/lumberjack"
 	"github.com/rs/zerolog"
@@ -22,7 +23,7 @@ import (
 )
 
 type config struct {
-	Trakt trakt.Config       `yaml:"trakt"`
+	Media media.Config       `yaml:"media"`
 	Pvrs  []nabarr.PvrConfig `yaml:"pvrs"`
 	Rss   rss.Config         `yaml:"rss"`
 }
@@ -143,9 +144,12 @@ func main() {
 		}
 	}()
 
-	// trakt
-	log.Trace().Msg("Initialising trakt")
-	t := trakt.New(&cfg.Trakt)
+	// media
+	log.Trace().Msg("Initialising media")
+	m, err := media.New(&cfg.Media)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed initialising media")
+	}
 
 	// states
 	pvrStates := make([]state.State, 0)
@@ -159,7 +163,7 @@ func main() {
 	for _, p := range cfg.Pvrs {
 		if ctx.Command() == "run" || (ctx.Command() == "test" && strings.EqualFold(cli.Test.Pvr, p.Name)) {
 			// init pvr
-			po, err := pvr.NewPVR(p, ctx.Command(), t, c)
+			po, err := pvr.NewPVR(p, ctx.Command(), m, c)
 			if err != nil {
 				log.Fatal().
 					Err(err).
@@ -174,7 +178,7 @@ func main() {
 			pvrs[p.Name] = po
 
 			// add cacheFiltersHash
-			cacheFiltersHash += nabarr.AsSHA256(p.Filters)
+			cacheFiltersHash += util.AsSHA256(p.Filters)
 		}
 	}
 
@@ -204,7 +208,7 @@ func main() {
 		}
 
 		// prepare test item
-		testItem := new(nabarr.FeedItem)
+		testItem := new(media.FeedItem)
 		switch strings.ToLower(idParts[0]) {
 		case "imdb":
 			testItem.Title = "Test.Mode.2021.BluRay.1080p.TrueHD.Atmos.7.1.AVC.HYBRID.REMUX-FraMeSToR"

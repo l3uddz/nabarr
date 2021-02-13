@@ -1,7 +1,7 @@
 package trakt
 
 import (
-	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/logger"
 	"github.com/rs/zerolog"
 	"go.uber.org/ratelimit"
 	"time"
@@ -19,7 +19,7 @@ type Client struct {
 func New(cfg *Config) *Client {
 	return &Client{
 		clientId: cfg.ClientId,
-		log:      nabarr.GetLogger(cfg.Verbosity).With().Logger(),
+		log:      logger.New(cfg.Verbosity).With().Logger(),
 		rl:       ratelimit.New(1, ratelimit.WithoutSlack),
 
 		apiURL:     "https://api.trakt.tv",

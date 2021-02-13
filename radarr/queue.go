@@ -3,12 +3,12 @@ package radarr
 import (
 	"errors"
 	"fmt"
-	"github.com/l3uddz/nabarr"
-	"github.com/l3uddz/nabarr/trakt"
+	"github.com/l3uddz/nabarr/media"
+	trakt2 "github.com/l3uddz/nabarr/media/trakt"
 	"github.com/lefelys/state"
 )
 
-func (c *Client) QueueFeedItem(item *nabarr.FeedItem) {
+func (c *Client) QueueFeedItem(item *media.FeedItem) {
 	c.queue <- item
 }
 
@@ -62,10 +62,10 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 				}
 			}
 
-			// trakt search item
-			traktItem, err := c.t.GetMovie(feedItem)
+			// get media info
+			traktItem, err := c.m.GetMovieInfo(feedItem)
 			if err != nil {
-				if errors.Is(err, trakt.ErrItemNotFound) {
+				if errors.Is(err, trakt2.ErrItemNotFound) {
 					c.log.Debug().
 						Err(err).
 						Str("feed_title", feedItem.Title).

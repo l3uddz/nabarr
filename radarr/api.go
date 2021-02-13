@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/media"
+	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
 	"net/url"
 	"strconv"
@@ -17,7 +18,7 @@ var (
 
 func (c *Client) getSystemStatus() (*systemStatus, error) {
 	// send request
-	resp, err := rek.Get(nabarr.JoinURL(c.apiURL, "/system/status"), rek.Headers(c.apiHeaders),
+	resp, err := rek.Get(util.JoinURL(c.apiURL, "/system/status"), rek.Headers(c.apiHeaders),
 		rek.Timeout(c.apiTimeout))
 	if err != nil {
 		return nil, fmt.Errorf("request system status: %w", err)
@@ -40,7 +41,7 @@ func (c *Client) getSystemStatus() (*systemStatus, error) {
 
 func (c *Client) getQualityProfileId(profileName string) (int, error) {
 	// send request
-	resp, err := rek.Get(nabarr.JoinURL(c.apiURL, "/profile"), rek.Headers(c.apiHeaders),
+	resp, err := rek.Get(util.JoinURL(c.apiURL, "/profile"), rek.Headers(c.apiHeaders),
 		rek.Timeout(c.apiTimeout))
 	if err != nil {
 		return 0, fmt.Errorf("request quality profiles: %w", err)
@@ -68,7 +69,7 @@ func (c *Client) getQualityProfileId(profileName string) (int, error) {
 	return 0, errors.New("quality profile not found")
 }
 
-func (c *Client) lookupMediaItem(item *nabarr.MediaItem) (*lookupRequest, error) {
+func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 	// determine metadata id to use
 	mdType := "imdb"
 	mdId := item.ImdbId
@@ -80,7 +81,7 @@ func (c *Client) lookupMediaItem(item *nabarr.MediaItem) (*lookupRequest, error)
 	}
 
 	// prepare request
-	reqUrl, err := nabarr.URLWithQuery(nabarr.JoinURL(c.apiURL, "/movie/lookup"),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "/movie/lookup"),
 		url.Values{"term": []string{fmt.Sprintf("%s:%s", mdType, mdId)}})
 	if err != nil {
 		return nil, fmt.Errorf("generate movie lookup request url: %w", err)
@@ -121,7 +122,7 @@ func (c *Client) lookupMediaItem(item *nabarr.MediaItem) (*lookupRequest, error)
 	return nil, fmt.Errorf("movie lookup %sId: %v: %w", mdType, mdId, ErrItemNotFound)
 }
 
-func (c *Client) AddMediaItem(item *nabarr.MediaItem) error {
+func (c *Client) AddMediaItem(item *media.Item) error {
 	// prepare request
 	req := addRequest{
 		Title:               item.Title,
@@ -137,12 +138,12 @@ func (c *Client) AddMediaItem(item *nabarr.MediaItem) error {
 			IgnoreEpisodesWithFiles:    false,
 			IgnoreEpisodesWithoutFiles: false,
 		},
-		TmdbId: nabarr.Atoi(item.TmdbId, 0),
+		TmdbId: util.Atoi(item.TmdbId, 0),
 		ImdbId: item.ImdbId,
 	}
 
 	// send request
-	resp, err := rek.Post(nabarr.JoinURL(c.apiURL, "/movie"), rek.Headers(c.apiHeaders), rek.Json(req),
+	resp, err := rek.Post(util.JoinURL(c.apiURL, "/movie"), rek.Headers(c.apiHeaders), rek.Json(req),
 		rek.Timeout(c.apiTimeout))
 	if err != nil {
 		return fmt.Errorf("request add movie: %w", err)

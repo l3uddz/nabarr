@@ -1,11 +1,11 @@
-package nabarr
+package logger
 
 import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
-func GetLogger(verbosity string) zerolog.Logger {
+func New(verbosity string) zerolog.Logger {
 	if verbosity == "" {
 		return log.Logger
 	}

@@ -1,12 +1,10 @@
 package trakt
 
 import (
-	"github.com/l3uddz/nabarr"
-	"strconv"
 	"time"
 )
 
-type showIds struct {
+type ShowIds struct {
 	Trakt int    `json:"trakt"`
 	Slug  string `json:"slug"`
 	Tvdb  int    `json:"tvdb"`
@@ -14,18 +12,18 @@ type showIds struct {
 	Tmdb  int    `json:"tmdb"`
 }
 
-type movieIds struct {
+type MovieIds struct {
 	Trakt int    `json:"trakt"`
 	Slug  string `json:"slug"`
 	Imdb  string `json:"imdb"`
 	Tmdb  int    `json:"tmdb"`
 }
 
-type show struct {
+type Show struct {
 	Type                  string    `json:"type"`
 	Title                 string    `json:"title"`
 	Year                  int       `json:"year"`
-	Ids                   showIds   `json:"ids"`
+	Ids                   ShowIds   `json:"ids"`
 	Overview              string    `json:"overview"`
 	FirstAired            time.Time `json:"first_aired"`
 	Runtime               int       `json:"runtime"`
@@ -45,11 +43,11 @@ type show struct {
 	Character             string    `json:"character"`
 }
 
-type movie struct {
+type Movie struct {
 	Type                  string   `json:"type"`
 	Title                 string   `json:"title"`
 	Year                  int      `json:"year"`
-	Ids                   movieIds `json:"ids"`
+	Ids                   MovieIds `json:"ids"`
 	Tagline               string   `json:"tagline"`
 	Overview              string   `json:"overview"`
 	Released              string   `json:"released"`
@@ -66,54 +64,4 @@ type movie struct {
 	Genres                []string `json:"genres"`
 	Certification         string   `json:"certification"`
 	Character             string   `json:"character"`
-}
-
-func (s *show) ToMediaItem(item *nabarr.FeedItem) *nabarr.MediaItem {
-	return &nabarr.MediaItem{
-		TvdbId:        strconv.Itoa(s.Ids.Tvdb),
-		TmdbId:        strconv.Itoa(s.Ids.Tmdb),
-		ImdbId:        s.Ids.Imdb,
-		Slug:          s.Ids.Slug,
-		Title:         s.Title,
-		FeedTitle:     item.Title,
-		Summary:       s.Overview,
-		Country:       []string{s.Country},
-		Network:       s.Network,
-		Date:          s.FirstAired,
-		Year:          s.FirstAired.Year(),
-		Runtime:       s.Runtime,
-		Rating:        s.Rating,
-		Votes:         s.Votes,
-		Status:        s.Status,
-		Genres:        s.Genres,
-		Languages:     []string{s.Language},
-		AiredEpisodes: s.AiredEpisodes,
-	}
-}
-
-func (m *movie) ToMediaItem(item *nabarr.FeedItem) *nabarr.MediaItem {
-	date, err := time.Parse("2006-01-02", m.Released)
-	if err != nil {
-		date = time.Time{}
-	}
-
-	return &nabarr.MediaItem{
-		TvdbId:    "",
-		TmdbId:    strconv.Itoa(m.Ids.Tmdb),
-		ImdbId:    m.Ids.Imdb,
-		Slug:      m.Ids.Slug,
-		Title:     m.Title,
-		FeedTitle: item.Title,
-		Summary:   m.Overview,
-		Country:   []string{m.Country},
-		Network:   "",
-		Date:      date,
-		Year:      date.Year(),
-		Runtime:   m.Runtime,
-		Rating:    m.Rating,
-		Votes:     m.Votes,
-		Status:    m.Status,
-		Genres:    m.Genres,
-		Languages: []string{m.Language},
-	}
 }

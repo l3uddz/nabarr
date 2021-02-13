@@ -3,7 +3,7 @@ package cache
 import (
 	"context"
 	"fmt"
-	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/logger"
 	"github.com/lefelys/state"
 	"github.com/rs/zerolog"
 	"github.com/xujiajun/nutsdb"
@@ -31,7 +31,7 @@ func New(path string) (*Client, error) {
 		return nil, fmt.Errorf("open: %w", err)
 	}
 
-	log := nabarr.GetLogger("trace").With().Logger()
+	log := logger.New("trace").With().Logger()
 
 	// start cleaner
 	st, tail := state.WithShutdown()

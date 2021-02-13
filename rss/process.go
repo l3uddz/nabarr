@@ -3,7 +3,7 @@ package rss
 import (
 	"encoding/xml"
 	"fmt"
-	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/media"
 	"github.com/lucperkins/rek"
 	"sort"
 	"strings"
@@ -34,7 +34,7 @@ func (j *rssJob) process() error {
 	return nil
 }
 
-func (j *rssJob) queueItemWithPvrs(item *nabarr.FeedItem) {
+func (j *rssJob) queueItemWithPvrs(item *media.FeedItem) {
 	for _, pvr := range j.pvrs {
 		switch {
 		case item.TvdbId != "" && pvr.Type() == "sonarr":
@@ -47,7 +47,7 @@ func (j *rssJob) queueItemWithPvrs(item *nabarr.FeedItem) {
 	}
 }
 
-func (j *rssJob) getFeed() ([]nabarr.FeedItem, error) {
+func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 	// request feed
 	res, err := rek.Get(j.url, rek.Timeout(30*time.Minute))
 	if err != nil {
@@ -61,13 +61,13 @@ func (j *rssJob) getFeed() ([]nabarr.FeedItem, error) {
 	}
 
 	// decode response
-	b := new(nabarr.Rss)
+	b := new(media.Rss)
 	if err := xml.NewDecoder(res.Body()).Decode(b); err != nil {
 		return nil, fmt.Errorf("decode feed: %w", err)
 	}
 
 	// prepare result
-	items := make([]nabarr.FeedItem, 0)
+	items := make([]media.FeedItem, 0)
 	if len(b.Channel.Items) < 1 {
 		return items, nil
 	}

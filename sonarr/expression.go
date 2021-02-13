@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/antonmedv/expr"
 	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/media"
 	"github.com/pkg/errors"
 )
 
@@ -23,7 +24,7 @@ func (c *Client) compileExpressions(filters nabarr.PvrFilters) error {
 	return nil
 }
 
-func (c *Client) ShouldIgnore(mediaItem *nabarr.MediaItem) (bool, string, error) {
+func (c *Client) ShouldIgnore(mediaItem *media.Item) (bool, string, error) {
 	exprItem := nabarr.NewExprEnv(mediaItem)
 
 	for _, expression := range c.ignoresExpr {

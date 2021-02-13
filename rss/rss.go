@@ -1,9 +1,9 @@
 package rss
 
 import (
-	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
+	"github.com/l3uddz/nabarr/logger"
 	"github.com/lefelys/state"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog"
@@ -28,7 +28,7 @@ func New(c Config, cc *cache.Client, cfh string, pvrs map[string]pvr.PVR) *Clien
 		cacheFiltersHash: cfh,
 		pvrs:             pvrs,
 
-		log: nabarr.GetLogger(c.Verbosity).With().Logger(),
+		log: logger.New(c.Verbosity).With().Logger(),
 	}
 }
 

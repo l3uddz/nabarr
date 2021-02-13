@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/cache"
-	"github.com/l3uddz/nabarr/trakt"
+	"github.com/l3uddz/nabarr/logger"
+	"github.com/l3uddz/nabarr/media"
+	"github.com/l3uddz/nabarr/util"
 	"github.com/rs/zerolog"
 	"strings"
 	"time"
@@ -26,15 +28,15 @@ type Client struct {
 	cacheTempDuration time.Duration
 	cacheFiltersHash  string
 
-	queue chan *nabarr.FeedItem
+	queue chan *media.FeedItem
 
-	t           *trakt.Client
+	m           *media.Client
 	log         zerolog.Logger
 	ignoresExpr []*nabarr.ExprProgram
 }
 
-func New(c nabarr.PvrConfig, mode string, t *trakt.Client, cc *cache.Client) (*Client, error) {
-	l := nabarr.GetLogger(c.Verbosity).With().
+func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*Client, error) {
+	l := logger.New(c.Verbosity).With().
 		Str("pvr_name", c.Name).
 		Str("pvr_type", c.Type).
 		Logger()
@@ -49,7 +51,7 @@ func New(c nabarr.PvrConfig, mode string, t *trakt.Client, cc *cache.Client) (*C
 	if strings.Contains(strings.ToLower(c.URL), "/api") {
 		apiURL = c.URL
 	} else {
-		apiURL = nabarr.JoinURL(c.URL, "/api")
+		apiURL = util.JoinURL(c.URL, "/api")
 	}
 
 	// set api headers
@@ -67,15 +69,15 @@ func New(c nabarr.PvrConfig, mode string, t *trakt.Client, cc *cache.Client) (*C
 
 		cache:             cc,
 		cacheTempDuration: c.CacheDuration,
-		cacheFiltersHash:  nabarr.AsSHA256(c.Filters),
+		cacheFiltersHash:  util.AsSHA256(c.Filters),
 
-		queue: make(chan *nabarr.FeedItem, 1024),
+		queue: make(chan *media.FeedItem, 1024),
 
 		apiURL:     apiURL,
 		apiHeaders: apiHeaders,
 		apiTimeout: 60 * time.Second,
 
-		t:   t,
+		m:   m,
 		log: l,
 	}
 
