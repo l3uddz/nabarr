@@ -2,6 +2,7 @@ package media
 
 import (
 	"encoding/xml"
+	"github.com/l3uddz/nabarr/media/omdb"
 	"github.com/pkg/errors"
 	"time"
 )
@@ -25,6 +26,9 @@ type Item struct {
 	Genres        []string
 	Languages     []string
 	AiredEpisodes int
+
+	// additional media provider data
+	Omdb omdb.Item
 }
 
 type Rss struct {

@@ -1,7 +1,9 @@
 package media
 
 import (
+	"errors"
 	"fmt"
+	"github.com/l3uddz/nabarr/media/trakt"
 	"strconv"
 	"time"
 )
@@ -10,10 +12,13 @@ func (c *Client) GetMovieInfo(item *FeedItem) (*Item, error) {
 	// lookup on trakt
 	m, err := c.trakt.GetMovie(item.ImdbId)
 	if err != nil {
-		return nil, fmt.Errorf("trakt: get movie: %w", err)
+		if errors.Is(err, trakt.ErrItemNotFound) {
+			return nil, fmt.Errorf("trakt: get movie: movie with imdbId %q: %w", item.ImdbId, ErrItemNotFound)
+		}
+		return nil, fmt.Errorf("trakt: get movie: movie with imdbId %q: %w", item.ImdbId, err)
 	}
 
-	// transform trakt info to MediaItem
+	// transform trakt info
 	date, err := time.Parse("2006-01-02", m.Released)
 	if err != nil {
 		date = time.Time{}
@@ -39,7 +44,15 @@ func (c *Client) GetMovieInfo(item *FeedItem) (*Item, error) {
 		Languages: []string{m.Language},
 	}
 
-	// fetch additional info
+	// omdb
+	if oi, err := c.omdb.GetItem(item.ImdbId); err != nil {
+		c.log.Debug().
+			Err(err).
+			Str("imdb_id", item.ImdbId).
+			Msg("Failed finding item on omdb")
+	} else if oi != nil {
+		mi.Omdb = *oi
+	}
 
 	return mi, nil
 }

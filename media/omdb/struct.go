@@ -1,11 +1,11 @@
 package omdb
 
-type Rating struct {
+type rating struct {
 	Source string `json:"Source,omitempty"`
 	Value  string `json:"Value,omitempty"`
 }
 
-type Item struct {
+type lookupResponse struct {
 	Title      string   `json:"Title,omitempty"`
 	Year       string   `json:"Year,omitempty"`
 	Rated      string   `json:"Rated,omitempty"`
@@ -20,7 +20,7 @@ type Item struct {
 	Country    string   `json:"Country,omitempty"`
 	Awards     string   `json:"Awards,omitempty"`
 	Poster     string   `json:"Poster,omitempty"`
-	Ratings    []Rating `json:"Ratings,omitempty"`
+	Ratings    []rating `json:"Ratings,omitempty"`
 	Metascore  string   `json:"Metascore,omitempty"`
 	ImdbRating string   `json:"imdbRating,omitempty"`
 	ImdbVotes  string   `json:"imdbVotes,omitempty"`
@@ -31,4 +31,10 @@ type Item struct {
 	Production string   `json:"Production,omitempty"`
 	Website    string   `json:"Website,omitempty"`
 	Response   string   `json:"Response,omitempty"`
+}
+
+type Item struct {
+	Actors     string  `json:"actors,omitempty"`
+	Metascore  int     `json:"metascore,omitempty"`
+	ImdbRating float64 `json:"imdb_rating,omitempty"`
 }

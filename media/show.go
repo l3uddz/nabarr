@@ -1,7 +1,9 @@
 package media
 
 import (
+	"errors"
 	"fmt"
+	"github.com/l3uddz/nabarr/media/trakt"
 	"strconv"
 )
 
@@ -9,7 +11,10 @@ func (c *Client) GetShowInfo(item *FeedItem) (*Item, error) {
 	// lookup on trakt
 	s, err := c.trakt.GetShow(item.TvdbId)
 	if err != nil {
-		return nil, fmt.Errorf("trakt: get show: %w", err)
+		if errors.Is(err, trakt.ErrItemNotFound) {
+			return nil, fmt.Errorf("trakt: get show: show with tvdbId %q: %w", item.TvdbId, ErrItemNotFound)
+		}
+		return nil, fmt.Errorf("trakt: get show: show with tvdbId %q: %w", item.TvdbId, err)
 	}
 
 	// transform trakt info to MediaItem

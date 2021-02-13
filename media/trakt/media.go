@@ -47,7 +47,7 @@ func (c *Client) GetShow(tvdbId string) (*Show, error) {
 	}
 
 	if len(*b) < 1 {
-		return nil, fmt.Errorf("show with tvdbId: %v: %w", tvdbId, ErrItemNotFound)
+		return nil, ErrItemNotFound
 	}
 
 	// translate response
@@ -88,7 +88,7 @@ func (c *Client) GetMovie(imdbId string) (*Movie, error) {
 	}
 
 	if len(*b) < 1 {
-		return nil, fmt.Errorf("movie with imdbId: %v: %w", imdbId, ErrItemNotFound)
+		return nil, ErrItemNotFound
 	}
 
 	// translate response

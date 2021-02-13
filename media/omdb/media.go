@@ -14,6 +14,11 @@ var (
 )
 
 func (c *Client) GetItem(imdbId string) (*Item, error) {
+	// empty item when not configured
+	if c.apiKey == "" {
+		return nil, nil
+	}
+
 	// prepare request
 	reqUrl, err := util.URLWithQuery(c.apiURL, url.Values{
 		"apikey": []string{c.apiKey},
@@ -40,7 +45,7 @@ func (c *Client) GetItem(imdbId string) (*Item, error) {
 	}
 
 	// decode response
-	b := new(Item)
+	b := new(lookupResponse)
 	if err := json.NewDecoder(resp.Body()).Decode(b); err != nil {
 		return nil, fmt.Errorf("decode lookup response: %w", err)
 	}
@@ -49,5 +54,10 @@ func (c *Client) GetItem(imdbId string) (*Item, error) {
 		return nil, fmt.Errorf("item with imdbId: %v: %w", imdbId, ErrItemNotFound)
 	}
 
-	return b, nil
+	// transform response
+	return &Item{
+		Actors:     b.Actors,
+		Metascore:  util.Atoi(b.Metascore, 0),
+		ImdbRating: util.Atof64(b.ImdbRating, 0.0),
+	}, nil
 }

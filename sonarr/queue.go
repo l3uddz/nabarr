@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/l3uddz/nabarr/media"
-	trakt2 "github.com/l3uddz/nabarr/media/trakt"
 	"github.com/lefelys/state"
 )
 
@@ -63,9 +62,9 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 			}
 
 			// get media info
-			traktItem, err := c.m.GetShowInfo(feedItem)
+			mediaItem, err := c.m.GetShowInfo(feedItem)
 			if err != nil {
-				if errors.Is(err, trakt2.ErrItemNotFound) {
+				if errors.Is(err, media.ErrItemNotFound) {
 					c.log.Debug().
 						Err(err).
 						Str("feed_title", feedItem.Title).
@@ -86,18 +85,18 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 
 			if c.testMode {
 				c.log.Debug().
-					Interface("trakt_item", traktItem).
+					Interface("trakt_item", mediaItem).
 					Msg("Item found on trakt")
 			}
 
 			// trakt expression check
-			ignore, filter, err := c.ShouldIgnore(traktItem)
+			ignore, filter, err := c.ShouldIgnore(mediaItem)
 			if err != nil {
 				c.log.Error().
 					Err(err).
-					Str("feed_title", traktItem.FeedTitle).
-					Str("trakt_title", traktItem.Title).
-					Str("trakt_tvdb_id", traktItem.TvdbId).
+					Str("feed_title", mediaItem.FeedTitle).
+					Str("trakt_title", mediaItem.Title).
+					Str("trakt_tvdb_id", mediaItem.TvdbId).
 					Str("feed_name", feedItem.Feed).
 					Str("ignore_filter", filter).
 					Msg("Failed checking item against ignore filters")
@@ -106,9 +105,9 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 
 			if ignore {
 				c.log.Debug().
-					Str("feed_title", traktItem.FeedTitle).
-					Str("trakt_title", traktItem.Title).
-					Str("trakt_tvdb_id", traktItem.TvdbId).
+					Str("feed_title", mediaItem.FeedTitle).
+					Str("trakt_title", mediaItem.Title).
+					Str("trakt_tvdb_id", mediaItem.TvdbId).
 					Str("feed_name", feedItem.Feed).
 					Str("ignore_filter", filter).
 					Msg("Item matched ignore filters")
@@ -116,13 +115,13 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 			}
 
 			// lookup item in pvr
-			s, err := c.lookupMediaItem(traktItem)
+			s, err := c.lookupMediaItem(mediaItem)
 			if err != nil {
 				if errors.Is(err, ErrItemNotFound) {
 					// the item was not found
 					c.log.Warn().
 						Err(err).
-						Str("feed_title", traktItem.FeedTitle).
+						Str("feed_title", mediaItem.FeedTitle).
 						Str("feed_tvdb_id", feedItem.TvdbId).
 						Str("feed_name", feedItem.Feed).
 						Msg("Item was not found via pvr lookup")
@@ -131,7 +130,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 
 				c.log.Error().
 					Err(err).
-					Str("feed_title", traktItem.FeedTitle).
+					Str("feed_title", mediaItem.FeedTitle).
 					Str("feed_tvdb_id", feedItem.TvdbId).
 					Str("feed_name", feedItem.Feed).
 					Msg("Failed finding item via pvr lookup")
@@ -159,36 +158,36 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 
 			// add item to pvr
 			c.log.Debug().
-				Str("feed_title", traktItem.FeedTitle).
-				Str("trakt_title", traktItem.Title).
-				Str("trakt_tvdb_id", traktItem.TvdbId).
-				Int("trakt_year", traktItem.Year).
+				Str("feed_title", mediaItem.FeedTitle).
+				Str("trakt_title", mediaItem.Title).
+				Str("trakt_tvdb_id", mediaItem.TvdbId).
+				Int("trakt_year", mediaItem.Year).
 				Str("feed_name", feedItem.Feed).
 				Msg("Sending item to pvr")
 
 			if s.TitleSlug != "" {
 				// use slug from pvr search
-				traktItem.Slug = s.TitleSlug
+				mediaItem.Slug = s.TitleSlug
 			}
 
 			if c.testMode {
 				c.log.Info().
 					Err(err).
-					Str("trakt_title", traktItem.Title).
-					Str("trakt_tvdb_id", traktItem.TvdbId).
-					Int("trakt_year", traktItem.Year).
+					Str("trakt_title", mediaItem.Title).
+					Str("trakt_tvdb_id", mediaItem.TvdbId).
+					Int("trakt_year", mediaItem.Year).
 					Str("feed_name", feedItem.Feed).
 					Msg("Added item (test mode)")
 				continue
 			}
 
-			if err := c.AddMediaItem(traktItem); err != nil {
+			if err := c.AddMediaItem(mediaItem); err != nil {
 				c.log.Error().
 					Err(err).
-					Str("feed_title", traktItem.FeedTitle).
-					Str("trakt_title", traktItem.Title).
-					Str("trakt_tvdb_id", traktItem.TvdbId).
-					Int("trakt_year", traktItem.Year).
+					Str("feed_title", mediaItem.FeedTitle).
+					Str("trakt_title", mediaItem.Title).
+					Str("trakt_tvdb_id", mediaItem.TvdbId).
+					Int("trakt_year", mediaItem.Year).
 					Str("feed_name", feedItem.Feed).
 					Msg("Failed adding item to pvr")
 			}
@@ -204,9 +203,9 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 
 			c.log.Info().
 				Err(err).
-				Str("trakt_title", traktItem.Title).
-				Str("trakt_tvdb_id", traktItem.TvdbId).
-				Int("trakt_year", traktItem.Year).
+				Str("trakt_title", mediaItem.Title).
+				Str("trakt_tvdb_id", mediaItem.TvdbId).
+				Int("trakt_year", mediaItem.Year).
 				Str("feed_name", feedItem.Feed).
 				Msg("Added item")
 		}
