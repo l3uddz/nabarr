@@ -9,7 +9,7 @@ import (
 
 func (c *Client) GetShowInfo(item *FeedItem) (*Item, error) {
 	// lookup on trakt
-	s, err := c.trakt.GetShow(item.TvdbId)
+	t, err := c.trakt.GetShow(item.TvdbId)
 	if err != nil {
 		if errors.Is(err, trakt.ErrItemNotFound) {
 			return nil, fmt.Errorf("trakt: get show: show with tvdbId %q: %w", item.TvdbId, ErrItemNotFound)
@@ -19,27 +19,35 @@ func (c *Client) GetShowInfo(item *FeedItem) (*Item, error) {
 
 	// transform trakt info to MediaItem
 	mi := &Item{
-		TvdbId:        strconv.Itoa(s.Ids.Tvdb),
-		TmdbId:        strconv.Itoa(s.Ids.Tmdb),
-		ImdbId:        s.Ids.Imdb,
-		Slug:          s.Ids.Slug,
-		Title:         s.Title,
+		TvdbId:        strconv.Itoa(t.Ids.Tvdb),
+		TmdbId:        strconv.Itoa(t.Ids.Tmdb),
+		ImdbId:        t.Ids.Imdb,
+		Slug:          t.Ids.Slug,
+		Title:         t.Title,
 		FeedTitle:     item.Title,
-		Summary:       s.Overview,
-		Country:       []string{s.Country},
-		Network:       s.Network,
-		Date:          s.FirstAired,
-		Year:          s.FirstAired.Year(),
-		Runtime:       s.Runtime,
-		Rating:        s.Rating,
-		Votes:         s.Votes,
-		Status:        s.Status,
-		Genres:        s.Genres,
-		Languages:     []string{s.Language},
-		AiredEpisodes: s.AiredEpisodes,
+		Summary:       t.Overview,
+		Country:       []string{t.Country},
+		Network:       t.Network,
+		Date:          t.FirstAired,
+		Year:          t.FirstAired.Year(),
+		Runtime:       t.Runtime,
+		Rating:        t.Rating,
+		Votes:         t.Votes,
+		Status:        t.Status,
+		Genres:        t.Genres,
+		Languages:     []string{t.Language},
+		AiredEpisodes: t.AiredEpisodes,
 	}
 
-	// fetch additional info
+	// omdb
+	if oi, err := c.omdb.GetItem(t.Ids.Imdb); err != nil {
+		c.log.Trace().
+			Err(err).
+			Str("imdb_id", item.ImdbId).
+			Msg("Failed finding item on omdb")
+	} else if oi != nil {
+		mi.Omdb = *oi
+	}
 
 	return mi, nil
 }

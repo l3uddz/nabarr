@@ -10,7 +10,7 @@ import (
 
 func (c *Client) GetMovieInfo(item *FeedItem) (*Item, error) {
 	// lookup on trakt
-	m, err := c.trakt.GetMovie(item.ImdbId)
+	t, err := c.trakt.GetMovie(item.ImdbId)
 	if err != nil {
 		if errors.Is(err, trakt.ErrItemNotFound) {
 			return nil, fmt.Errorf("trakt: get movie: movie with imdbId %q: %w", item.ImdbId, ErrItemNotFound)
@@ -19,34 +19,34 @@ func (c *Client) GetMovieInfo(item *FeedItem) (*Item, error) {
 	}
 
 	// transform trakt info
-	date, err := time.Parse("2006-01-02", m.Released)
+	date, err := time.Parse("2006-01-02", t.Released)
 	if err != nil {
 		date = time.Time{}
 	}
 
 	mi := &Item{
 		TvdbId:    "",
-		TmdbId:    strconv.Itoa(m.Ids.Tmdb),
-		ImdbId:    m.Ids.Imdb,
-		Slug:      m.Ids.Slug,
-		Title:     m.Title,
+		TmdbId:    strconv.Itoa(t.Ids.Tmdb),
+		ImdbId:    t.Ids.Imdb,
+		Slug:      t.Ids.Slug,
+		Title:     t.Title,
 		FeedTitle: item.Title,
-		Summary:   m.Overview,
-		Country:   []string{m.Country},
+		Summary:   t.Overview,
+		Country:   []string{t.Country},
 		Network:   "",
 		Date:      date,
 		Year:      date.Year(),
-		Runtime:   m.Runtime,
-		Rating:    m.Rating,
-		Votes:     m.Votes,
-		Status:    m.Status,
-		Genres:    m.Genres,
-		Languages: []string{m.Language},
+		Runtime:   t.Runtime,
+		Rating:    t.Rating,
+		Votes:     t.Votes,
+		Status:    t.Status,
+		Genres:    t.Genres,
+		Languages: []string{t.Language},
 	}
 
 	// omdb
-	if oi, err := c.omdb.GetItem(item.ImdbId); err != nil {
-		c.log.Debug().
+	if oi, err := c.omdb.GetItem(t.Ids.Imdb); err != nil {
+		c.log.Trace().
 			Err(err).
 			Str("imdb_id", item.ImdbId).
 			Msg("Failed finding item on omdb")

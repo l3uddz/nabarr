@@ -14,8 +14,8 @@ var (
 )
 
 func (c *Client) GetItem(imdbId string) (*Item, error) {
-	// empty item when not configured
-	if c.apiKey == "" {
+	// empty item when appropriate
+	if c.apiKey == "" || imdbId == "" {
 		return nil, nil
 	}
 
