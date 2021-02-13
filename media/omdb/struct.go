@@ -34,7 +34,7 @@ type lookupResponse struct {
 }
 
 type Item struct {
-	Actors     string  `json:"actors,omitempty"`
-	Metascore  int     `json:"metascore,omitempty"`
-	ImdbRating float64 `json:"imdb_rating,omitempty"`
+	Metascore      int     `json:"metascore,omitempty"`
+	RottenTomatoes int     `json:"rotten_tomatoes,omitempty"`
+	ImdbRating     float64 `json:"imdb_rating,omitempty"`
 }

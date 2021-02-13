@@ -41,10 +41,10 @@ func (c *Client) GetShowInfo(item *FeedItem) (*Item, error) {
 
 	// omdb
 	if oi, err := c.omdb.GetItem(t.Ids.Imdb); err != nil {
-		c.log.Trace().
+		c.log.Debug().
 			Err(err).
-			Str("imdb_id", item.ImdbId).
-			Msg("Failed finding item on omdb")
+			Str("imdb_id", t.Ids.Imdb).
+			Msg("Item was not found on omdb")
 	} else if oi != nil {
 		mi.Omdb = *oi
 	}

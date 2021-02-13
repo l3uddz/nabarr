@@ -7,6 +7,7 @@ import (
 	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
 	"net/url"
+	"strings"
 )
 
 var (
@@ -55,9 +56,17 @@ func (c *Client) GetItem(imdbId string) (*Item, error) {
 	}
 
 	// transform response
+	rt := 0
+	for _, rating := range b.Ratings {
+		if strings.EqualFold(rating.Source, "Rotten Tomatoes") {
+			rt = util.Atoi(strings.TrimSuffix(rating.Value, "%"), 0)
+			break
+		}
+	}
+
 	return &Item{
-		Actors:     b.Actors,
-		Metascore:  util.Atoi(b.Metascore, 0),
-		ImdbRating: util.Atof64(b.ImdbRating, 0.0),
+		Metascore:      util.Atoi(b.Metascore, 0),
+		RottenTomatoes: rt,
+		ImdbRating:     util.Atof64(b.ImdbRating, 0.0),
 	}, nil
 }
