@@ -152,30 +152,29 @@ jobs:
 #          -d "{\"query\":\"query {repository(owner:\\\""l3uddz"\\\", name:\\\""nabarr"\\\") {packages(names:[\\\""nabarr"\\\"], first:1) {edges{node{id, name, version(version:\\\""$tag"\\\"){id, version}}}}}}\"}" \
 #          https://api.github.com/graphql | jq '.data.repository.packages.edges[].node.version.id')"
 
-      - uses: octokit/graphql-action@v2.x
-        id: get_latest_release
+      - name: get package id of tag
+        uses: octokit/graphql-action@v2.x
+        id: get_tag_package_id
         with:
           query: |
-            query package($owner:String!,$repo:String!) {
-              repository(
-                owner: $owner,
-                name: $repo,
-              ) {
+            query package($owner:String!,$repo:String!,$tag:String!) {
+              repository(owner: $owner, name: $repo) {
                 packages(names:[$repo], first:1) {
                   edges {
                     node {
                       id,
                       name,
-                      version(version:$tag) {
+                      version(version: $tag) {
                         id, version
                       }
                     }
                   }
                 }
+              }
             }
           owner: ${{ github.event.repository.owner.name }}
           repo: ${{ github.event.repository.name }}
           tag: ${{ steps.dockertag.outputs.replaced }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: "echo 'latest release: ${{ steps.get_latest_release.outputs.data }}'"
+      - run: "echo 'latest package id: ${{ steps.get_tag_package_id.outputs.data }}'"
