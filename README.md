@@ -200,7 +200,7 @@ docker run \
   -e "PGID=1001" \
   -v "/opt/nabarr:/config" \
   --restart=unless-stopped \
-  -d docker.pkg.github.com/l3uddz/nabarr/nabarr:latest
+  -d cloudb0x/nabarr:latest
 ```
 
 #### Parameters
@@ -230,7 +230,7 @@ docker run \
   --network=cloudbox \
   --network-alias=nabarr  \
   --restart=unless-stopped \
-  -d docker.pkg.github.com/l3uddz/nabarr/nabarr:latest
+  -d cloudb0x/nabarr:latest
 ```
 
 ## Donate

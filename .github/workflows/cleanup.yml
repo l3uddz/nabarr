@@ -16,38 +16,11 @@ jobs:
           replace-with: '-'
           flags: 'g'
 
-      - name: query for package version id
-        uses: octokit/graphql-action@v2.x
-        id: query_package_version
-        with:
-          query: |
-            query package($owner:String!,$repo:String!,$tag:String!) {
-              repository(owner: $owner, name: $repo) {
-                packages(names:[$repo], first:1) {
-                  edges {
-                    node {
-                      id,
-                      name,
-                      version(version: $tag) {
-                        id, version
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
+      - name: Remove branch docker tag
+        shell: bash
+        env:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           tag: ${{ steps.dockertag.outputs.replaced }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: parse package version id
-        run: echo "VERSION_ID=$(echo $json | jq -r $jsonpath)" >> $GITHUB_ENV
-        env:
-          json: ${{ steps.query_package_version.outputs.data }}
-          jsonpath: ".repository.packages.edges[].node.version.id"
-
-      - uses: actions/delete-package-versions@v1
-        with:
-          package-version-ids: '${{ env.VERSION_ID }}'
+        run: |
+          docker run --rm lumir/remove-dockerhub-tag --user "$username" --password "$password" cloudb0x/nabarr:$tag
