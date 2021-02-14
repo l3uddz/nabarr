@@ -17,6 +17,8 @@ jobs:
           flags: 'g'
 
       - name: Get GitHub Package Release ID
+        env:
+          tag: ${{ steps.dockertag.outputs.replaced }}
         run: |
           echo "::set-env name=VERSION_ID::$(curl -X POST \
           -H "Accept: application/vnd.github.packages-preview+json" \
