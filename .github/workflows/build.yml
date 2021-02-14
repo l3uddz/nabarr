@@ -174,7 +174,7 @@ jobs:
         uses: gr2m/get-json-paths-action@v1.x
         with:
           json: ${{ steps.query_package_version.outputs.data }}
-          id: "data.repository.packages.edges[].node.version.id"
+          id: "repository.packages.edges[].node.version.id"
 
       - name: show package version id
         run: "echo cleaning package version id: ${{ steps.package_version.id }}"
