@@ -98,7 +98,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: l3uddz/nabarr
+          repository: l3uddz/nabarr/nabarr
           dockerfile: docker/Dockerfile
           tags: latest
           tag_with_ref: true
@@ -113,7 +113,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: l3uddz/nabarr
+          repository: l3uddz/nabarr/nabarr
           dockerfile: docker/Dockerfile
           tags: master
           tag_with_sha: true
@@ -127,7 +127,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: l3uddz/nabarr
+          repository: l3uddz/nabarr/nabarr
           dockerfile: docker/Dockerfile
           tag_with_ref: true
           tag_with_sha: false
