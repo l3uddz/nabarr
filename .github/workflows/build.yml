@@ -173,7 +173,6 @@ jobs:
                   }
                 }
             }
-          }
           owner: ${{ github.event.repository.owner.name }}
           repo: ${{ github.event.repository.name }}
           tag: ${{ steps.dockertag.outputs.replaced }}
