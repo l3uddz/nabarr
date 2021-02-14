@@ -87,7 +87,7 @@ jobs:
       - name: artifact_windows
         uses: actions/upload-artifact@v2-preview
         with:
-          name: build_darwin
+          name: build_windows
           path: dist/*windows*
 
       # docker build (latest & tag)

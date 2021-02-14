@@ -8,7 +8,7 @@ ENV \
   APP_VERBOSITY="0"
 
 # Binary
-COPY ["dist/build_linux_linux_amd64/nabarr", "/app/nabarr/nabarr"]
+COPY ["dist/nabarr_linux_amd64/nabarr", "/app/nabarr/nabarr"]
 
 # Add root files
 COPY ["docker/run", "/etc/services.d/nabarr/run"]
