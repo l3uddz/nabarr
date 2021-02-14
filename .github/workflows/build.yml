@@ -142,15 +142,41 @@ jobs:
           replace-with: '-'
           flags: 'g'
 
-      - name: Get GitHub Package Release ID
-        env:
-          tag: ${{ steps.dockertag.outputs.replaced }}
-        run: |
-          echo "::set-env name=VERSION_ID::$(curl -X POST \
-          -H "Accept: application/vnd.github.packages-preview+json" \
-          -H "Authorization: Bearer ${{ github.token }}" \
-          -d "{\"query\":\"query {repository(owner:\\\""l3uddz"\\\", name:\\\""nabarr"\\\") {packages(names:[\\\""nabarr"\\\"], first:1) {edges{node{id, name, version(version:\\\""$tag"\\\"){id, version}}}}}}\"}" \
-          https://api.github.com/graphql | jq '.data.repository.packages.edges[].node.version.id')"
+#      - name: Get GitHub Package Release ID
+#        env:
+#          tag: ${{ steps.dockertag.outputs.replaced }}
+#        run: |
+#          echo "::set-env name=VERSION_ID::$(curl -X POST \
+#          -H "Accept: application/vnd.github.packages-preview+json" \
+#          -H "Authorization: Bearer ${{ github.token }}" \
+#          -d "{\"query\":\"query {repository(owner:\\\""l3uddz"\\\", name:\\\""nabarr"\\\") {packages(names:[\\\""nabarr"\\\"], first:1) {edges{node{id, name, version(version:\\\""$tag"\\\"){id, version}}}}}}\"}" \
+#          https://api.github.com/graphql | jq '.data.repository.packages.edges[].node.version.id')"
 
-      - name: Show GPRID
-        run: echo "$VERSION_ID"
+      - uses: octokit/graphql-action@v2.x
+        id: get_latest_release
+        with:
+          query: |
+            query package($owner:String!,$repo:String!) {
+              repository(
+                owner: $owner,
+                name: $repo,
+              ) {
+                packages(names:[$repo], first:1) {
+                  edges {
+                    node {
+                      id,
+                      name,
+                      version(version:$tag) {
+                        id, version
+                      }
+                    }
+                  }
+                }
+            }
+          }
+          owner: ${{ github.event.repository.owner.name }}
+          repo: ${{ github.event.repository.name }}
+          tag: ${{ steps.dockertag.outputs.replaced }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: "echo 'latest release: ${{ steps.get_latest_release.outputs.data }}'"
