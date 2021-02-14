@@ -11,13 +11,13 @@ Nabarr monitors Newznab/Torznab RSS feeds to find new media to add to Sonarr and
 
 - [Installing nabarr](#installing-nabarr)
 - [Introduction](#introduction)
-    - [Rewriting paths](#rewriting-paths)
-    - [Triggers](#triggers)
-    - [Processor](#processor)
-    - [Targets](#targets)
+    - [Media](#media)
+    - [PVR](#pvr)
+    - [RSS](#rss)
     - [Full config file](#full-config-file)
 - [Other installation options](#other-installation-options)
     - [Docker](#docker)
+- [Donate](#donate)
 
 ## Installing nabarr
 
