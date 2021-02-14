@@ -171,10 +171,13 @@ jobs:
 
       - name: parse package version id
         id: package_version
-        run: echo "VERSION_ID=$(echo $json | jq $jsonpath)" >> $GITHUB_ENV
+        run: echo "VERSION_ID=$(echo $json | jq -r $jsonpath)" >> $GITHUB_ENV
         env:
           json: ${{ steps.query_package_version.outputs.data }}
           jsonpath: ".repository.packages.edges[].node.version.id"
 
-      - name: show package version id
-        run: "echo cleaning package version id: $VERSION_ID"
+      - run: "echo cleaning package version id: $VERSION_ID"
+
+      - uses: actions/delete-package-versions@v1
+        with:
+          package-version-ids: $VERSION_ID
