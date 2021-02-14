@@ -171,7 +171,7 @@ jobs:
 
       - name: parse package version id
         id: package_version
-        run: echo "VERSION_ID=$(echo $json | jq $jsonpath)"
+        run: echo "VERSION_ID=$(echo $json | jq $jsonpath)" >> $GITHUB_ENV
         env:
           json: ${{ steps.query_package_version.outputs.data }}
           jsonpath: ".repository.packages.edges[].node.version.id"
