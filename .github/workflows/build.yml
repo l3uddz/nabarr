@@ -132,3 +132,14 @@ jobs:
           tag_with_ref: true
           tag_with_sha: false
           always_pull: true
+
+      - name: Get GitHub Package Release ID
+        run: |
+          echo "::set-env name=VERSION_ID::$(curl -X POST \
+          -H "Accept: application/vnd.github.packages-preview+json" \
+          -H "Authorization: Bearer ${{ github.token }}" \
+          -d "{\"query\":\"query {repository(owner:\\\""l3uddz"\\\", name:\\\""nabarr"\\\") {packages(names:[\\\""nabarr"\\\"], first:1) {edges{node{id, name, version(version:\\\""${{ tag }}"\\\"){id, version}}}}}}\"}" \
+          https://api.github.com/graphql | jq '.data.repository.packages.edges[].node.version.id')"
+
+      - name: Show GPRID
+        run: echo "$VERSION_ID"
