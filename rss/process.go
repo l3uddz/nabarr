@@ -112,7 +112,10 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 		}
 
 		// validate item
-		if b.Channel.Items[p].TvdbId == "" && b.Channel.Items[p].ImdbId == "" {
+		switch {
+		case b.Channel.Items[p].TvdbId == "", b.Channel.Items[p].TvdbId == "0":
+			continue
+		case b.Channel.Items[p].ImdbId == "":
 			continue
 		}
 
