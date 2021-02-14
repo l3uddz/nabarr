@@ -90,10 +90,9 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/') == true
         uses: docker/build-push-action@v1
         with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
-          repository: l3uddz/nabarr/nabarr
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: cloudb0x/nabarr
           dockerfile: docker/Dockerfile
           tags: latest
           tag_with_ref: true
@@ -105,12 +104,12 @@ jobs:
         if: github.ref == 'refs/heads/master'
         uses: docker/build-push-action@v1
         with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
-          repository: l3uddz/nabarr/nabarr
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: cloudb0x/nabarr
           dockerfile: docker/Dockerfile
           tags: master
+          tag_with_ref: false
           tag_with_sha: false
           always_pull: true
 
@@ -119,10 +118,9 @@ jobs:
         if: startsWith(github.ref, 'refs/heads/master') == false
         uses: docker/build-push-action@v1
         with:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
-          repository: l3uddz/nabarr/nabarr
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: cloudb0x/nabarr
           dockerfile: docker/Dockerfile
           tag_with_ref: true
           tag_with_sha: false
