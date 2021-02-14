@@ -133,6 +133,15 @@ jobs:
           tag_with_sha: false
           always_pull: true
 
+      - name: Sanitize branch docker tag
+        uses: frabert/replace-string-action@master
+        id: dockertag
+        with:
+          pattern: '[:\.\/]+'
+          string: "${{ github.event.ref }}"
+          replace-with: '-'
+          flags: 'g'
+          
       - name: Get GitHub Package Release ID
         run: |
           echo "::set-env name=VERSION_ID::$(curl -X POST \
