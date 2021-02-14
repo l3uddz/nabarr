@@ -71,7 +71,6 @@ func main() {
 			"version":     fmt.Sprintf("%s (%s@%s)", Version, GitCommit, Timestamp),
 			"config_file": filepath.Join(defaultConfigPath(), "config.yml"),
 			"cache_file":  filepath.Join(defaultConfigPath(), "cache"),
-			"token_file":  filepath.Join(defaultConfigPath(), "token.json"),
 			"log_file":    filepath.Join(defaultConfigPath(), "activity.log"),
 		},
 	)
