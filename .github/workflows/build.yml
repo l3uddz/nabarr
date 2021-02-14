@@ -177,7 +177,7 @@ jobs:
           jsonpath: ".repository.packages.edges[].node.version.id"
 
       - run: "echo cleaning package version id: $VERSION_ID"
-
+        
       - uses: actions/delete-package-versions@v1
         with:
-          package-version-ids: $VERSION_ID
+          package-version-ids: '${{ VERSION_ID }}'
