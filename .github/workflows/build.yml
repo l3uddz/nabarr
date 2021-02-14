@@ -142,9 +142,9 @@ jobs:
 #          replace-with: '-'
 #          flags: 'g'
 
-      - name: get package id of tag
+      - name: query for package version id
         uses: octokit/graphql-action@v2.x
-        id: get_tag_package_id
+        id: query_package_version
         with:
           query: |
             query package($owner:String!,$repo:String!,$tag:String!) {
@@ -169,4 +169,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: "echo 'latest package id: ${{ steps.get_tag_package_id.outputs.data }}'"
+      - name: parse package version id
+        id: package_version
+        uses: gr2m/get-json-paths-action@v1.x
+        with:
+          json: ${{ steps.query_package_version.outputs.data }}
+          id: "data.repository.packages.edges[].node.version.id"
+
+      - name: show package version id
+        run: "echo cleaning package version id: ${{ steps.package_version.id }}"
