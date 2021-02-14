@@ -6,11 +6,6 @@ on:
       - '*'
     tags:
       - 'v*'
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - edited
 
 jobs:
   build:
@@ -102,7 +97,7 @@ jobs:
           dockerfile: docker/Dockerfile
           tags: latest
           tag_with_ref: true
-          tag_with_sha: true
+          tag_with_sha: false
           always_pull: true
 
       # docker build (master)
@@ -116,7 +111,7 @@ jobs:
           repository: l3uddz/nabarr/nabarr
           dockerfile: docker/Dockerfile
           tags: master
-          tag_with_sha: true
+          tag_with_sha: false
           always_pull: true
 
       # docker build (branch)

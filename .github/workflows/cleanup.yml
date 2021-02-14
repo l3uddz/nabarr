@@ -36,7 +36,7 @@ jobs:
                 }
               }
             }
-          owner: ${{ github.event.repository.owner.name }}
+          owner: l3uddz
           repo: ${{ github.event.repository.name }}
           tag: ${{ steps.dockertag.outputs.replaced }}
         env:
