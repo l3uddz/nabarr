@@ -1,0 +1,54 @@
+name: Docker Cleanup
+
+on: delete
+
+jobs:
+  cleanup_branch:
+    if: startsWith(github.event.ref_type, 'branch') == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sanitize branch docker tag
+        uses: frabert/replace-string-action@master
+        id: dockertag
+        with:
+          pattern: '[:\.\/]+'
+          string: "${{ github.event.ref }}"
+          replace-with: '-'
+          flags: 'g'
+
+      - name: query for package version id
+        uses: octokit/graphql-action@v2.x
+        id: query_package_version
+        with:
+          query: |
+            query package($owner:String!,$repo:String!,$tag:String!) {
+              repository(owner: $owner, name: $repo) {
+                packages(names:[$repo], first:1) {
+                  edges {
+                    node {
+                      id,
+                      name,
+                      version(version: $tag) {
+                        id, version
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          owner: ${{ github.event.repository.owner.name }}
+          repo: ${{ github.event.repository.name }}
+          tag: ${{ steps.dockertag.outputs.replaced }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: parse package version id
+        id: package_version
+        run: echo "VERSION_ID=$(echo $json | jq -r $jsonpath)" >> $GITHUB_ENV
+        env:
+          json: ${{ steps.query_package_version.outputs.data }}
+          jsonpath: ".repository.packages.edges[].node.version.id"
+
+      - uses: actions/delete-package-versions@v1
+        with:
+          package-version-ids: '${{ env.VERSION_ID }}'
