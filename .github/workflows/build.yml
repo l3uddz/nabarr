@@ -177,4 +177,7 @@ jobs:
           version_id: "repository.packages.edges[].node.version.id"
 
       - name: show package version id
-        run: "echo cleaning package version id: ${{ steps.package_version.version_id }}"
+        run: "echo cleaning package version id: $(${{ json }} | jq ${{ jsonpath }})"
+        env:
+          json: ${{ steps.query_package_version.outputs.data }}
+          jsonpath: "repository.packages.edges[].node.version.id"
