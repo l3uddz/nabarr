@@ -111,6 +111,7 @@ jobs:
           repository: l3uddz/nabarr/nabarr
           dockerfile: docker/Dockerfile
           tags: master
+          tag_with_ref: false
           tag_with_sha: false
           always_pull: true
 
