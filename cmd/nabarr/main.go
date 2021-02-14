@@ -227,6 +227,9 @@ func main() {
 		for _, p := range pvrs {
 			p.QueueFeedItem(testItem)
 		}
+
+		// sleep for a moment
+		time.Sleep(1 * time.Second)
 	}
 
 	// shutdown

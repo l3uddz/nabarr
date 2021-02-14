@@ -8,27 +8,27 @@ import (
 )
 
 type Item struct {
-	TvdbId        string
-	TmdbId        string
-	ImdbId        string
-	Slug          string
-	FeedTitle     string
-	Title         string
-	Summary       string
-	Country       []string
-	Network       string
-	Date          time.Time
-	Year          int
-	Runtime       int
-	Rating        float64
-	Votes         int
-	Status        string
-	Genres        []string
-	Languages     []string
-	AiredEpisodes int
+	TvdbId        string    `json:"TvdbId,omitempty"`
+	TmdbId        string    `json:"TmdbId,omitempty"`
+	ImdbId        string    `json:"ImdbId,omitempty"`
+	Slug          string    `json:"Slug,omitempty"`
+	FeedTitle     string    `json:"FeedTitle,omitempty"`
+	Title         string    `json:"Title,omitempty"`
+	Summary       string    `json:"Summary,omitempty"`
+	Country       []string  `json:"Country,omitempty"`
+	Network       string    `json:"Network,omitempty"`
+	Date          time.Time `json:"Date"`
+	Year          int       `json:"Year,omitempty"`
+	Runtime       int       `json:"Runtime,omitempty"`
+	Rating        float64   `json:"Rating,omitempty"`
+	Votes         int       `json:"Votes,omitempty"`
+	Status        string    `json:"Status,omitempty"`
+	Genres        []string  `json:"Genres,omitempty"`
+	Languages     []string  `json:"Languages,omitempty"`
+	AiredEpisodes int       `json:"AiredEpisodes,omitempty"`
 
 	// additional media provider data
-	Omdb omdb.Item
+	Omdb omdb.Item `json:"Omdb,omitempty"`
 }
 
 type Rss struct {
