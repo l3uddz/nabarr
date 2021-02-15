@@ -44,8 +44,8 @@ jobs:
         run: |
           make vendor
 
-      # git state
-      - run: git diff
+      # git status
+      - run: git status
 
       # build
       - name: build
