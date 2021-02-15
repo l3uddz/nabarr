@@ -68,5 +68,6 @@ func (c *Client) GetItem(imdbId string) (*Item, error) {
 		Metascore:      util.Atoi(b.Metascore, 0),
 		RottenTomatoes: rt,
 		ImdbRating:     util.Atof64(b.ImdbRating, 0.0),
+		ImdbVotes:      util.Atoi(b.ImdbVotes, 0),
 	}, nil
 }

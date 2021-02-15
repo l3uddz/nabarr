@@ -37,4 +37,5 @@ type Item struct {
 	Metascore      int     `json:"Metascore,omitempty"`
 	RottenTomatoes int     `json:"RottenTomatoes,omitempty"`
 	ImdbRating     float64 `json:"ImdbRating,omitempty"`
+	ImdbVotes      int     `json:"ImdbVotes,omitempty"`
 }
