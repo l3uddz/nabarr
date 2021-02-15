@@ -1,0 +1,12 @@
+# misc
+/.idea/
+/.vscode/
+
+# configuration
+config.yml
+
+# vendor files
+/vendor/
+
+# dist folder
+/dist/
