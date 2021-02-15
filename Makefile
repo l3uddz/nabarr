@@ -44,7 +44,7 @@ release: check_goreleaser ## Generate a release, but don't publish
 
 .PHONY: publish
 publish: check_goreleaser ## Generate a release, and publish
-	goreleaser --rm-dist
+	goreleaser --rm-dist --skip-validate
 
 .PHONY: snapshot
 snapshot: check_goreleaser ## Generate a snapshot release
