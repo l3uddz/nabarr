@@ -44,6 +44,9 @@ jobs:
         run: |
           make vendor
 
+      # git state
+      - run: git diff
+
       # build
       - name: build
         if: startsWith(github.ref, 'refs/tags/') == false
