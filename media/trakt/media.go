@@ -51,7 +51,10 @@ func (c *Client) GetShow(tvdbId string) (*Show, error) {
 	}
 
 	// translate response
-	return &(*b)[0].Show, nil
+	show := &(*b)[0].Show
+	show.Ids.Imdb = util.StripNonAlphaNumeric(show.Ids.Imdb)
+
+	return show, nil
 }
 
 func (c *Client) GetMovie(imdbId string) (*Movie, error) {
@@ -92,5 +95,8 @@ func (c *Client) GetMovie(imdbId string) (*Movie, error) {
 	}
 
 	// translate response
-	return &(*b)[0].Movie, nil
+	movie := &(*b)[0].Movie
+	movie.Ids.Imdb = util.StripNonAlphaNumeric(movie.Ids.Imdb)
+
+	return movie, nil
 }
