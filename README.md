@@ -86,8 +86,8 @@ pvrs:
         - 'len(Genres) == 0'
         - 'any (Genres, {# in ["anime", "talk-show", "news"]})'
         - 'Network in ["Twitch", "Xbox Video", "YouTube"]'
-        - 'any (["transgend", "LGBT", "gay", "stand-up", "drag queen", "WWE", "WWF"], {Summary contains #})'
-        - 'Title matches "(?i)ru ?paul.+drag.+"'
+        - 'any (["harry", "potter", "horrid", "henry", "minions", "WWE", "WWF"], {Summary contains #})'
+        - 'Title matches "(?i)ru ?wwe.+events.+"'
         - 'Title contains "My 600"'
         - 'TvdbId in ["248783"]'
 ```
@@ -99,8 +99,8 @@ The rss configuration section is where you will specify the RSS feeds that Nabar
 ```yaml
 rss:
   feeds:
-    - name: omgwtfnzbs series premiere
-      url: https://rss.omgwtfnzbs.me/rss-search.php?catid=19,20&user=your-username&api=your-api-key&search=S01E01&langs=11&nuke=1&pw=2&nodupe=1&limit=200
+    - name: series premiere
+      url: https://rss.indexer.me/rss-search.php?catid=19,20&user=your-username&api=your-api-key&search=S01E01&langs=11&nuke=1&pw=2&nodupe=1&limit=200
       cron: '*/10 * * * *'
       pvrs:
         - sonarr
@@ -146,8 +146,8 @@ pvrs:
         - 'len(Genres) == 0'
         - 'any (Genres, {# in ["anime", "talk-show", "news"]})'
         - 'Network in ["Twitch", "Xbox Video", "YouTube"]'
-        - 'any (["transgend", "LGBT", "gay", "stand-up", "drag queen", "WWE", "WWF"], {Summary contains #})'
-        - 'Title matches "(?i)ru ?paul.+drag.+"'
+        - 'any (["harry", "potter", "horrid", "henry", "minions", "WWE", "WWF"], {Summary contains #})'
+        - 'Title matches "(?i)ru ?wwe.+events.+"'
         - 'Title contains "My 600"'
         - 'TvdbId in ["248783"]'
   - name: radarr
@@ -167,14 +167,14 @@ pvrs:
         - 'Year < 2021 && (Omdb.Metascore < 55 || Omdb.RottenTomatoes < 55)'
         - 'Title startsWith "Untitled"'
         - 'any (["WWE", "AEW", "WWF", "NXT", "Live:", "Concert", "Musical", " Edition", "Paglaki Ko", "Wrestling ", "UFC on"], {Title contains #})'
-        - 'any (["transgend", "LGBT", "gay", "stand-up"], {Summary contains #})'
+        - 'any (["harry", "potter", "horrid", "henry", "minions", "WWE", "WWF"], {Summary contains #})'
         - 'Title matches "^UFC.?\\d.+\\:"'
         - 'ImdbId in ["tt0765458", "tt0892255"]'
         - 'TmdbId in ["11910", "8881"]'
 rss:
   feeds:
-    - name: omgwtfnzbs series premiere
-      url: https://rss.omgwtfnzbs.me/rss-search.php?catid=19,20&user=your-username&api=your-api-key&search=S01E01&langs=11&nuke=1&pw=2&nodupe=1&limit=200
+    - name: series premiere
+      url: https://rss.indexer.me/rss-search.php?catid=19,20&user=your-username&api=your-api-key&search=S01E01&langs=11&nuke=1&pw=2&nodupe=1&limit=200
       cron: '*/10 * * * *'
       pvrs:
         - sonarr
