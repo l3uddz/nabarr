@@ -10,7 +10,6 @@ import (
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/rss"
-	"github.com/l3uddz/nabarr/util"
 	"github.com/lefelys/state"
 	"github.com/natefinch/lumberjack"
 	"github.com/rs/zerolog"
@@ -156,9 +155,8 @@ func main() {
 
 	// pvrs
 	log.Trace().Msg("Initialising pvrs")
-	cacheFiltersHash := ""
-	pvrs := make(map[string]pvr.PVR, 0)
 
+	pvrs := make(map[string]pvr.PVR, 0)
 	for _, p := range cfg.Pvrs {
 		if ctx.Command() == "run" || (ctx.Command() == "test" && strings.EqualFold(cli.Test.Pvr, p.Name)) {
 			// init pvr
@@ -175,9 +173,6 @@ func main() {
 
 			// add pvr to map
 			pvrs[p.Name] = po
-
-			// add cacheFiltersHash
-			cacheFiltersHash += util.AsSHA256(p.Filters)
 		}
 	}
 
@@ -185,7 +180,7 @@ func main() {
 	if ctx.Command() == "run" {
 		// rss
 		log.Trace().Msg("Initialising rss")
-		r := rss.New(cfg.Rss, c, cacheFiltersHash, pvrs)
+		r := rss.New(cfg.Rss, c, pvrs)
 		for _, feed := range cfg.Rss.Feeds {
 			if err := r.AddJob(feed); err != nil {
 				log.Fatal().

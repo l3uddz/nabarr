@@ -30,7 +30,7 @@ func (c *Client) AddJob(feed feedItem) error {
 		cron:             c.cron,
 		cache:            c.cache,
 		cacheDuration:    feed.CacheDuration,
-		cacheFiltersHash: c.cacheFiltersHash,
+		cacheFiltersHash: "",
 	}
 
 	// add pvrs
@@ -40,6 +40,7 @@ func (c *Client) AddJob(feed feedItem) error {
 			return fmt.Errorf("pvr object does not exist: %v", p)
 		}
 		job.pvrs[p] = po
+		job.cacheFiltersHash += po.GetFiltersHash()
 	}
 
 	// schedule job

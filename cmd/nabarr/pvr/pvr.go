@@ -13,6 +13,7 @@ import (
 
 type PVR interface {
 	Type() string
+	GetFiltersHash() string
 	AddMediaItem(*media.Item) error
 	ShouldIgnore(*media.Item) (bool, string, error)
 	Start() state.State

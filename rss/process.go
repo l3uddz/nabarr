@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/lucperkins/rek"
-	"sort"
 	"strings"
 	"time"
 )
@@ -71,11 +70,6 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 	if len(b.Channel.Items) < 1 {
 		return items, nil
 	}
-
-	// sort response items
-	sort.SliceStable(b.Channel.Items, func(i, j int) bool {
-		return b.Channel.Items[i].PubDate.After(b.Channel.Items[j].PubDate.Time)
-	})
 
 	// process feed items
 	for p, i := range b.Channel.Items {

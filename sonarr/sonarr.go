@@ -108,3 +108,7 @@ func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*C
 func (c *Client) Type() string {
 	return c.pvrType
 }
+
+func (c *Client) GetFiltersHash() string {
+	return c.cacheFiltersHash
+}

@@ -11,22 +11,20 @@ import (
 )
 
 type Client struct {
-	cron             *cron.Cron
-	cache            *cache.Client
-	cacheFiltersHash string
-	pvrs             map[string]pvr.PVR
+	cron  *cron.Cron
+	cache *cache.Client
+	pvrs  map[string]pvr.PVR
 
 	log zerolog.Logger
 }
 
-func New(c Config, cc *cache.Client, cfh string, pvrs map[string]pvr.PVR) *Client {
+func New(c Config, cc *cache.Client, pvrs map[string]pvr.PVR) *Client {
 	return &Client{
 		cron: cron.New(cron.WithChain(
 			cron.Recover(cron.DefaultLogger),
 		)),
-		cache:            cc,
-		cacheFiltersHash: cfh,
-		pvrs:             pvrs,
+		cache: cc,
+		pvrs:  pvrs,
 
 		log: logger.New(c.Verbosity).With().Logger(),
 	}
