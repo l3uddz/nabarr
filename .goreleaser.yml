@@ -13,6 +13,7 @@ builds:
     main: ./cmd/nabarr
     goarch:
       - amd64
+      - arm64
     ldflags:
       - -s -w
       - -X "main.Version={{ .Version }}"
