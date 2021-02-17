@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/l3uddz/nabarr/media/trakt"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -53,14 +52,6 @@ func (c *Client) GetMovieInfo(item *FeedItem) (*Item, error) {
 			Msg("Item was not found on omdb")
 	} else if oi != nil {
 		mi.Omdb = *oi
-
-		if oi.Language != "" {
-			mi.Languages = append(mi.Languages, strings.Split(oi.Language, ", ")...)
-		}
-
-		if oi.Country != "" {
-			mi.Country = append(mi.Country, strings.Split(oi.Country, ", ")...)
-		}
 	}
 
 	return mi, nil
