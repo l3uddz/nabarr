@@ -38,4 +38,6 @@ type Item struct {
 	RottenTomatoes int     `json:"RottenTomatoes,omitempty"`
 	ImdbRating     float64 `json:"ImdbRating,omitempty"`
 	ImdbVotes      int     `json:"ImdbVotes,omitempty"`
+	Language       string  `json:"Language,omitempty"`
+	Country        string  `json:"Country,omitempty"`
 }
