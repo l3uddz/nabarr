@@ -14,6 +14,10 @@ CGO            := 0
 check_goreleaser:
 	@command -v goreleaser >/dev/null || (echo "goreleaser is required."; exit 1)
 
+.PHONY: test
+test: ## Run tests
+	go test ./... -cover -v -race ${GO_PACKAGES}
+
 .PHONY: vendor
 vendor: ## Vendor files and tidy go.mod
 	go mod vendor

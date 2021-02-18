@@ -30,6 +30,11 @@ jobs:
       - run: go version
       - run: go env
 
+      # test
+      - name: tests
+        run: |
+          make test
+
       # cache
       - name: cache
         uses: actions/cache@v1
