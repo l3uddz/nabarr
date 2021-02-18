@@ -81,7 +81,7 @@ func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 	}
 
 	// prepare request
-	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "/movie/lookup"),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "movie", "lookup"),
 		url.Values{"term": []string{fmt.Sprintf("%s:%s", mdType, mdId)}})
 	if err != nil {
 		return nil, fmt.Errorf("generate movie lookup request url: %w", err)

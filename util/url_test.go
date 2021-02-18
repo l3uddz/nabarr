@@ -73,7 +73,7 @@ func TestURLWithQuery(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "trakt url without values",
+			name: "url without values",
 			args: args{
 				base: JoinURL("https://api.trakt.tv", "search", "tvdb", "12345"),
 				q:    nil,

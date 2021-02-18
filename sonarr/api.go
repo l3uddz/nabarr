@@ -71,7 +71,7 @@ func (c *Client) getQualityProfileId(profileName string) (int, error) {
 
 func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 	// prepare request
-	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "/series/lookup"),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "series", "lookup"),
 		url.Values{"term": []string{fmt.Sprintf("tvdb:%s", item.TvdbId)}})
 	if err != nil {
 		return nil, fmt.Errorf("generate series lookup request url: %w", err)
