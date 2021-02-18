@@ -30,11 +30,6 @@ jobs:
       - run: go version
       - run: go env
 
-      # test
-      - name: tests
-        run: |
-          make test
-
       # cache
       - name: cache
         uses: actions/cache@v1
@@ -48,6 +43,11 @@ jobs:
       - name: vendor
         run: |
           make vendor
+
+      # test
+      - name: tests
+        run: |
+          make test
 
       # git status
       - run: git status
