@@ -23,10 +23,11 @@ type Config struct {
 }
 
 type rssJob struct {
-	name string
-	log  zerolog.Logger
-	url  string
-	pvrs map[string]pvr.PVR
+	name    string
+	log     zerolog.Logger
+	url     string
+	timeout time.Duration
+	pvrs    map[string]pvr.PVR
 
 	attempts int
 	errors   []error
