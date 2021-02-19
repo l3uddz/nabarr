@@ -3,6 +3,7 @@ package media
 import (
 	"encoding/xml"
 	"github.com/l3uddz/nabarr/media/omdb"
+	"github.com/l3uddz/nabarr/media/tvdb"
 	"github.com/pkg/errors"
 	"time"
 )
@@ -29,6 +30,7 @@ type Item struct {
 
 	// additional media provider data
 	Omdb omdb.Item `json:"Omdb,omitempty"`
+	Tvdb tvdb.Item `json:"Tvdb,omitempty"`
 }
 
 type Rss struct {
