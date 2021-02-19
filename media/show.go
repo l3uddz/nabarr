@@ -49,5 +49,15 @@ func (c *Client) GetShowInfo(item *FeedItem) (*Item, error) {
 		mi.Omdb = *oi
 	}
 
+	// tvdb
+	if ti, err := c.tvdb.GetItem(strconv.Itoa(t.Ids.Tvdb)); err != nil {
+		c.log.Debug().
+			Err(err).
+			Int("tvdb_id", t.Ids.Tvdb).
+			Msg("Item was not found on tvdb")
+	} else if ti != nil {
+		mi.Tvdb = *ti
+	}
+
 	return mi, nil
 }
