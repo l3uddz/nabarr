@@ -15,7 +15,7 @@ var (
 
 func (c *Client) GetShow(tvdbId string) (*Show, error) {
 	// prepare request
-	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, fmt.Sprintf("/search/tvdb/%s", tvdbId)),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "search", "tvdb", tvdbId),
 		url.Values{
 			"type":     []string{"show"},
 			"extended": []string{"full"}})
@@ -59,7 +59,7 @@ func (c *Client) GetShow(tvdbId string) (*Show, error) {
 
 func (c *Client) GetMovie(imdbId string) (*Movie, error) {
 	// prepare request
-	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, fmt.Sprintf("/search/imdb/%s", imdbId)),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "search", "imdb", imdbId),
 		url.Values{
 			"type":     []string{"movie"},
 			"extended": []string{"full"}})

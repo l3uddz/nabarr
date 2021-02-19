@@ -44,6 +44,11 @@ jobs:
         run: |
           make vendor
 
+      # test
+      - name: tests
+        run: |
+          make test
+
       # git status
       - run: git status
 
