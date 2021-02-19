@@ -7,7 +7,6 @@ import (
 	"github.com/lucperkins/rek"
 	"sort"
 	"strings"
-	"time"
 )
 
 func (j *rssJob) process() error {
@@ -49,7 +48,7 @@ func (j *rssJob) queueItemWithPvrs(item *media.FeedItem) {
 
 func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 	// request feed
-	res, err := rek.Get(j.url, rek.Timeout(30*time.Minute))
+	res, err := rek.Get(j.url, rek.Timeout(j.timeout))
 	if err != nil {
 		return nil, fmt.Errorf("request feed: %w", err)
 	}

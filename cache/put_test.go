@@ -34,7 +34,7 @@ func TestClient_Put(t *testing.T) {
 				bucket: "put",
 				key:    "test",
 				val:    []byte("testing"),
-				ttl:    50 * time.Millisecond,
+				ttl:    5 * time.Second,
 			},
 			want:    []byte("testing"),
 			wantErr: false,
@@ -48,9 +48,9 @@ func TestClient_Put(t *testing.T) {
 				bucket: "put",
 				key:    "test",
 				val:    []byte("testing"),
-				ttl:    1 * time.Second,
+				ttl:    500 * time.Millisecond,
 			},
-			sleep:   2 * time.Second,
+			sleep:   1 * time.Second,
 			want:    nil,
 			wantErr: true,
 		},
@@ -65,6 +65,7 @@ func TestClient_Put(t *testing.T) {
 				val:    []byte("testing"),
 				ttl:    0,
 			},
+			sleep:   1 * time.Second,
 			want:    []byte("testing"),
 			wantErr: false,
 		},
@@ -73,7 +74,7 @@ func TestClient_Put(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Client{
 				log: tt.fields.log,
-				db:  newDb(t, "nabarr_put"),
+				db:  newDb(t),
 			}
 
 			if err := c.Put(tt.args.bucket, tt.args.key, tt.args.val, tt.args.ttl); (err != nil) != tt.wantErr && tt.sleep == 0 {

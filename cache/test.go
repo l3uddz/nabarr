@@ -1,24 +1,16 @@
 package cache
 
 import (
-	"github.com/xujiajun/nutsdb"
-	"os"
-	"path/filepath"
+	"github.com/dgraph-io/badger/v3"
 	"testing"
 )
 
-func newDb(t *testing.T, dir string) *nutsdb.DB {
-	db, err := nutsdb.Open(nutsdb.Options{
-		Dir:                  filepath.Join(os.TempDir(), dir),
-		EntryIdxMode:         nutsdb.HintKeyValAndRAMIdxMode,
-		SegmentSize:          8 * 1024 * 1024,
-		NodeNum:              1,
-		RWMode:               nutsdb.FileIO,
-		SyncEnable:           true,
-		StartFileLoadingMode: nutsdb.MMap,
-	})
+func newDb(t *testing.T) *badger.DB {
+	opts := badger.DefaultOptions("").WithInMemory(true)
+	opts.Logger = nil
+	db, err := badger.Open(opts)
 	if err != nil {
-		t.Fatalf("newDb(dir: %v) open error: %v", dir, err)
+		t.Fatalf("newDb() open error: %v", err)
 	}
 	return db
 }

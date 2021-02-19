@@ -38,7 +38,7 @@ func TestClient_Get(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "with value",
+			name: "with value ttl",
 			fields: fields{
 				log: zerolog.Logger{},
 			},
@@ -52,25 +52,12 @@ func TestClient_Get(t *testing.T) {
 			want:    []byte("test"),
 			wantErr: false,
 		},
-		{
-			name: "no value post ttl",
-			fields: fields{
-				log: zerolog.Logger{},
-			},
-			args: args{
-				bucket: "get",
-				key:    "test",
-			},
-			sleep:   1 * time.Second,
-			want:    nil,
-			wantErr: true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Client{
 				log: tt.fields.log,
-				db:  newDb(t, "get"),
+				db:  newDb(t),
 			}
 
 			if tt.put {

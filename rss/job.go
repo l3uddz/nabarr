@@ -19,10 +19,11 @@ func (c *Client) AddJob(feed feedItem) error {
 
 	// create job
 	job := &rssJob{
-		name: feed.Name,
-		log:  c.log.With().Str("feed_name", feed.Name).Logger(),
-		url:  feed.URL,
-		pvrs: make(map[string]pvr.PVR, 0),
+		name:    feed.Name,
+		log:     c.log.With().Str("feed_name", feed.Name).Logger(),
+		url:     feed.URL,
+		timeout: 30 * time.Second,
+		pvrs:    make(map[string]pvr.PVR, 0),
 
 		attempts: 0,
 		errors:   make([]error, 0),

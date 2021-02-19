@@ -35,7 +35,7 @@ func TestClient_Delete(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Client{
 				log: tt.fields.log,
-				db:  newDb(t, "delete"),
+				db:  newDb(t),
 			}
 			if err := c.Delete(tt.args.bucket, tt.args.key); (err != nil) != tt.wantErr {
 				t.Errorf("Delete() error = %v, wantErr %v", err, tt.wantErr)
