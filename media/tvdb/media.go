@@ -44,7 +44,7 @@ func (c *Client) GetItem(tvdbId string) (*Item, error) {
 	}
 
 	if b.Data.SeriesName == "" {
-		return nil, fmt.Errorf("item with imdbId: %v: %w", tvdbId, ErrItemNotFound)
+		return nil, fmt.Errorf("item with tvdbId: %v: %w", tvdbId, ErrItemNotFound)
 	}
 
 	return &Item{
