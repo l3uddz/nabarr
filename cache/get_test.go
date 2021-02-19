@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"github.com/lefelys/state"
 	"github.com/rs/zerolog"
 	"reflect"
 	"testing"
@@ -11,7 +10,6 @@ import (
 func TestClient_Get(t *testing.T) {
 	type fields struct {
 		log zerolog.Logger
-		st  state.State
 	}
 	type args struct {
 		bucket string
@@ -31,7 +29,6 @@ func TestClient_Get(t *testing.T) {
 			name: "no value",
 			fields: fields{
 				log: zerolog.Logger{},
-				st:  state.Empty(),
 			},
 			args: args{
 				bucket: "get",
@@ -44,7 +41,6 @@ func TestClient_Get(t *testing.T) {
 			name: "with value",
 			fields: fields{
 				log: zerolog.Logger{},
-				st:  state.Empty(),
 			},
 			args: args{
 				bucket: "get",
@@ -60,7 +56,6 @@ func TestClient_Get(t *testing.T) {
 			name: "no value post ttl",
 			fields: fields{
 				log: zerolog.Logger{},
-				st:  state.Empty(),
 			},
 			args: args{
 				bucket: "get",
@@ -75,7 +70,6 @@ func TestClient_Get(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Client{
 				log: tt.fields.log,
-				st:  tt.fields.st,
 				db:  newDb(t, "get"),
 			}
 

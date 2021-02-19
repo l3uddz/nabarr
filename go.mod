@@ -18,7 +18,7 @@ require (
 	github.com/rs/zerolog v1.20.0
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/ulikunitz/xz v0.5.10 // indirect
-	github.com/xujiajun/nutsdb v0.5.0
+	github.com/xujiajun/nutsdb v0.5.1-0.20210103130259-2812a595bc10
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/ratelimit v0.1.0
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777 // indirect

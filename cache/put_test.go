@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"github.com/lefelys/state"
 	"github.com/rs/zerolog"
 	"reflect"
 	"testing"
@@ -11,7 +10,6 @@ import (
 func TestClient_Put(t *testing.T) {
 	type fields struct {
 		log zerolog.Logger
-		st  state.State
 	}
 	type args struct {
 		bucket string
@@ -31,7 +29,6 @@ func TestClient_Put(t *testing.T) {
 			name: "with ttl",
 			fields: fields{
 				log: zerolog.Logger{},
-				st:  state.Empty(),
 			},
 			args: args{
 				bucket: "put",
@@ -46,7 +43,6 @@ func TestClient_Put(t *testing.T) {
 			name: "ttl timed out",
 			fields: fields{
 				log: zerolog.Logger{},
-				st:  state.Empty(),
 			},
 			args: args{
 				bucket: "put",
@@ -62,7 +58,6 @@ func TestClient_Put(t *testing.T) {
 			name: "no ttl",
 			fields: fields{
 				log: zerolog.Logger{},
-				st:  state.Empty(),
 			},
 			args: args{
 				bucket: "put",
@@ -78,7 +73,6 @@ func TestClient_Put(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Client{
 				log: tt.fields.log,
-				st:  tt.fields.st,
 				db:  newDb(t, "nabarr_put"),
 			}
 

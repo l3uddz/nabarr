@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"github.com/lefelys/state"
 	"github.com/rs/zerolog"
 	"testing"
 )
@@ -9,7 +8,6 @@ import (
 func TestClient_Delete(t *testing.T) {
 	type fields struct {
 		log zerolog.Logger
-		st  state.State
 	}
 	type args struct {
 		bucket string
@@ -25,7 +23,6 @@ func TestClient_Delete(t *testing.T) {
 			name: "key not present",
 			fields: fields{
 				log: zerolog.Logger{},
-				st:  state.Empty(),
 			},
 			args: args{
 				bucket: "delete",
@@ -38,7 +35,6 @@ func TestClient_Delete(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Client{
 				log: tt.fields.log,
-				st:  tt.fields.st,
 				db:  newDb(t, "delete"),
 			}
 			if err := c.Delete(tt.args.bucket, tt.args.key); (err != nil) != tt.wantErr {
