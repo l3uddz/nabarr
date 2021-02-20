@@ -137,6 +137,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 					Str("feed_tvdb_id", feedItem.TvdbId).
 					Str("feed_name", feedItem.Feed).
 					Msg("Failed finding item via pvr lookup")
+				continue
 			}
 
 			if s.Id > 0 {
