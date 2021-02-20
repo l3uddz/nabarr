@@ -85,8 +85,7 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 		}
 
 		// guid seen before?
-		cacheKey := fmt.Sprintf("%s_%s", j.name, i.GUID)
-		if cacheValue, err := j.cache.Get(j.name, cacheKey); err == nil {
+		if cacheValue, err := j.cache.Get(j.name, i.GUID); err == nil {
 			if string(cacheValue) == j.cacheFiltersHash {
 				// item has been seen before and the filters have not changed
 				continue
@@ -120,7 +119,7 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 		items = append(items, b.Channel.Items[p])
 
 		// add item to temp cache (to prevent re-processing)
-		if err := j.cache.Put(j.name, cacheKey, []byte(j.cacheFiltersHash), j.cacheDuration); err != nil {
+		if err := j.cache.Put(j.name, i.GUID, []byte(j.cacheFiltersHash), j.cacheDuration); err != nil {
 			j.log.Error().
 				Err(err).
 				Str("guid", i.GUID).
