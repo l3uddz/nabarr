@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
@@ -122,7 +123,13 @@ func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 	return nil, fmt.Errorf("movie lookup %sId: %v: %w", mdType, mdId, ErrItemNotFound)
 }
 
-func (c *Client) AddMediaItem(item *media.Item) error {
+func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error {
+	// prepare options
+	_, err := buildOptions(opts...)
+	if err != nil {
+		return fmt.Errorf("build options: %v: %w", item.TmdbId, err)
+	}
+
 	// prepare request
 	req := addRequest{
 		Title:               item.Title,

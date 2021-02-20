@@ -1,6 +1,8 @@
 package nabarr
 
-import "time"
+import (
+	"time"
+)
 
 type PvrConfig struct {
 	Name           string        `yaml:"name"`
@@ -16,4 +18,11 @@ type PvrConfig struct {
 
 type PvrFilters struct {
 	Ignores []string
+}
+
+type PvrOption func(options *PvrOptions)
+
+type PvrOptions struct {
+	// the seriesType returned from the lookup before adding (sonarr)
+	LookupType string
 }

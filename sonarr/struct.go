@@ -15,6 +15,7 @@ type lookupRequest struct {
 	TitleSlug string `json:"titleSlug"`
 	Year      int    `json:"year,omitempty"`
 	TvdbId    int    `json:"tvdbId"`
+	Type      string `json:"seriesType"`
 }
 
 type addRequest struct {
