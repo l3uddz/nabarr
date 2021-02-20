@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
@@ -122,7 +123,13 @@ func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 	return nil, fmt.Errorf("movie lookup %sId: %v: %w", mdType, mdId, ErrItemNotFound)
 }
 
-func (c *Client) AddMediaItem(item *media.Item) error {
+func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error {
+	// prepare options
+	o, err := nabarr.BuildPvrOptions(opts...)
+	if err != nil {
+		return fmt.Errorf("build options: %v: %w", item.TmdbId, err)
+	}
+
 	// prepare request
 	req := addRequest{
 		Title:               item.Title,
@@ -130,11 +137,11 @@ func (c *Client) AddMediaItem(item *media.Item) error {
 		Year:                item.Year,
 		QualityProfileId:    c.qualityProfileId,
 		Images:              []string{},
-		Monitored:           true,
+		Monitored:           o.AddMonitored,
 		RootFolderPath:      c.rootFolder,
 		MinimumAvailability: "released",
 		AddOptions: addOptions{
-			SearchForMovie:             true,
+			SearchForMovie:             o.SearchMissing,
 			IgnoreEpisodesWithFiles:    false,
 			IgnoreEpisodesWithoutFiles: false,
 		},

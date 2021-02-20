@@ -20,6 +20,11 @@ type Client struct {
 	rootFolder       string
 	qualityProfileId int
 
+	// options
+	searchMissing bool
+	addMonitored  bool
+	skipAnime     bool
+
 	apiURL     string
 	apiHeaders map[string]string
 	apiTimeout time.Duration
@@ -66,6 +71,10 @@ func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*C
 		testMode: strings.EqualFold(mode, "test"),
 
 		rootFolder: c.RootFolder,
+
+		searchMissing: util.BoolOrDefault(c.Options.SearchMissing, true),
+		addMonitored:  util.BoolOrDefault(c.Options.AddMonitored, true),
+		skipAnime:     util.BoolOrDefault(c.Options.SkipAnime, true),
 
 		cache:             cc,
 		cacheTempDuration: c.CacheDuration,

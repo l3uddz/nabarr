@@ -14,7 +14,7 @@ import (
 type PVR interface {
 	Type() string
 	GetFiltersHash() string
-	AddMediaItem(*media.Item) error
+	AddMediaItem(*media.Item, ...nabarr.PvrOption) error
 	ShouldIgnore(*media.Item) (bool, string, error)
 	Start() state.State
 	QueueFeedItem(*media.FeedItem)

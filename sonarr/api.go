@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
@@ -105,7 +106,13 @@ func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 	return nil, fmt.Errorf("series lookup tvdbId: %v: %w", item.TvdbId, ErrItemNotFound)
 }
 
-func (c *Client) AddMediaItem(item *media.Item) error {
+func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error {
+	// prepare options
+	o, err := nabarr.BuildPvrOptions(opts...)
+	if err != nil {
+		return fmt.Errorf("build options: %v: %w", item.TvdbId, err)
+	}
+
 	// prepare request
 	tvdbId, err := strconv.Atoi(item.TvdbId)
 	if err != nil {
@@ -119,15 +126,15 @@ func (c *Client) AddMediaItem(item *media.Item) error {
 		QualityProfileId: c.qualityProfileId,
 		Images:           []string{},
 		Tags:             []string{},
-		Monitored:        true,
+		Monitored:        o.AddMonitored,
 		RootFolderPath:   c.rootFolder,
 		AddOptions: addOptions{
-			SearchForMissingEpisodes:   true,
+			SearchForMissingEpisodes:   o.SearchMissing,
 			IgnoreEpisodesWithFiles:    false,
 			IgnoreEpisodesWithoutFiles: false,
 		},
 		Seasons:      []string{},
-		SeriesType:   "standard",
+		SeriesType:   util.StringOrDefault(o.LookupType, "standard"),
 		SeasonFolder: true,
 		TvdbId:       tvdbId,
 	}

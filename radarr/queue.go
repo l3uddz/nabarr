@@ -3,6 +3,7 @@ package radarr
 import (
 	"errors"
 	"fmt"
+	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/lefelys/state"
 )
@@ -144,6 +145,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 					Str("feed_imdb_id", feedItem.ImdbId).
 					Str("feed_name", feedItem.Feed).
 					Msg("Failed finding item via pvr lookup")
+				continue
 			}
 
 			if s.Id > 0 {
@@ -184,7 +186,6 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 
 			if c.testMode {
 				c.log.Info().
-					Err(err).
 					Str("trakt_title", mediaItem.Title).
 					Str("trakt_imdb_id", mediaItem.ImdbId).
 					Str("trakt_tmdb_id", mediaItem.TmdbId).
@@ -194,7 +195,12 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 				continue
 			}
 
-			if err := c.AddMediaItem(mediaItem); err != nil {
+			opts := []nabarr.PvrOption{
+				nabarr.WithAddMonitored(c.addMonitored),
+				nabarr.WithSearchMissing(c.searchMissing),
+			}
+
+			if err := c.AddMediaItem(mediaItem, opts...); err != nil {
 				c.log.Error().
 					Err(err).
 					Str("feed_title", mediaItem.FeedTitle).
@@ -204,6 +210,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 					Int("trakt_year", mediaItem.Year).
 					Str("feed_name", feedItem.Feed).
 					Msg("Failed adding item to pvr")
+				continue
 			}
 
 			// add item to perm cache (item was added to pvr)
@@ -216,7 +223,6 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 			}
 
 			c.log.Info().
-				Err(err).
 				Str("trakt_title", mediaItem.Title).
 				Str("trakt_imdb_id", mediaItem.ImdbId).
 				Str("trakt_tmdb_id", mediaItem.TmdbId).
