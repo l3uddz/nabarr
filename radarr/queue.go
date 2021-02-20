@@ -210,6 +210,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 					Int("trakt_year", mediaItem.Year).
 					Str("feed_name", feedItem.Feed).
 					Msg("Failed adding item to pvr")
+				continue
 			}
 
 			// add item to perm cache (item was added to pvr)
