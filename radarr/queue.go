@@ -185,7 +185,6 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 
 			if c.testMode {
 				c.log.Info().
-					Err(err).
 					Str("trakt_title", mediaItem.Title).
 					Str("trakt_imdb_id", mediaItem.ImdbId).
 					Str("trakt_tmdb_id", mediaItem.TmdbId).
@@ -222,7 +221,6 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 			}
 
 			c.log.Info().
-				Err(err).
 				Str("trakt_title", mediaItem.Title).
 				Str("trakt_imdb_id", mediaItem.ImdbId).
 				Str("trakt_tmdb_id", mediaItem.TmdbId).

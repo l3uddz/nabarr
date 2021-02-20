@@ -14,8 +14,11 @@ type PvrConfig struct {
 	QualityProfile string `yaml:"quality_profile"`
 	RootFolder     string `yaml:"root_folder"`
 	Options        struct {
+		// add options
 		AddMonitored  *bool `yaml:"add_monitored"`
 		SearchMissing *bool `yaml:"search_missing"`
+		// skip objects
+		SkipAnime *bool `yaml:"skip_anime"`
 	} `yaml:"options"`
 	Filters       PvrFilters    `yaml:"filters"`
 	CacheDuration time.Duration `yaml:"cache_duration"`

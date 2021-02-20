@@ -53,9 +53,28 @@ media:
     client_id: trakt-client-id
   omdb:
     api_key: omdb-api-key
+  tvdb:
+    api_key: tvdb-legacy-api-key
 ```
 
-An omdb `api_key` can also be provided which will be used to supplement trakt data with additional information such as IMDb rating, Metascore rating and Rotten Tomatoes rating.
+An omdb `api_key` can be provided which will be used to supplement trakt data with additional information such as:
+
+- Metascore     
+- RottenTomatoes
+- ImdbRating    
+- ImdbVotes     
+- Language      
+- Country
+
+An tvdb `api_key` can be provided which will be used to supplement trakt data with additional information such as:
+
+- Runtime        
+- Language       
+- Genre          
+- AirsDayOfWeek  
+- SiteRating     
+- SiteRatingCount
+
 
 ### PVR
 
@@ -69,6 +88,10 @@ pvrs:
     api_key: sonarr-api-key
     quality_profile: WEBDL-1080p
     root_folder: /mnt/unionfs/Media/TV
+    options:
+      add_monitored: true
+      search_missing: true
+      skip_anime: true
     filters:
       ignores:
         - 'not (FeedTitle matches "(?i)S\\d\\d?E?\\d?\\d?")'
@@ -91,6 +114,15 @@ pvrs:
         - 'Title contains "My 600"'
         - 'TvdbId in ["248783"]'
 ```
+
+The following `options` can be set to override the default behaviour when adding content to a PVR (types: Sonarr & Radarr).
+
+- `add_monitored` (default: `true`) - Add new content as monitored
+- `search_missing` (default: `true`) - Add new content and search immediately
+
+The following `options` can be set to skip adding content to a Sonarr PVR.
+
+- `skip_anime` (default: `true`) - If the series is of the anime type, do not add it
 
 ### RSS
 
@@ -122,6 +154,8 @@ media:
     client_id: trakt-client-id
   omdb:
     api_key: omdb-api-key
+  tvdb:
+    api_key: tvdb-legacy-api-key
 pvrs:
   - name: sonarr
     type: sonarr
@@ -133,14 +167,17 @@ pvrs:
       ignores:
         - 'not (FeedTitle matches "(?i)S\\d\\d?E?\\d?\\d?")'
         - 'FeedTitle matches "(?i)\\d\\d\\d\\d\\s?[\\s\\.\\-]\\d\\d?\\s?[\\s\\.\\-]\\d\\d?"'
-        - 'len(Languages) != 1 || "en" not in Languages'
+        - 'not (any(Country, {# in ["us", "gb", "au", "ca", "nz"]})) && not (any(["USA", "UK", "Australia", "Canada", "New Zealand"], {Omdb.Country == #}))'
+        - 'len(Languages) > 0 && not (any(Languages, {# in ["en", ""]}))'
+        - 'Omdb.Language != "" && Omdb.Language != "English"'
+        - 'Tvdb.Language != "" && Tvdb.Language != "en"'
+        - 'not (any(Languages, {# in ["en", ""]})) && Omdb.Language == "" && Tvdb.Language == ""'
         - 'Runtime < 10 || Runtime > 70'
         - 'Network == ""'
         - 'any (["Hallmark Movies"], {Network contains #})'
-        - 'not (any(Country, {# in ["us", "gb", "au", "ca"]}))'
         - 'Year < 2000'
         - 'Year < 2021 && Omdb.ImdbRating < 7.5'
-        - 'AiredEpisodes > 200'
+        - 'AiredEpisodes > 100'
         - 'Year > (Now().Year() + 1)'
         - 'any (["WWE", "AEW", "WWF", "NXT", "Live:", "Concert", "Musical", " Edition", "Wrestling"], {Title contains #})'
         - 'len(Genres) == 0'
@@ -158,7 +195,8 @@ pvrs:
     root_folder: /mnt/unionfs/Media/Movies
     filters:
       ignores:
-        - 'len(Languages) != 1 || "en" not in Languages'
+        - 'not (any(Country, {# in ["us", "gb", "au", "ca", "nz"]})) && not (any(["USA", "UK", "Australia", "Canada", "New Zealand"], {Omdb.Country == #}))'
+        - 'not (any(Languages, {# in ["en"]})) && Omdb.Language != "English"'
         - 'Runtime < 60'
         - 'len(Genres) == 0'
         - '("music" in Genres || "documentary" in Genres)'

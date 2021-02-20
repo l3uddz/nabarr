@@ -81,3 +81,39 @@ func TestAtoi(t *testing.T) {
 		})
 	}
 }
+
+func TestBoolOrDefault(t *testing.T) {
+	type args struct {
+		val        *bool
+		defaultVal bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "expect default",
+			args: args{
+				val:        nil,
+				defaultVal: true,
+			},
+			want: true,
+		},
+		{
+			name: "expect value",
+			args: args{
+				val:        new(bool),
+				defaultVal: true,
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := BoolOrDefault(tt.args.val, tt.args.defaultVal); got != tt.want {
+				t.Errorf("BoolOrDefault() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

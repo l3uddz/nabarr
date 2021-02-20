@@ -18,9 +18,11 @@ type Client struct {
 	testMode bool
 
 	rootFolder       string
-	searchMissing    bool
-	addMonitored     bool
 	qualityProfileId int
+
+	// options
+	searchMissing bool
+	addMonitored  bool
 
 	apiURL     string
 	apiHeaders map[string]string

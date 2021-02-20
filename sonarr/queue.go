@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
+	"github.com/l3uddz/nabarr/util"
 	"github.com/lefelys/state"
+	"strings"
 )
 
 func (c *Client) QueueFeedItem(item *media.FeedItem) {
@@ -157,6 +159,23 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 				continue
 			}
 
+			// set appropriate series type
+			switch {
+			case util.StringSliceContains(mediaItem.Genres, "anime"), util.StringSliceContains(mediaItem.Tvdb.Genre, "anime"):
+				s.Type = "anime"
+			}
+
+			// check if item should be skipped (skip options)
+			if c.skipAnime && strings.EqualFold(s.Type, "anime") {
+				c.log.Debug().
+					Str("trakt_title", mediaItem.Title).
+					Str("trakt_tvdb_id", mediaItem.TvdbId).
+					Int("trakt_year", mediaItem.Year).
+					Str("feed_name", feedItem.Feed).
+					Msg("Skipping item (skip_anime enabled)")
+				continue
+			}
+
 			// add item to pvr
 			c.log.Debug().
 				Str("feed_title", mediaItem.FeedTitle).
@@ -173,7 +192,6 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 
 			if c.testMode {
 				c.log.Info().
-					Err(err).
 					Str("trakt_title", mediaItem.Title).
 					Str("trakt_tvdb_id", mediaItem.TvdbId).
 					Int("trakt_year", mediaItem.Year).
@@ -209,7 +227,6 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 			}
 
 			c.log.Info().
-				Err(err).
 				Str("trakt_title", mediaItem.Title).
 				Str("trakt_tvdb_id", mediaItem.TvdbId).
 				Int("trakt_year", mediaItem.Year).
