@@ -19,8 +19,7 @@ var (
 
 func (c *Client) getSystemStatus() (*systemStatus, error) {
 	// send request
-	resp, err := rek.Get(util.JoinURL(c.apiURL, "system", "status"), rek.Headers(c.apiHeaders),
-		rek.Timeout(c.apiTimeout))
+	resp, err := rek.Get(util.JoinURL(c.apiURL, "system", "status"), rek.Client(c.http), rek.Headers(c.apiHeaders))
 	if err != nil {
 		return nil, fmt.Errorf("request system status: %w", err)
 	}
@@ -42,8 +41,7 @@ func (c *Client) getSystemStatus() (*systemStatus, error) {
 
 func (c *Client) getQualityProfileId(profileName string) (int, error) {
 	// send request
-	resp, err := rek.Get(util.JoinURL(c.apiURL, "profile"), rek.Headers(c.apiHeaders),
-		rek.Timeout(c.apiTimeout))
+	resp, err := rek.Get(util.JoinURL(c.apiURL, "profile"), rek.Client(c.http), rek.Headers(c.apiHeaders))
 	if err != nil {
 		return 0, fmt.Errorf("request quality profiles: %w", err)
 	}
@@ -89,7 +87,7 @@ func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 	}
 
 	// send request
-	resp, err := rek.Get(reqUrl, rek.Headers(c.apiHeaders), rek.Timeout(c.apiTimeout))
+	resp, err := rek.Get(reqUrl, rek.Client(c.http), rek.Headers(c.apiHeaders))
 	if err != nil {
 		return nil, fmt.Errorf("request movie lookup: %w", err)
 	}
@@ -150,8 +148,8 @@ func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error 
 	}
 
 	// send request
-	resp, err := rek.Post(util.JoinURL(c.apiURL, "movie"), rek.Headers(c.apiHeaders), rek.Json(req),
-		rek.Timeout(c.apiTimeout))
+	resp, err := rek.Post(util.JoinURL(c.apiURL, "movie"), rek.Client(c.http), rek.Headers(c.apiHeaders),
+		rek.Json(req))
 	if err != nil {
 		return fmt.Errorf("request add movie: %w", err)
 	}

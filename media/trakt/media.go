@@ -23,13 +23,8 @@ func (c *Client) GetShow(tvdbId string) (*Show, error) {
 		return nil, fmt.Errorf("generate lookup show request url: %w", err)
 	}
 
-	c.log.Trace().
-		Str("url", reqUrl).
-		Msg("Searching trakt")
-
 	// send request
-	c.rl.Take()
-	resp, err := rek.Get(reqUrl, rek.Headers(c.getAuthHeaders()), rek.Timeout(c.apiTimeout))
+	resp, err := rek.Get(reqUrl, rek.Client(c.http), rek.Headers(c.getAuthHeaders()))
 	if err != nil {
 		return nil, fmt.Errorf("request show: %w", err)
 	}
@@ -67,13 +62,8 @@ func (c *Client) GetMovie(imdbId string) (*Movie, error) {
 		return nil, fmt.Errorf("generate lookup movie request url: %w", err)
 	}
 
-	c.log.Trace().
-		Str("url", reqUrl).
-		Msg("Searching trakt")
-
 	// send request
-	c.rl.Take()
-	resp, err := rek.Get(reqUrl, rek.Headers(c.getAuthHeaders()), rek.Timeout(c.apiTimeout))
+	resp, err := rek.Get(reqUrl, rek.Client(c.http), rek.Headers(c.getAuthHeaders()))
 	if err != nil {
 		return nil, fmt.Errorf("request movie: %w", err)
 	}

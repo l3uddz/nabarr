@@ -8,6 +8,7 @@ import (
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/rs/zerolog"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -27,7 +28,6 @@ type Client struct {
 
 	apiURL     string
 	apiHeaders map[string]string
-	apiTimeout time.Duration
 
 	cache             *cache.Client
 	cacheTempDuration time.Duration
@@ -36,6 +36,7 @@ type Client struct {
 	queue chan *media.FeedItem
 
 	m           *media.Client
+	http        *http.Client
 	log         zerolog.Logger
 	ignoresExpr []*nabarr.ExprProgram
 }
@@ -84,10 +85,10 @@ func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*C
 
 		apiURL:     apiURL,
 		apiHeaders: apiHeaders,
-		apiTimeout: 60 * time.Second,
 
-		m:   m,
-		log: l,
+		m:    m,
+		http: util.NewRetryableHttpClient(60*time.Second, nil, &l),
+		log:  l,
 	}
 
 	// compile expressions

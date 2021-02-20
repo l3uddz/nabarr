@@ -3,6 +3,7 @@ package rss
 import (
 	"fmt"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
+	"github.com/l3uddz/nabarr/util"
 	"github.com/robfig/cron/v3"
 	"time"
 )
@@ -17,13 +18,18 @@ func (c *Client) AddJob(feed feedItem) error {
 		feed.CacheDuration = (24 * time.Hour) * 28
 	}
 
+	l := c.log.With().
+		Str("feed_name", feed.Name).
+		Logger()
+
 	// create job
 	job := &rssJob{
-		name:    feed.Name,
-		log:     c.log.With().Str("feed_name", feed.Name).Logger(),
-		url:     feed.URL,
-		timeout: 30 * time.Second,
-		pvrs:    make(map[string]pvr.PVR, 0),
+		name: feed.Name,
+		log:  l,
+		http: util.NewRetryableHttpClient(30*time.Second, nil, &l),
+
+		url:  feed.URL,
+		pvrs: make(map[string]pvr.PVR, 0),
 
 		attempts: 0,
 		errors:   make([]error, 0),

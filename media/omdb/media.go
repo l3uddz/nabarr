@@ -28,13 +28,8 @@ func (c *Client) GetItem(imdbId string) (*Item, error) {
 		return nil, fmt.Errorf("generate lookup request url: %w", err)
 	}
 
-	c.log.Trace().
-		Str("url", reqUrl).
-		Msg("Searching omdb")
-
 	// send request
-	c.rl.Take()
-	resp, err := rek.Get(reqUrl, rek.Timeout(c.apiTimeout))
+	resp, err := rek.Get(reqUrl, rek.Client(c.http))
 	if err != nil {
 		return nil, fmt.Errorf("request lookup: %w", err)
 	}

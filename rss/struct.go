@@ -5,6 +5,7 @@ import (
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog"
+	"net/http"
 	"time"
 )
 
@@ -23,11 +24,12 @@ type Config struct {
 }
 
 type rssJob struct {
-	name    string
-	log     zerolog.Logger
-	url     string
-	timeout time.Duration
-	pvrs    map[string]pvr.PVR
+	name string
+	log  zerolog.Logger
+	http *http.Client
+
+	url  string
+	pvrs map[string]pvr.PVR
 
 	attempts int
 	errors   []error
