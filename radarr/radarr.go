@@ -18,6 +18,8 @@ type Client struct {
 	testMode bool
 
 	rootFolder       string
+	searchMissing    bool
+	addMonitored     bool
 	qualityProfileId int
 
 	apiURL     string
@@ -65,7 +67,9 @@ func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*C
 		name:     strings.ToLower(c.Name),
 		testMode: strings.EqualFold(mode, "test"),
 
-		rootFolder: c.RootFolder,
+		rootFolder:    c.RootFolder,
+		searchMissing: util.BoolOrDefault(c.Options.SearchMissing, true),
+		addMonitored:  util.BoolOrDefault(c.Options.AddMonitored, true),
 
 		cache:             cc,
 		cacheTempDuration: c.CacheDuration,

@@ -3,6 +3,7 @@ package radarr
 import (
 	"errors"
 	"fmt"
+	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/lefelys/state"
 )
@@ -194,7 +195,12 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 				continue
 			}
 
-			if err := c.AddMediaItem(mediaItem); err != nil {
+			opts := []nabarr.PvrOption{
+				nabarr.WithAddMonitored(c.addMonitored),
+				nabarr.WithSearchMissing(c.searchMissing),
+			}
+
+			if err := c.AddMediaItem(mediaItem, opts...); err != nil {
 				c.log.Error().
 					Err(err).
 					Str("feed_title", mediaItem.FeedTitle).

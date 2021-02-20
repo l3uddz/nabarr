@@ -108,7 +108,7 @@ func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 
 func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error {
 	// prepare options
-	o, err := buildOptions(opts...)
+	o, err := nabarr.BuildPvrOptions(opts...)
 	if err != nil {
 		return fmt.Errorf("build options: %v: %w", item.TvdbId, err)
 	}
@@ -126,10 +126,10 @@ func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error 
 		QualityProfileId: c.qualityProfileId,
 		Images:           []string{},
 		Tags:             []string{},
-		Monitored:        true,
+		Monitored:        o.AddMonitored,
 		RootFolderPath:   c.rootFolder,
 		AddOptions: addOptions{
-			SearchForMissingEpisodes:   true,
+			SearchForMissingEpisodes:   o.SearchMissing,
 			IgnoreEpisodesWithFiles:    false,
 			IgnoreEpisodesWithoutFiles: false,
 		},

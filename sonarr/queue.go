@@ -183,7 +183,9 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 			}
 
 			opts := []nabarr.PvrOption{
-				seriesType(s.Type),
+				nabarr.WithSeriesType(s.Type),
+				nabarr.WithAddMonitored(c.addMonitored),
+				nabarr.WithSearchMissing(c.searchMissing),
 			}
 
 			if err := c.AddMediaItem(mediaItem, opts...); err != nil {
