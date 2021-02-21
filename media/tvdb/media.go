@@ -20,13 +20,9 @@ func (c *Client) GetItem(tvdbId string) (*Item, error) {
 
 	// prepare request
 	reqUrl := util.JoinURL(c.apiURL, "series", tvdbId)
-	c.log.Trace().
-		Str("url", reqUrl).
-		Msg("Searching tvdb")
 
 	// send request
-	c.rl.Take()
-	resp, err := rek.Get(reqUrl, rek.Headers(c.apiHeaders), rek.Timeout(c.apiTimeout))
+	resp, err := rek.Get(reqUrl, rek.Client(c.http), rek.Headers(c.apiHeaders))
 	if err != nil {
 		return nil, fmt.Errorf("request lookup: %w", err)
 	}

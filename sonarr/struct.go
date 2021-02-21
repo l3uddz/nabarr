@@ -10,12 +10,12 @@ type qualityProfile struct {
 }
 
 type lookupRequest struct {
-	Id        int    `json:"id,omitempty"`
-	Title     string `json:"title"`
-	TitleSlug string `json:"titleSlug"`
-	Year      int    `json:"year,omitempty"`
-	TvdbId    int    `json:"tvdbId"`
-	Type      string `json:"seriesType"`
+	Id         int    `json:"id,omitempty"`
+	Title      string `json:"title"`
+	TitleSlug  string `json:"titleSlug"`
+	Year       int    `json:"year,omitempty"`
+	TvdbId     int    `json:"tvdbId"`
+	SeriesType string `json:"seriesType"`
 }
 
 type addRequest struct {

@@ -48,7 +48,7 @@ func (j *rssJob) queueItemWithPvrs(item *media.FeedItem) {
 
 func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 	// request feed
-	res, err := rek.Get(j.url, rek.Timeout(j.timeout))
+	res, err := rek.Get(j.url, rek.Client(j.http))
 	if err != nil {
 		return nil, fmt.Errorf("request feed: %w", err)
 	}

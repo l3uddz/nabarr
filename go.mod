@@ -9,6 +9,7 @@ require (
 	github.com/dgraph-io/badger/v3 v3.2011.1
 	github.com/goccy/go-yaml v1.8.8
 	github.com/golang/protobuf v1.4.3 // indirect
+	github.com/hashicorp/go-retryablehttp v0.6.8
 	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
 	github.com/lefelys/state v1.1.0
 	github.com/lucperkins/rek v0.1.3

@@ -25,7 +25,7 @@ func New(path string) (*Client, error) {
 		return nil, fmt.Errorf("open: %w", err)
 	}
 
-	log := logger.New("trace").With().Logger()
+	log := logger.New("").With().Logger()
 
 	// start cleaner
 	st, tail := state.WithShutdown()

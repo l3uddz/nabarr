@@ -2,34 +2,38 @@ package trakt
 
 import (
 	"github.com/l3uddz/nabarr/logger"
+	"github.com/l3uddz/nabarr/util"
 	"github.com/rs/zerolog"
 	"go.uber.org/ratelimit"
+	"net/http"
 	"time"
 )
 
 type Client struct {
-	clientId string
-	log      zerolog.Logger
-	rl       ratelimit.Limiter
+	log  zerolog.Logger
+	http *http.Client
 
-	apiURL     string
-	apiTimeout time.Duration
+	apiKey string
+	apiURL string
 }
 
 func New(cfg *Config) *Client {
-	return &Client{
-		clientId: cfg.ClientId,
-		log:      logger.New(cfg.Verbosity).With().Logger(),
-		rl:       ratelimit.New(1, ratelimit.WithoutSlack),
+	l := logger.New(cfg.Verbosity).With().
+		Str("media", "trakt").
+		Logger()
 
-		apiURL:     "https://api.trakt.tv",
-		apiTimeout: 30 * time.Second,
+	return &Client{
+		log:  l,
+		http: util.NewRetryableHttpClient(30*time.Second, ratelimit.New(1, ratelimit.WithoutSlack), &l),
+
+		apiKey: cfg.ClientId,
+		apiURL: "https://api.trakt.tv",
 	}
 }
 
 func (c *Client) getAuthHeaders() map[string]string {
 	return map[string]string{
-		"trakt-api-key":     c.clientId,
+		"trakt-api-key":     c.apiKey,
 		"trakt-api-version": "2",
 	}
 }
