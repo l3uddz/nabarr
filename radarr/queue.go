@@ -32,14 +32,15 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 				return
 			}
 
-			// validate item has required id(s)
-			if feedItem.ImdbId == "" {
+			// determine and validate media provider data
+			mdp, mdi := feedItem.GetProviderData()
+			if mdp == "" || mdi == "" {
 				continue
 			}
 
 			// check cache / add item to cache
 			pvrCacheBucket := fmt.Sprintf("pvr_%s_%s", c.Type(), c.name)
-			cacheKey := fmt.Sprintf("imdb_%s", feedItem.ImdbId)
+			cacheKey := fmt.Sprintf("%s_%s", mdp, mdi)
 			if !c.testMode {
 				// not running in test mode, so use cache
 				if cacheValue, err := c.cache.Get(pvrCacheBucket, cacheKey); err == nil {
@@ -69,7 +70,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 					c.log.Debug().
 						Err(err).
 						Str("feed_title", feedItem.Title).
-						Str("feed_imdb_id", feedItem.ImdbId).
+						Str(fmt.Sprintf("feed_%s_id", mdp), mdi).
 						Str("feed_name", feedItem.Feed).
 						Msg("Item was not found on trakt")
 					continue
@@ -78,7 +79,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 				c.log.Error().
 					Err(err).
 					Str("feed_title", feedItem.Title).
-					Str("feed_imdb_id", feedItem.ImdbId).
+					Str(fmt.Sprintf("feed_%s_id", mdp), mdi).
 					Str("feed_name", feedItem.Feed).
 					Msg("Failed finding item on trakt")
 				continue
@@ -90,11 +91,11 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 					Msg("Item found on trakt")
 			}
 
-			// validate tmdbId was found
+			// validate tmdbId was found (radarr works best with these)
 			if mediaItem.TmdbId == "" || mediaItem.TmdbId == "0" {
 				c.log.Warn().
 					Str("feed_title", mediaItem.FeedTitle).
-					Str("feed_imdb_id", feedItem.ImdbId).
+					Str(fmt.Sprintf("feed_%s_id", mdp), mdi).
 					Str("feed_name", feedItem.Feed).
 					Msg("Item had no tmdbId on trakt")
 				continue
@@ -133,7 +134,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 					c.log.Warn().
 						Err(err).
 						Str("feed_title", mediaItem.FeedTitle).
-						Str("feed_imdb_id", feedItem.ImdbId).
+						Str(fmt.Sprintf("feed_%s_id", mdp), mdi).
 						Str("feed_name", feedItem.Feed).
 						Msg("Item was not found via pvr lookup")
 					continue
@@ -142,7 +143,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 				c.log.Error().
 					Err(err).
 					Str("feed_title", mediaItem.FeedTitle).
-					Str("feed_imdb_id", feedItem.ImdbId).
+					Str(fmt.Sprintf("feed_%s_id", mdp), mdi).
 					Str("feed_name", feedItem.Feed).
 					Msg("Failed finding item via pvr lookup")
 				continue

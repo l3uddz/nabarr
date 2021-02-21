@@ -52,9 +52,9 @@ func (c *Client) GetShow(tvdbId string) (*Show, error) {
 	return show, nil
 }
 
-func (c *Client) GetMovie(imdbId string) (*Movie, error) {
+func (c *Client) GetMovie(providerType string, providerId string) (*Movie, error) {
 	// prepare request
-	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "search", "imdb", imdbId),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "search", providerType, providerId),
 		url.Values{
 			"type":     []string{"movie"},
 			"extended": []string{"full"}})

@@ -207,6 +207,9 @@ func main() {
 		case "imdb":
 			testItem.Title = "Test.Mode.2021.BluRay.1080p.TrueHD.Atmos.7.1.AVC.HYBRID.REMUX-FraMeSToR"
 			testItem.ImdbId = idParts[1]
+		case "tmdb":
+			testItem.Title = "Test.Mode.2021.BluRay.1080p.TrueHD.Atmos.7.1.AVC.HYBRID.REMUX-FraMeSToR"
+			testItem.TmdbId = idParts[1]
 		case "tvdb":
 			testItem.Title = "Test.Mode.S01E01.1080p.DTS-HD.MA.5.1.AVC.REMUX-FraMeSToR"
 			testItem.TvdbId = idParts[1]

@@ -39,7 +39,7 @@ func (j *rssJob) queueItemWithPvrs(item *media.FeedItem) {
 		case item.TvdbId != "" && pvr.Type() == "sonarr":
 			// tvdbId is present, queue with sonarr
 			pvr.QueueFeedItem(item)
-		case item.ImdbId != "" && pvr.Type() == "radarr":
+		case (item.ImdbId != "" || item.TmdbId != "") && pvr.Type() == "radarr":
 			// imdbId is present, queue with radarr
 			pvr.QueueFeedItem(item)
 		}
@@ -106,11 +106,14 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 				} else {
 					b.Channel.Items[p].ImdbId = fmt.Sprintf("tt%s", a.Value)
 				}
+			case "tmdb", "tmdbid":
+				b.Channel.Items[p].TmdbId = a.Value
 			}
 		}
 
 		// validate item
-		if (b.Channel.Items[p].TvdbId == "" || b.Channel.Items[p].TvdbId == "0") && b.Channel.Items[p].ImdbId == "" {
+		if (b.Channel.Items[p].TvdbId == "" || b.Channel.Items[p].TvdbId == "0") &&
+			(b.Channel.Items[p].ImdbId == "" && (b.Channel.Items[p].TmdbId == "" || b.Channel.Items[p].TmdbId == "0")) {
 			continue
 		}
 

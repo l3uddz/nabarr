@@ -53,12 +53,25 @@ type FeedItem struct {
 	TvdbId   string `xml:"tvdb,omitempty"`
 	TvMazeId string
 	ImdbId   string `xml:"imdb,omitempty"`
+	TmdbId   string `xml:"tmdb,omitempty"`
 
 	Attributes []struct {
 		XMLName xml.Name
 		Name    string `xml:"name,attr"`
 		Value   string `xml:"value,attr"`
 	} `xml:"attr"`
+}
+
+func (f *FeedItem) GetProviderData() (string, string) {
+	switch {
+	case f.TvdbId != "" && f.TvdbId != "0":
+		return "tvdb", f.TvdbId
+	case f.TmdbId != "" && f.TmdbId != "0":
+		return "tmdb", f.TmdbId
+	case f.ImdbId != "":
+		return "imdb", f.ImdbId
+	}
+	return "", ""
 }
 
 // Time credits: https://github.com/mrobinsn/go-newznab/blob/cd89d9c56447859fa1298dc9a0053c92c45ac7ef/newznab/structs.go#L150
