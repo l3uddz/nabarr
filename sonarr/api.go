@@ -132,7 +132,7 @@ func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error 
 			IgnoreEpisodesWithoutFiles: false,
 		},
 		Seasons:      []string{},
-		SeriesType:   util.StringOrDefault(o.LookupType, "standard"),
+		SeriesType:   util.StringOrDefault(o.SeriesType, "standard"),
 		SeasonFolder: true,
 		TvdbId:       tvdbId,
 	}

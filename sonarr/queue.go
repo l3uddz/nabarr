@@ -163,11 +163,11 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 			// set appropriate series type
 			switch {
 			case util.StringSliceContains(mediaItem.Genres, "anime"), util.StringSliceContains(mediaItem.Tvdb.Genre, "anime"):
-				s.Type = "anime"
+				s.SeriesType = "anime"
 			}
 
 			// check if item should be skipped (skip options)
-			if c.skipAnime && strings.EqualFold(s.Type, "anime") {
+			if c.skipAnime && strings.EqualFold(s.SeriesType, "anime") {
 				c.log.Debug().
 					Str("trakt_title", mediaItem.Title).
 					Str("trakt_tvdb_id", mediaItem.TvdbId).
@@ -202,7 +202,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 			}
 
 			opts := []nabarr.PvrOption{
-				nabarr.WithSeriesType(s.Type),
+				nabarr.WithSeriesType(s.SeriesType),
 				nabarr.WithAddMonitored(c.addMonitored),
 				nabarr.WithSearchMissing(c.searchMissing),
 			}

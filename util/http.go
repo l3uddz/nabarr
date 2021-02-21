@@ -29,7 +29,7 @@ func NewRetryableHttpClient(timeout time.Duration, rl ratelimit.Limiter, log *ze
 					Msg("Sending request")
 			default:
 				// retry
-				log.Warn().
+				log.Debug().
 					Str("url", request.URL.String()).
 					Int("attempt", i).
 					Msg("Retrying failed request")

@@ -34,8 +34,8 @@ type PvrFilters struct {
 type PvrOption func(options *PvrOptions)
 
 type PvrOptions struct {
-	// the seriesType returned from the lookup before adding (sonarr)
-	LookupType string
+	// seriesType returned from the lookup before adding (sonarr)
+	SeriesType string
 
 	AddMonitored  bool
 	SearchMissing bool
@@ -53,7 +53,7 @@ func BuildPvrOptions(opts ...PvrOption) (*PvrOptions, error) {
 
 func WithSeriesType(seriesType string) PvrOption {
 	return func(opts *PvrOptions) {
-		opts.LookupType = seriesType
+		opts.SeriesType = seriesType
 	}
 }
 

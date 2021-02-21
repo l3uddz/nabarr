@@ -33,16 +33,3 @@ func NewExprEnv(media *media.Item) *ExprEnv {
 		Now:  func() time.Time { return time.Now().UTC() },
 	}
 }
-
-func StringOrDefault(currentValue *string, defaultValue string) string {
-	if currentValue == nil {
-		return defaultValue
-	}
-	return *currentValue
-}
-func Uint64OrDefault(currentValue *uint64, defaultValue uint64) uint64 {
-	if currentValue == nil {
-		return defaultValue
-	}
-	return *currentValue
-}
