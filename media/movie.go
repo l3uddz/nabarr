@@ -9,13 +9,19 @@ import (
 )
 
 func (c *Client) GetMovieInfo(item *FeedItem) (*Item, error) {
+	// retrieve and validate media provider data
+	mdp, mdi := item.GetProviderData()
+	if mdp == "" || mdi == "" {
+		return nil, fmt.Errorf("trakt: get movie: no media provider details found")
+	}
+
 	// lookup on trakt
-	t, err := c.trakt.GetMovie(item.ImdbId)
+	t, err := c.trakt.GetMovie(mdp, mdi)
 	if err != nil {
 		if errors.Is(err, trakt.ErrItemNotFound) {
-			return nil, fmt.Errorf("trakt: get movie: movie with imdbId %q: %w", item.ImdbId, ErrItemNotFound)
+			return nil, fmt.Errorf("trakt: get movie: movie with %sId %q: %w", mdp, mdi, ErrItemNotFound)
 		}
-		return nil, fmt.Errorf("trakt: get movie: movie with imdbId %q: %w", item.ImdbId, err)
+		return nil, fmt.Errorf("trakt: get movie: movie with %sId %q: %w", mdp, mdi, err)
 	}
 
 	// transform trakt info

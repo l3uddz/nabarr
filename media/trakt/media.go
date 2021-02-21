@@ -13,9 +13,9 @@ var (
 	ErrItemNotFound = errors.New("not found")
 )
 
-func (c *Client) GetShow(tvdbId string) (*Show, error) {
+func (c *Client) GetShow(providerType string, providerId string) (*Show, error) {
 	// prepare request
-	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "search", "tvdb", tvdbId),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "search", providerType, providerId),
 		url.Values{
 			"type":     []string{"show"},
 			"extended": []string{"full"}})
@@ -52,9 +52,9 @@ func (c *Client) GetShow(tvdbId string) (*Show, error) {
 	return show, nil
 }
 
-func (c *Client) GetMovie(imdbId string) (*Movie, error) {
+func (c *Client) GetMovie(providerType string, providerId string) (*Movie, error) {
 	// prepare request
-	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "search", "imdb", imdbId),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "search", providerType, providerId),
 		url.Values{
 			"type":     []string{"movie"},
 			"extended": []string{"full"}})

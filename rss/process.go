@@ -39,7 +39,7 @@ func (j *rssJob) queueItemWithPvrs(item *media.FeedItem) {
 		case item.TvdbId != "" && pvr.Type() == "sonarr":
 			// tvdbId is present, queue with sonarr
 			pvr.QueueFeedItem(item)
-		case item.ImdbId != "" && pvr.Type() == "radarr":
+		case (item.ImdbId != "" || item.TmdbId != "") && pvr.Type() == "radarr":
 			// imdbId is present, queue with radarr
 			pvr.QueueFeedItem(item)
 		}
@@ -84,13 +84,13 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 			continue
 		}
 
-		// guid seen before?
+		// item seen before?
 		if cacheValue, err := j.cache.Get(j.name, i.GUID); err == nil {
 			if string(cacheValue) == j.cacheFiltersHash {
-				// item has been seen before and the filters have not changed
+				// item has been seen before and the filter hash has not changed since
 				continue
 			}
-			// item has been seen, however the filters have changed since it was last seen, re-process
+			// item has been seen, however the filter hash has changed, re-process
 		}
 
 		// process feed item attributes
@@ -106,11 +106,24 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 				} else {
 					b.Channel.Items[p].ImdbId = fmt.Sprintf("tt%s", a.Value)
 				}
+			case "tmdb", "tmdbid":
+				b.Channel.Items[p].TmdbId = a.Value
 			}
 		}
 
 		// validate item
-		if (b.Channel.Items[p].TvdbId == "" || b.Channel.Items[p].TvdbId == "0") && b.Channel.Items[p].ImdbId == "" {
+		switch {
+		case b.Channel.Items[p].TvdbId != "" && b.Channel.Items[p].TvdbId != "0":
+			// tvdb id is present, allow processing
+			break
+		case b.Channel.Items[p].ImdbId != "":
+			// imdb id present, allow processing
+			break
+		case b.Channel.Items[p].TmdbId != "" && b.Channel.Items[p].TmdbId != "0":
+			// tmdb id present, allow processing
+			break
+		default:
+			// skip item as an expected media provider id was not present
 			continue
 		}
 

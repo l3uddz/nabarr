@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+/* Media Item(s) */
+
 type Item struct {
 	TvdbId        string    `json:"TvdbId,omitempty"`
 	TmdbId        string    `json:"TmdbId,omitempty"`
@@ -33,6 +35,20 @@ type Item struct {
 	Tvdb tvdb.Item `json:"Tvdb,omitempty"`
 }
 
+func (i *Item) GetProviderData() (string, string) {
+	switch {
+	case i.TvdbId != "" && i.TvdbId != "0":
+		return "tvdb", i.TvdbId
+	case i.TmdbId != "" && i.TmdbId != "0":
+		return "tmdb", i.TmdbId
+	case i.ImdbId != "":
+		return "imdb", i.ImdbId
+	}
+	return "", ""
+}
+
+/* Rss Item(s) */
+
 type Rss struct {
 	Channel struct {
 		Items []FeedItem `xml:"item"`
@@ -53,12 +69,25 @@ type FeedItem struct {
 	TvdbId   string `xml:"tvdb,omitempty"`
 	TvMazeId string
 	ImdbId   string `xml:"imdb,omitempty"`
+	TmdbId   string `xml:"tmdb,omitempty"`
 
 	Attributes []struct {
 		XMLName xml.Name
 		Name    string `xml:"name,attr"`
 		Value   string `xml:"value,attr"`
 	} `xml:"attr"`
+}
+
+func (f *FeedItem) GetProviderData() (string, string) {
+	switch {
+	case f.TvdbId != "" && f.TvdbId != "0":
+		return "tvdb", f.TvdbId
+	case f.TmdbId != "" && f.TmdbId != "0":
+		return "tmdb", f.TmdbId
+	case f.ImdbId != "":
+		return "imdb", f.ImdbId
+	}
+	return "", ""
 }
 
 // Time credits: https://github.com/mrobinsn/go-newznab/blob/cd89d9c56447859fa1298dc9a0053c92c45ac7ef/newznab/structs.go#L150
