@@ -8,13 +8,19 @@ import (
 )
 
 func (c *Client) GetShowInfo(item *FeedItem) (*Item, error) {
+	// retrieve and validate media provider data
+	mdp, mdi := item.GetProviderData()
+	if mdp == "" || mdi == "" {
+		return nil, fmt.Errorf("trakt: get show: no media provider details found")
+	}
+
 	// lookup on trakt
-	t, err := c.trakt.GetShow(item.TvdbId)
+	t, err := c.trakt.GetShow(mdp, mdi)
 	if err != nil {
 		if errors.Is(err, trakt.ErrItemNotFound) {
-			return nil, fmt.Errorf("trakt: get show: show with tvdbId %q: %w", item.TvdbId, ErrItemNotFound)
+			return nil, fmt.Errorf("trakt: get show: show with %sId %q: %w", mdp, mdi, ErrItemNotFound)
 		}
-		return nil, fmt.Errorf("trakt: get show: show with tvdbId %q: %w", item.TvdbId, err)
+		return nil, fmt.Errorf("trakt: get show: show with %sId %q: %w", mdp, mdi, err)
 	}
 
 	// transform trakt info to MediaItem

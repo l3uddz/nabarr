@@ -69,9 +69,15 @@ func (c *Client) getQualityProfileId(profileName string) (int, error) {
 }
 
 func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
+	// retrieve and validate media provider data
+	mdp, mdi := item.GetProviderData()
+	if mdp == "" || mdi == "" {
+		return nil, fmt.Errorf("no media provider details found")
+	}
+
 	// prepare request
 	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "series", "lookup"),
-		url.Values{"term": []string{fmt.Sprintf("tvdb:%s", item.TvdbId)}})
+		url.Values{"term": []string{fmt.Sprintf("%s:%s", mdp, mdi)}})
 	if err != nil {
 		return nil, fmt.Errorf("generate series lookup request url: %w", err)
 	}
@@ -96,12 +102,12 @@ func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 
 	// find series
 	for _, s := range *b {
-		if strconv.Itoa(s.TvdbId) == item.TvdbId {
+		if strconv.Itoa(s.TvdbId) == mdi {
 			return &s, nil
 		}
 	}
 
-	return nil, fmt.Errorf("series lookup tvdbId: %v: %w", item.TvdbId, ErrItemNotFound)
+	return nil, fmt.Errorf("series lookup %sId: %v: %w", mdp, mdi, ErrItemNotFound)
 }
 
 func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error {

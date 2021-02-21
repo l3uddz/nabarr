@@ -69,19 +69,15 @@ func (c *Client) getQualityProfileId(profileName string) (int, error) {
 }
 
 func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
-	// determine metadata id to use
-	mdType := "imdb"
-	mdId := item.ImdbId
-
-	if item.TmdbId != "" && item.TmdbId != "0" {
-		// radarr prefers tmdb
-		mdType = "tmdb"
-		mdId = item.TmdbId
+	// retrieve and validate media provider data
+	mdp, mdi := item.GetProviderData()
+	if mdp == "" || mdi == "" {
+		return nil, fmt.Errorf("no media provider details found")
 	}
 
 	// prepare request
 	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "movie", "lookup"),
-		url.Values{"term": []string{fmt.Sprintf("%s:%s", mdType, mdId)}})
+		url.Values{"term": []string{fmt.Sprintf("%s:%s", mdp, mdi)}})
 	if err != nil {
 		return nil, fmt.Errorf("generate movie lookup request url: %w", err)
 	}
@@ -106,19 +102,19 @@ func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 
 	// find movie
 	for _, s := range *b {
-		switch mdType {
+		switch mdp {
 		case "tmdb":
-			if strconv.Itoa(s.TmdbId) == item.TmdbId {
+			if strconv.Itoa(s.TmdbId) == mdi {
 				return &s, nil
 			}
 		default:
-			if s.ImdbId == item.ImdbId {
+			if s.ImdbId == mdi {
 				return &s, nil
 			}
 		}
 	}
 
-	return nil, fmt.Errorf("movie lookup %sId: %v: %w", mdType, mdId, ErrItemNotFound)
+	return nil, fmt.Errorf("movie lookup %sId: %v: %w", mdp, mdi, ErrItemNotFound)
 }
 
 func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error {

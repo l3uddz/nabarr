@@ -9,10 +9,10 @@ import (
 )
 
 func (c *Client) GetMovieInfo(item *FeedItem) (*Item, error) {
-	// determine and validate media provider data
+	// retrieve and validate media provider data
 	mdp, mdi := item.GetProviderData()
 	if mdp == "" || mdi == "" {
-		return nil, fmt.Errorf("item: get movie: no media provider details found")
+		return nil, fmt.Errorf("trakt: get movie: no media provider details found")
 	}
 
 	// lookup on trakt

@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+/* Media Item(s) */
+
 type Item struct {
 	TvdbId        string    `json:"TvdbId,omitempty"`
 	TmdbId        string    `json:"TmdbId,omitempty"`
@@ -32,6 +34,20 @@ type Item struct {
 	Omdb omdb.Item `json:"Omdb,omitempty"`
 	Tvdb tvdb.Item `json:"Tvdb,omitempty"`
 }
+
+func (i *Item) GetProviderData() (string, string) {
+	switch {
+	case i.TvdbId != "" && i.TvdbId != "0":
+		return "tvdb", i.TvdbId
+	case i.TmdbId != "" && i.TmdbId != "0":
+		return "tmdb", i.TmdbId
+	case i.ImdbId != "":
+		return "imdb", i.ImdbId
+	}
+	return "", ""
+}
+
+/* Rss Item(s) */
 
 type Rss struct {
 	Channel struct {

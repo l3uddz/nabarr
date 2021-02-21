@@ -13,9 +13,9 @@ var (
 	ErrItemNotFound = errors.New("not found")
 )
 
-func (c *Client) GetShow(tvdbId string) (*Show, error) {
+func (c *Client) GetShow(providerType string, providerId string) (*Show, error) {
 	// prepare request
-	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "search", "tvdb", tvdbId),
+	reqUrl, err := util.URLWithQuery(util.JoinURL(c.apiURL, "search", providerType, providerId),
 		url.Values{
 			"type":     []string{"show"},
 			"extended": []string{"full"}})

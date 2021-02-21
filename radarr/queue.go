@@ -32,18 +32,18 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 				return
 			}
 
-			// determine and validate media provider data
+			// retrieve and validate media provider data
 			mdp, mdi := feedItem.GetProviderData()
 			if mdp == "" || mdi == "" {
 				continue
 			}
 
 			// check cache / add item to cache
-			pvrCacheBucket := fmt.Sprintf("pvr_%s_%s", c.Type(), c.name)
+			cacheBucket := fmt.Sprintf("pvr_%s_%s", c.Type(), c.name)
 			cacheKey := fmt.Sprintf("%s_%s", mdp, mdi)
 			if !c.testMode {
 				// not running in test mode, so use cache
-				if cacheValue, err := c.cache.Get(pvrCacheBucket, cacheKey); err == nil {
+				if cacheValue, err := c.cache.Get(cacheBucket, cacheKey); err == nil {
 					// item already exists in the cache
 					switch string(cacheValue) {
 					case c.name:
@@ -56,7 +56,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 				}
 
 				// insert temp cache entry
-				if err := c.cache.Put(pvrCacheBucket, cacheKey, []byte(c.cacheFiltersHash), c.cacheTempDuration); err != nil {
+				if err := c.cache.Put(cacheBucket, cacheKey, []byte(c.cacheFiltersHash), c.cacheTempDuration); err != nil {
 					c.log.Error().
 						Err(err).
 						Msg("Failed storing item in temp cache")
@@ -161,7 +161,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 
 				// add item to perm cache (items already in pvr)
 				if !c.testMode {
-					if err := c.cache.Put(pvrCacheBucket, cacheKey, []byte(c.name), 0); err != nil {
+					if err := c.cache.Put(cacheBucket, cacheKey, []byte(c.name), 0); err != nil {
 						c.log.Error().
 							Err(err).
 							Msg("Failed storing item in perm cache")
@@ -216,7 +216,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 
 			// add item to perm cache (item was added to pvr)
 			if !c.testMode {
-				if err := c.cache.Put(pvrCacheBucket, cacheKey, []byte(c.name), 0); err != nil {
+				if err := c.cache.Put(cacheBucket, cacheKey, []byte(c.name), 0); err != nil {
 					c.log.Error().
 						Err(err).
 						Msg("Failed storing item in perm cache")
