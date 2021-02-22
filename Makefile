@@ -52,7 +52,7 @@ publish: check_goreleaser ## Generate a release, and publish
 
 .PHONY: snapshot
 snapshot: check_goreleaser ## Generate a snapshot release
-	goreleaser --snapshot --skip-publish --rm-dist
+	goreleaser --snapshot --skip-publish --rm-dist --parallelism 4
 
 .PHONY: help
 help:
