@@ -105,16 +105,25 @@ jobs:
           echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
       # docker build (latest & tag)
+      - name: release tag
+        if: startsWith(github.ref, 'refs/tags/') == true
+        uses: little-core-labs/get-git-tag@v3.0.2
+        id: releasetag
+        with:
+          tagRegex: "v?(.+)"
+
       - name: docker - build release
         if: startsWith(github.ref, 'refs/tags/') == true
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
-          repository: cloudb0x/nabarr
-          dockerfile: docker/Dockerfile
-          tags: latest
-          tag_with_ref: true
-          tag_with_sha: false
-          always_pull: true
+          context: .
+          file: ./docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          pull: true
+          push: true
+          tags: |
+            cloudb0x/nabarr:${{ steps.releasetag.outputs.tag }}
+            cloudb0x/nabarr:latest
 
       # docker build (branch)
       - name: branch name
@@ -139,6 +148,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           platforms: linux/amd64,linux/arm64
+          pull: true
           push: true
           tags: |
             cloudb0x/nabarr:${{ steps.dockertag.outputs.replaced }}
