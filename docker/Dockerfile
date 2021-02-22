@@ -1,5 +1,8 @@
 FROM sc4h/alpine-s6overlay:3.12
 
+ARG TARGETOS
+ARG TARGETVARIANT
+
 ENV \
   PATH="/app/nabarr:${PATH}" \
   APP_CONFIG="/config/config.yml" \
