@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_CLI_EXPERIMENTAL: "enabled"
+      DOCKER_BUILDKIT: 1
     steps:
       # dependencies
       - name: goreleaser
