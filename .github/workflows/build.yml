@@ -98,18 +98,6 @@ jobs:
           name: build_windows
           path: dist/*windows*
 
-      # extract branch name
-      - name: get branch name
-        if: github.event_name != 'pull_request'
-        shell: bash
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      # extract branch name on pull request
-      - name: show branch name
-        if: github.event_name == 'pull_request'
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
-
       # docker login
       - name: docker login
         env:
@@ -140,7 +128,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            cloudb0x/nabarr:$BRANCH_NAME
+            cloudb0x/nabarr:${{ github.head_ref }}
 
       # cleanup
       - name: cleanup
