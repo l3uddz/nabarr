@@ -1,7 +1,7 @@
 FROM sc4h/alpine-s6overlay:3.12
 
 ARG TARGETOS
-ARG TARGETVARIANT
+ARG TARGETARCH
 
 ENV \
   PATH="/app/nabarr:${PATH}" \
@@ -11,7 +11,7 @@ ENV \
   APP_VERBOSITY="0"
 
 # Binary
-COPY ["dist/nabarr_${TARGETOS}_${TARGETVARIANT}/nabarr", "/app/nabarr/nabarr"]
+COPY ["dist/nabarr_${TARGETOS}_${TARGETARCH}/nabarr", "/app/nabarr/nabarr"]
 
 # Add root files
 COPY ["docker/run", "/etc/services.d/nabarr/run"]
