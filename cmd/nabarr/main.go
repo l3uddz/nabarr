@@ -112,9 +112,10 @@ func main() {
 	log.Trace().Msg("Initialising config")
 	file, err := os.Open(cli.Config)
 	if err != nil {
-		log.Fatal().
+		log.Error().
 			Err(err).
 			Msg("Failed opening config")
+		return
 	}
 	defer file.Close()
 
@@ -123,16 +124,17 @@ func main() {
 	err = decoder.Decode(&cfg)
 	if err != nil {
 		log.Error().Msg("Failed decoding configuration")
-		log.Fatal().
-			Msg(err.Error())
+		log.Error().Msg(err.Error())
+		return
 	}
 
 	// cache
 	c, err := cache.New(cli.Cache)
 	if err != nil {
-		log.Fatal().
+		log.Error().
 			Err(err).
 			Msg("Failed initialising cache")
+		return
 	}
 	defer func() {
 		if err := c.Close(); err != nil {
@@ -146,7 +148,10 @@ func main() {
 	log.Trace().Msg("Initialising media")
 	m, err := media.New(&cfg.Media)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed initialising media")
+		log.Error().
+			Err(err).
+			Msg("Failed initialising media")
+		return
 	}
 
 	// states
@@ -162,10 +167,11 @@ func main() {
 			// init pvr
 			po, err := pvr.NewPVR(p, ctx.Command(), m, c)
 			if err != nil {
-				log.Fatal().
+				log.Error().
 					Err(err).
 					Str("pvr", p.Name).
 					Msg("Failed initialising pvr")
+				return
 			}
 
 			// start pvr processor
@@ -183,9 +189,10 @@ func main() {
 		r := rss.New(cfg.Rss, c, pvrs)
 		for _, feed := range cfg.Rss.Feeds {
 			if err := r.AddJob(feed); err != nil {
-				log.Fatal().
+				log.Error().
 					Err(err).
 					Msg("Failed initialising rss")
+				return
 			}
 		}
 		rssState = r.Start()
@@ -196,9 +203,10 @@ func main() {
 		// test mode
 		idParts := strings.Split(cli.Test.Id, ":")
 		if len(idParts) < 2 {
-			log.Fatal().
+			log.Error().
 				Str("id", cli.Test.Id).
 				Msg("An invalid id was provided")
+			return
 		}
 
 		// prepare test item
@@ -214,10 +222,11 @@ func main() {
 			testItem.Title = "Test.Mode.S01E01.1080p.DTS-HD.MA.5.1.AVC.REMUX-FraMeSToR"
 			testItem.TvdbId = idParts[1]
 		default:
-			log.Fatal().
+			log.Error().
 				Str("agent", idParts[0]).
 				Str("id", idParts[1]).
 				Msg("Unsupported agent was provided")
+			return
 		}
 
 		// queue test item
@@ -235,8 +244,9 @@ func main() {
 
 	appState := state.Merge(pvrStates...).DependsOn(rssState)
 	if err := appState.Shutdown(appCtx); err != nil {
-		log.Fatal().
+		log.Error().
 			Err(err).
 			Msg("Failed shutting down gracefully")
+		return
 	}
 }
