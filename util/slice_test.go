@@ -1,6 +1,9 @@
 package util
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestStringSliceContains(t *testing.T) {
 	type args struct {
@@ -33,6 +36,58 @@ func TestStringSliceContains(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := StringSliceContains(tt.args.slice, tt.args.val); got != tt.want {
 				t.Errorf("StringSliceContains() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStringSliceMergeUnique(t *testing.T) {
+	type args struct {
+		existingSlice []string
+		mergeSlice    []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want []string
+	}{
+		{
+			name: "no change",
+			args: args{
+				existingSlice: []string{"test", "test2"},
+				mergeSlice:    []string{"test", "Test2"},
+			},
+			want: []string{"test", "test2"},
+		},
+		{
+			name: "no change empty",
+			args: args{
+				existingSlice: []string{},
+				mergeSlice:    []string{},
+			},
+			want: []string{},
+		},
+		{
+			name: "with change",
+			args: args{
+				existingSlice: []string{"test", "test2"},
+				mergeSlice:    []string{"test", "Test2", "test3"},
+			},
+			want: []string{"test", "test2", "test3"},
+		},
+		{
+			name: "with change no empty",
+			args: args{
+				existingSlice: []string{"", "en"},
+				mergeSlice:    []string{"fr", "", "en"},
+			},
+			want: []string{"en", "fr"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := StringSliceMergeUnique(tt.args.existingSlice, tt.args.mergeSlice); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("StringSliceMergeUnique() = %v, want %v", got, tt.want)
 			}
 		})
 	}
