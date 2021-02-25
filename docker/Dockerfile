@@ -11,7 +11,7 @@ ENV \
   APP_VERBOSITY="0"
 
 # Binary
-COPY ["dist/nabarr_${TARGETOS}_${TARGETARCH}/nabarr", "/app/nabarr/nabarr"]
+COPY ["dist/nabarr_${TARGETOS}_${TARGETARCH}${TARGETVARIANT}/nabarr", "/app/nabarr/nabarr"]
 
 # Add root files
 COPY ["docker/run", "/etc/services.d/nabarr/run"]
