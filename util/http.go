@@ -16,7 +16,9 @@ func NewRetryableHttpClient(timeout time.Duration, rl ratelimit.Limiter, log *ze
 	retryClient.RetryWaitMax = 10 * time.Second
 	retryClient.RequestLogHook = func(l retryablehttp.Logger, request *http.Request, i int) {
 		// set user-agent
-		request.Header.Set("User-Agent", "nabarr/"+build.Version)
+		if request != nil {
+			request.Header.Set("User-Agent", "nabarr/"+build.Version)
+		}
 
 		// rate limit
 		if rl != nil {
