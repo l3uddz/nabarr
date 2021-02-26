@@ -6,6 +6,7 @@ import (
 	"github.com/alecthomas/kong"
 	"github.com/goccy/go-yaml"
 	"github.com/l3uddz/nabarr"
+	"github.com/l3uddz/nabarr/build"
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/l3uddz/nabarr/media"
@@ -28,10 +29,6 @@ type config struct {
 }
 
 var (
-	Version   string
-	Timestamp string
-	GitCommit string
-
 	// CLI
 	cli struct {
 		globals
@@ -67,7 +64,7 @@ func main() {
 			Compact: true,
 		}),
 		kong.Vars{
-			"version":     fmt.Sprintf("%s (%s@%s)", Version, GitCommit, Timestamp),
+			"version":     fmt.Sprintf("%s (%s@%s)", build.Version, build.GitCommit, build.Timestamp),
 			"config_file": filepath.Join(defaultConfigPath(), "config.yml"),
 			"cache_file":  filepath.Join(defaultConfigPath(), "cache"),
 			"log_file":    filepath.Join(defaultConfigPath(), "activity.log"),

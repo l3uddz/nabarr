@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/alecthomas/kong"
 	"github.com/blang/semver"
+	"github.com/l3uddz/nabarr/build"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"os"
 )
@@ -15,7 +16,7 @@ func (u updateFlag) Decode(ctx *kong.DecodeContext) error { return nil }
 func (u updateFlag) IsBool() bool                         { return true }
 func (u updateFlag) BeforeApply(app *kong.Kong, vars kong.Vars) error {
 	// parse current version
-	v, err := semver.Parse(Version)
+	v, err := semver.Parse(build.Version)
 	if err != nil {
 		fmt.Printf("Failed parsing current build version: %v\n", err)
 		app.Exit(1)
@@ -33,7 +34,7 @@ func (u updateFlag) BeforeApply(app *kong.Kong, vars kong.Vars) error {
 
 	// check version
 	if !found || latest.Version.LTE(v) {
-		fmt.Printf("Already using the latest version: %v\n", Version)
+		fmt.Printf("Already using the latest version: %v\n", build.Version)
 		app.Exit(0)
 		return nil
 	}

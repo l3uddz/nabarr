@@ -2,6 +2,7 @@ package util
 
 import (
 	"github.com/hashicorp/go-retryablehttp"
+	"github.com/l3uddz/nabarr/build"
 	"github.com/rs/zerolog"
 	"go.uber.org/ratelimit"
 	"net/http"
@@ -14,6 +15,9 @@ func NewRetryableHttpClient(timeout time.Duration, rl ratelimit.Limiter, log *ze
 	retryClient.RetryWaitMin = 1 * time.Second
 	retryClient.RetryWaitMax = 10 * time.Second
 	retryClient.RequestLogHook = func(l retryablehttp.Logger, request *http.Request, i int) {
+		// set user-agent
+		request.Header.Set("User-Agent", "nabarr/"+build.Version)
+
 		// rate limit
 		if rl != nil {
 			rl.Take()

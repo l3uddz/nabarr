@@ -38,7 +38,7 @@ ${BUILD_PATH}/${CMD}: ${GO_FILES} go.sum
 	CGO_ENABLED=${CGO} go build \
 		-mod vendor \
 		-trimpath \
-		-ldflags "-s -w -X main.Version=${VERSION} -X main.GitCommit=${GIT_COMMIT} -X main.Timestamp=${TIMESTAMP}" \
+		-ldflags "-s -w -X github.com/l3uddz/nabarr/build.Version=${VERSION} -X github.com/l3uddz/nabarr/build.GitCommit=${GIT_COMMIT} -X github.com/l3uddz/nabarr/build.Timestamp=${TIMESTAMP}" \
 		-o ${BUILD_PATH}/${CMD} \
 		./cmd/nabarr
 
