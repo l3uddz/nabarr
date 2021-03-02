@@ -64,7 +64,12 @@ func (c *Client) GetShowInfo(item *FeedItem) (*Item, error) {
 			Msg("Item was not found on tvdb")
 	} else if ti != nil {
 		mi.Tvdb = *ti
+
+		// merge with trakt data
 		mi.Languages = util.StringSliceMergeUnique(mi.Languages, []string{ti.Language})
+		if mi.Network == "" {
+			mi.Network = ti.Network
+		}
 	}
 
 	return mi, nil

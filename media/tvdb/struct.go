@@ -35,6 +35,7 @@ type lookupResponse struct {
 type Item struct {
 	Runtime         int      `json:"Runtime,omitempty"`
 	Language        string   `json:"Language,omitempty"`
+	Network         string   `json:"Network,omitempty"`
 	Genre           []string `json:"Genre,omitempty"`
 	AirsDayOfWeek   string   `json:"AirsDayOfWeek,omitempty"`
 	SiteRating      float64  `json:"SiteRating,omitempty"`
