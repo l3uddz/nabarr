@@ -26,7 +26,7 @@ func (c *Client) AddJob(feed feedItem) error {
 	job := &rssJob{
 		name: feed.Name,
 		log:  l,
-		http: util.NewRetryableHttpClient(30*time.Second, nil, &l),
+		http: util.NewRetryableHttpClient(60*time.Second, nil, &l),
 
 		url:  feed.URL,
 		pvrs: make(map[string]pvr.PVR, 0),

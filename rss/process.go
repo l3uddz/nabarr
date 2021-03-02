@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"github.com/l3uddz/nabarr/media"
+	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
 	"sort"
 	"strings"
@@ -113,13 +114,13 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 
 		// validate item
 		switch {
-		case b.Channel.Items[p].TvdbId != "" && b.Channel.Items[p].TvdbId != "0":
+		case b.Channel.Items[p].TvdbId != "" && !util.StringSliceContains([]string{"0", "1"}, b.Channel.Items[p].TvdbId):
 			// tvdb id is present, allow processing
 			break
-		case b.Channel.Items[p].ImdbId != "":
+		case b.Channel.Items[p].ImdbId != "" && strings.HasPrefix(b.Channel.Items[p].ImdbId, "tt"):
 			// imdb id present, allow processing
 			break
-		case b.Channel.Items[p].TmdbId != "" && b.Channel.Items[p].TmdbId != "0":
+		case b.Channel.Items[p].TmdbId != "" && !util.StringSliceContains([]string{"0", "1"}, b.Channel.Items[p].TmdbId):
 			// tmdb id present, allow processing
 			break
 		default:
