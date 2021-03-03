@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/l3uddz/nabarr/media/trakt"
-	"github.com/l3uddz/nabarr/util"
 	"strconv"
 )
 
@@ -66,7 +65,6 @@ func (c *Client) GetShowInfo(item *FeedItem) (*Item, error) {
 		mi.Tvdb = *ti
 
 		// merge with trakt data
-		mi.Languages = util.StringSliceMergeUnique(mi.Languages, []string{ti.Language})
 		if mi.Network == "" {
 			mi.Network = ti.Network
 		}
