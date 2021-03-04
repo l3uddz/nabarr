@@ -86,7 +86,7 @@ func (f *FeedItem) GetProviderData() (string, string) {
 		return "tvdb", f.TvdbId
 	case f.TmdbId != "" && !util.StringSliceContains([]string{"0", "1"}, f.TmdbId):
 		return "tmdb", f.TmdbId
-	case f.ImdbId != "" && strings.HasPrefix(f.TmdbId, "tt"):
+	case f.ImdbId != "" && strings.HasPrefix(f.ImdbId, "tt"):
 		return "imdb", f.ImdbId
 	}
 	return "", ""
