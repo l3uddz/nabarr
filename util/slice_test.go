@@ -92,3 +92,39 @@ func TestStringSliceMergeUnique(t *testing.T) {
 		})
 	}
 }
+
+func TestStringSliceContainsAny(t *testing.T) {
+	type args struct {
+		slice []string
+		vals  []string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "expect true",
+			args: args{
+				slice: []string{"tes", "Test"},
+				vals:   []string{"nope", "test"},
+			},
+			want: true,
+		},
+		{
+			name: "expect false",
+			args: args{
+				slice: []string{"tes", "Test"},
+				vals:   []string{"testing"},
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := StringSliceContainsAny(tt.args.slice, tt.args.vals); got != tt.want {
+				t.Errorf("StringSliceContainsAny() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

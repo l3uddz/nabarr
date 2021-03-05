@@ -11,6 +11,17 @@ func StringSliceContains(slice []string, val string) bool {
 	return false
 }
 
+func StringSliceContainsAny(slice []string, vals []string) bool {
+	for _, s := range slice {
+		for _, v := range vals {
+			if strings.EqualFold(s, v) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func StringSliceMergeUnique(existingSlice []string, mergeSlice []string) []string {
 	// add existing
 	data := make([]string, 0)

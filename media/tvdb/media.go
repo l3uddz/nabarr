@@ -46,6 +46,7 @@ func (c *Client) GetItem(tvdbId string) (*Item, error) {
 	return &Item{
 		Runtime:         util.Atoi(b.Data.Runtime, 0),
 		Language:        b.Data.Language,
+		Network:         b.Data.Network,
 		Genre:           b.Data.Genre,
 		AirsDayOfWeek:   b.Data.AirsDayOfWeek,
 		SiteRating:      b.Data.SiteRating,

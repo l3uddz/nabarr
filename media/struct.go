@@ -4,7 +4,9 @@ import (
 	"encoding/xml"
 	"github.com/l3uddz/nabarr/media/omdb"
 	"github.com/l3uddz/nabarr/media/tvdb"
+	"github.com/l3uddz/nabarr/util"
 	"github.com/pkg/errors"
+	"strings"
 	"time"
 )
 
@@ -80,11 +82,11 @@ type FeedItem struct {
 
 func (f *FeedItem) GetProviderData() (string, string) {
 	switch {
-	case f.TvdbId != "" && f.TvdbId != "0":
+	case f.TvdbId != "" && !util.StringSliceContains([]string{"0", "1"}, f.TvdbId):
 		return "tvdb", f.TvdbId
-	case f.TmdbId != "" && f.TmdbId != "0":
+	case f.TmdbId != "" && !util.StringSliceContains([]string{"0", "1"}, f.TmdbId):
 		return "tmdb", f.TmdbId
-	case f.ImdbId != "":
+	case f.ImdbId != "" && strings.HasPrefix(f.ImdbId, "tt"):
 		return "imdb", f.ImdbId
 	}
 	return "", ""
