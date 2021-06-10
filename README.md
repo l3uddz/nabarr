@@ -87,6 +87,7 @@ pvrs:
     url: https://sonarr.domain.com
     api_key: sonarr-api-key
     quality_profile: WEBDL-1080p
+    language_profile: English
     root_folder: /mnt/unionfs/Media/TV
     options:
       add_monitored: true
@@ -162,6 +163,7 @@ pvrs:
     url: https://sonarr.domain.com
     api_key: sonarr-api-key
     quality_profile: WEBDL-1080p
+    language_profile: English
     root_folder: /mnt/unionfs/Media/TV
     filters:
       ignores:

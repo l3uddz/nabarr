@@ -7,13 +7,14 @@ import (
 /* pvr config / filters */
 
 type PvrConfig struct {
-	Name           string `yaml:"name"`
-	Type           string `yaml:"type"`
-	URL            string `yaml:"url"`
-	ApiKey         string `yaml:"api_key"`
-	QualityProfile string `yaml:"quality_profile"`
-	RootFolder     string `yaml:"root_folder"`
-	Options        struct {
+	Name            string `yaml:"name"`
+	Type            string `yaml:"type"`
+	URL             string `yaml:"url"`
+	ApiKey          string `yaml:"api_key"`
+	QualityProfile  string `yaml:"quality_profile"`
+	LanguageProfile string `yaml:"language_profile"`
+	RootFolder      string `yaml:"root_folder"`
+	Options         struct {
 		// add options
 		AddMonitored  *bool `yaml:"add_monitored"`
 		SearchMissing *bool `yaml:"search_missing"`

@@ -107,7 +107,7 @@ func TestStringSliceContainsAny(t *testing.T) {
 			name: "expect true",
 			args: args{
 				slice: []string{"tes", "Test"},
-				vals:   []string{"nope", "test"},
+				vals:  []string{"nope", "test"},
 			},
 			want: true,
 		},
@@ -115,7 +115,7 @@ func TestStringSliceContainsAny(t *testing.T) {
 			name: "expect false",
 			args: args{
 				slice: []string{"tes", "Test"},
-				vals:   []string{"testing"},
+				vals:  []string{"testing"},
 			},
 			want: false,
 		},

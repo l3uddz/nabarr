@@ -14,9 +14,10 @@ import (
 )
 
 type Client struct {
-	pvrType  string
-	name     string
-	testMode bool
+	pvrType     string
+	name        string
+	testMode    bool
+	testModeAdd bool
 
 	rootFolder       string
 	qualityProfileId int
@@ -66,9 +67,10 @@ func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*C
 
 	// create client
 	cl := &Client{
-		pvrType:  "radarr",
-		name:     strings.ToLower(c.Name),
-		testMode: strings.EqualFold(mode, "test"),
+		pvrType:     "radarr",
+		name:        strings.ToLower(c.Name),
+		testMode:    util.StringSliceContains([]string{"test", "test-add"}, mode),
+		testModeAdd: strings.EqualFold(mode, "test-add"),
 
 		rootFolder:    c.RootFolder,
 		searchMissing: util.BoolOrDefault(c.Options.SearchMissing, true),

@@ -68,6 +68,35 @@ func (c *Client) getQualityProfileId(profileName string) (int, error) {
 	return 0, errors.New("quality profile not found")
 }
 
+func (c *Client) getLanguageProfileId(profileName string) (int, error) {
+	// send request
+	resp, err := rek.Get(util.JoinURL(c.apiURL, "languageprofile"), rek.Client(c.http), rek.Headers(c.apiHeaders))
+	if err != nil {
+		return 0, fmt.Errorf("request language profiles: %w", err)
+	}
+	defer resp.Body().Close()
+
+	// validate response
+	if resp.StatusCode() != 200 {
+		return 0, fmt.Errorf("validate language profiles response: %s", resp.Status())
+	}
+
+	// decode response
+	b := new([]languageProfile)
+	if err := json.NewDecoder(resp.Body()).Decode(b); err != nil {
+		return 0, fmt.Errorf("decode language profiles response: %w", err)
+	}
+
+	// find quality profile
+	for _, profile := range *b {
+		if strings.EqualFold(profile.Name, profileName) {
+			return profile.Id, nil
+		}
+	}
+
+	return 0, errors.New("language language not found")
+}
+
 func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 	// retrieve and validate media provider data
 	mdp, mdi := item.GetProviderData()
@@ -124,14 +153,15 @@ func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error 
 	}
 
 	req := addRequest{
-		Title:            item.Title,
-		TitleSlug:        item.Slug,
-		Year:             item.Year,
-		QualityProfileId: c.qualityProfileId,
-		Images:           []string{},
-		Tags:             []string{},
-		Monitored:        o.AddMonitored,
-		RootFolderPath:   c.rootFolder,
+		Title:             item.Title,
+		TitleSlug:         item.Slug,
+		Year:              item.Year,
+		QualityProfileId:  c.qualityProfileId,
+		LanguageProfileId: c.languageProfileId,
+		Images:            []string{},
+		Tags:              []string{},
+		Monitored:         o.AddMonitored,
+		RootFolderPath:    c.rootFolder,
 		AddOptions: addOptions{
 			SearchForMissingEpisodes:   o.SearchMissing,
 			IgnoreEpisodesWithFiles:    false,

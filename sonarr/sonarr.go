@@ -14,12 +14,14 @@ import (
 )
 
 type Client struct {
-	pvrType  string
-	name     string
-	testMode bool
+	pvrType     string
+	name        string
+	testMode    bool
+	testModeAdd bool
 
-	rootFolder       string
-	qualityProfileId int
+	rootFolder        string
+	qualityProfileId  int
+	languageProfileId int
 
 	// options
 	searchMissing bool
@@ -67,9 +69,10 @@ func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*C
 
 	// create client
 	cl := &Client{
-		pvrType:  "sonarr",
-		name:     strings.ToLower(c.Name),
-		testMode: strings.EqualFold(mode, "test"),
+		pvrType:     "sonarr",
+		name:        strings.ToLower(c.Name),
+		testMode:    util.StringSliceContains([]string{"test", "test-add"}, mode),
+		testModeAdd: strings.EqualFold(mode, "test-add"),
 
 		rootFolder: c.RootFolder,
 
@@ -107,6 +110,13 @@ func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*C
 		return nil, fmt.Errorf("get quality profile: %v: %w", c.QualityProfile, err)
 	} else {
 		cl.qualityProfileId = qid
+	}
+
+	// get language profile
+	if lid, err := cl.getLanguageProfileId(c.LanguageProfile); err != nil {
+		return nil, fmt.Errorf("get language profile: %v: %w", c.LanguageProfile, err)
+	} else {
+		cl.languageProfileId = lid
 	}
 
 	cl.log.Info().
