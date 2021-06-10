@@ -57,7 +57,7 @@ func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*C
 	if strings.Contains(strings.ToLower(c.URL), "/api") {
 		apiURL = c.URL
 	} else {
-		apiURL = util.JoinURL(c.URL, "api")
+		apiURL = util.JoinURL(c.URL, "api", "v3")
 	}
 
 	// set api headers
