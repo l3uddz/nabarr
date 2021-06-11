@@ -192,7 +192,7 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 				mediaItem.Slug = s.TitleSlug
 			}
 
-			if c.testMode {
+			if c.testMode && !c.testModeAdd {
 				c.log.Info().
 					Str("trakt_title", mediaItem.Title).
 					Str("trakt_tvdb_id", mediaItem.TvdbId).

@@ -42,8 +42,9 @@ var (
 		// commands
 		Run  struct{} `cmd help:"Run"`
 		Test struct {
-			Pvr string `type:"string" required:"1" help:"PVR to test item against" placeholder:"sonarr"`
-			Id  string `type:"string" required:"1" help:"Metadata ID of item to test" placeholder:"tvdb:121361"`
+			Pvr      string `type:"string" required:"1" help:"PVR to test item against" placeholder:"sonarr"`
+			Id       string `type:"string" required:"1" help:"Metadata ID of item to test" placeholder:"tvdb:121361"`
+			AllowAdd bool   `type:"bool" default:"0" required:"0" help:"Add item"`
 		} `cmd help:"Test your filters and stop"`
 	}
 )
@@ -162,7 +163,12 @@ func main() {
 	for _, p := range cfg.Pvrs {
 		if ctx.Command() == "run" || (ctx.Command() == "test" && strings.EqualFold(cli.Test.Pvr, p.Name)) {
 			// init pvr
-			po, err := pvr.NewPVR(p, ctx.Command(), m, c)
+			mode := ctx.Command()
+			if ctx.Command() == "test" && cli.Test.AllowAdd {
+				mode = "test-add"
+			}
+
+			po, err := pvr.NewPVR(p, mode, m, c)
 			if err != nil {
 				log.Error().
 					Err(err).

@@ -41,7 +41,7 @@ func (c *Client) getSystemStatus() (*systemStatus, error) {
 
 func (c *Client) getQualityProfileId(profileName string) (int, error) {
 	// send request
-	resp, err := rek.Get(util.JoinURL(c.apiURL, "profile"), rek.Client(c.http), rek.Headers(c.apiHeaders))
+	resp, err := rek.Get(util.JoinURL(c.apiURL, "qualityprofile"), rek.Client(c.http), rek.Headers(c.apiHeaders))
 	if err != nil {
 		return 0, fmt.Errorf("request quality profiles: %w", err)
 	}
