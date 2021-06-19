@@ -94,7 +94,7 @@ func (c *Client) getLanguageProfileId(profileName string) (int, error) {
 		}
 	}
 
-	return 0, errors.New("language language not found")
+	return 0, errors.New("language profile not found")
 }
 
 func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
