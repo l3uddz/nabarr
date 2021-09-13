@@ -37,8 +37,8 @@ func (j *rssJob) process() error {
 func (j *rssJob) queueItemWithPvrs(item *media.FeedItem) {
 	for _, pvr := range j.pvrs {
 		switch {
-		case item.TvdbId != "" && pvr.Type() == "sonarr":
-			// tvdbId is present, queue with sonarr
+		case (item.TvdbId != "" || item.TmdbId != "") && pvr.Type() == "sonarr":
+			// tvdbId/tmdbId is present, queue with sonarr
 			pvr.QueueFeedItem(item)
 		case (item.ImdbId != "" || item.TmdbId != "") && pvr.Type() == "radarr":
 			// imdbId is present, queue with radarr
@@ -99,7 +99,7 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 			switch strings.ToLower(a.Name) {
 			case "language":
 				b.Channel.Items[p].Language = a.Value
-			case "tvdb", "tvdbid":
+			case "tvdb", "tvdbid", "thetvdb":
 				b.Channel.Items[p].TvdbId = a.Value
 			case "imdb", "imdbid":
 				if strings.HasPrefix(a.Value, "tt") {
