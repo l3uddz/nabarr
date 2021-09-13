@@ -38,7 +38,7 @@ func (j *rssJob) queueItemWithPvrs(item *media.FeedItem) {
 	for _, pvr := range j.pvrs {
 		switch {
 		case (item.TvdbId != "" || item.TmdbId != "") && pvr.Type() == "sonarr":
-			// tvdbId is present, queue with sonarr
+			// tvdbId/tmdbId is present, queue with sonarr
 			pvr.QueueFeedItem(item)
 		case (item.ImdbId != "" || item.TmdbId != "") && pvr.Type() == "radarr":
 			// imdbId is present, queue with radarr
