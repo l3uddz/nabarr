@@ -99,7 +99,7 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 			switch strings.ToLower(a.Name) {
 			case "language":
 				b.Channel.Items[p].Language = a.Value
-			case "tvdb", "tvdbid":
+			case "tvdb", "tvdbid", "thetvdb":
 				b.Channel.Items[p].TvdbId = a.Value
 			case "imdb", "imdbid":
 				if strings.HasPrefix(a.Value, "tt") {
