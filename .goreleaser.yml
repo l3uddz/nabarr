@@ -24,9 +24,6 @@ builds:
       - -X "github.com/l3uddz/nabarr/build.Timestamp={{ .Timestamp }}"
     flags:
       - -trimpath
-    ignore:
-      - goos: windows
-        goarch: arm64
 
 # Archive
 archives:
