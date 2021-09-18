@@ -66,5 +66,6 @@ func (c *Client) GetItem(imdbId string) (*Item, error) {
 		ImdbVotes:      util.Atoi(util.StripNonNumeric(b.ImdbVotes), 0),
 		Language:       b.Language,
 		Country:        b.Country,
+		Rated:          b.Rated,
 	}, nil
 }
