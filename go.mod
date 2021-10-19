@@ -6,9 +6,9 @@ require (
 	github.com/alecthomas/kong v0.2.17
 	github.com/antonmedv/expr v1.9.0
 	github.com/blang/semver v3.5.1+incompatible
-	github.com/dgraph-io/badger/v3 v3.2103.1
-	github.com/fatih/color v1.12.0 // indirect
-	github.com/goccy/go-yaml v1.9.3
+	github.com/dgraph-io/badger/v3 v3.2103.2
+	github.com/fatih/color v1.13.0 // indirect
+	github.com/goccy/go-yaml v1.9.4
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -18,7 +18,7 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.0
 	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
-	github.com/klauspost/compress v1.13.5 // indirect
+	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/lefelys/state v1.1.0
 	github.com/lucperkins/rek v0.1.3
 	github.com/mattn/go-isatty v0.0.14 // indirect
@@ -30,10 +30,10 @@ require (
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/ratelimit v0.2.0
-	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
-	golang.org/x/net v0.0.0-20210908191846-a5e095526f91 // indirect
-	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f // indirect
-	golang.org/x/sys v0.0.0-20210910150752-751e447fb3d0
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
+	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
+	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1 // indirect
+	golang.org/x/sys v0.0.0-20211015200801-69063c4bb744
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
@@ -49,7 +49,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/go-github/v30 v30.1.0 // indirect
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf // indirect
-	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/mattn/go-colorable v0.1.11 // indirect
 	github.com/tcnksm/go-gitconfig v0.1.2 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 )

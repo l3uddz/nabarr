@@ -10,6 +10,7 @@ builds:
       - linux
       - darwin
       - windows
+      - freebsd
     main: ./cmd/nabarr
     goarch:
       - amd64
@@ -24,6 +25,16 @@ builds:
       - -X "github.com/l3uddz/nabarr/build.Timestamp={{ .Timestamp }}"
     flags:
       - -trimpath
+    ignore:
+      - goos: freebsd
+        goarch: arm64
+      - goos: freebsd
+        goarch: arm
+
+# MacOS Universal Binaries
+universal_binaries:
+  -
+    replace: true
 
 # Archive
 archives:
