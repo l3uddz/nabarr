@@ -46,11 +46,11 @@ func (j *rssJob) queueItemWithPvrs(item *media.FeedItem) bool {
 	queued := false
 	for _, pvr := range j.pvrs {
 		switch {
-		case (item.TvdbId != "" || item.TmdbId != "") && util.ContainsTvCategory(item.Category) && pvr.Type() == "sonarr":
+		case (item.TvdbId != "" || item.TmdbId != "") && util.ContainsTvCategory(item.Categories) && pvr.Type() == "sonarr":
 			// tvdbId/tmdbId is present, queue with sonarr
 			pvr.QueueFeedItem(item)
 			queued = true
-		case (item.ImdbId != "" || item.TmdbId != "") && util.ContainsMovieCategory(item.Category) && pvr.Type() == "radarr":
+		case (item.ImdbId != "" || item.TmdbId != "") && util.ContainsMovieCategory(item.Categories) && pvr.Type() == "radarr":
 			// imdbId is present, queue with radarr
 			pvr.QueueFeedItem(item)
 			queued = true
@@ -110,7 +110,7 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 		for _, a := range i.Attributes {
 			switch strings.ToLower(a.Name) {
 			case "category":
-				b.Channel.Items[p].Category = append(b.Channel.Items[p].Category, a.Value)
+				b.Channel.Items[p].Categories = append(b.Channel.Items[p].Categories, a.Value)
 			case "language":
 				b.Channel.Items[p].Language = a.Value
 			case "tvdb", "tvdbid", "thetvdb":
