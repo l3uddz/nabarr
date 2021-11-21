@@ -24,8 +24,16 @@ func (j *rssJob) process() error {
 		return nil
 	}
 
-	for p, _ := range items {
-		j.queueItemWithPvrs(&items[p])
+	queuedItems := 0
+	for p := range items {
+		if j.queueItemWithPvrs(&items[p]) {
+			queuedItems++
+		}
+	}
+
+	if queuedItems == 0 {
+		j.log.Debug().Msg("Refreshed, no valid items to queue")
+		return nil
 	}
 
 	j.log.Info().
@@ -34,17 +42,21 @@ func (j *rssJob) process() error {
 	return nil
 }
 
-func (j *rssJob) queueItemWithPvrs(item *media.FeedItem) {
+func (j *rssJob) queueItemWithPvrs(item *media.FeedItem) bool {
+	queued := false
 	for _, pvr := range j.pvrs {
 		switch {
-		case (item.TvdbId != "" || item.TmdbId != "") && pvr.Type() == "sonarr":
+		case (item.TvdbId != "" || item.TmdbId != "") && util.ContainsTvCategory(item.Categories) && pvr.Type() == "sonarr":
 			// tvdbId/tmdbId is present, queue with sonarr
 			pvr.QueueFeedItem(item)
-		case (item.ImdbId != "" || item.TmdbId != "") && pvr.Type() == "radarr":
+			queued = true
+		case (item.ImdbId != "" || item.TmdbId != "") && util.ContainsMovieCategory(item.Categories) && pvr.Type() == "radarr":
 			// imdbId is present, queue with radarr
 			pvr.QueueFeedItem(item)
+			queued = true
 		}
 	}
+	return queued
 }
 
 func (j *rssJob) getFeed() ([]media.FeedItem, error) {
@@ -97,6 +109,8 @@ func (j *rssJob) getFeed() ([]media.FeedItem, error) {
 		// process feed item attributes
 		for _, a := range i.Attributes {
 			switch strings.ToLower(a.Name) {
+			case "category":
+				b.Channel.Items[p].Categories = append(b.Channel.Items[p].Categories, a.Value)
 			case "language":
 				b.Channel.Items[p].Language = a.Value
 			case "tvdb", "tvdbid", "thetvdb":
