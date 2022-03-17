@@ -100,15 +100,6 @@ jobs:
           name: build_windows
           path: dist/*windows*
 
-      # compress artifacts
-      - name: compress
-        uses: crazy-max/ghaction-upx@v1
-        with:
-          version: latest
-          files: |
-            ./dist/*lin*/*
-          args: --brute
-
       # docker login
       - name: docker login
         env:
