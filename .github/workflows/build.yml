@@ -147,6 +147,8 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           pull: true
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: |
             cloudb0x/nabarr:${{ steps.releasetag.outputs.tag }}
             cloudb0x/nabarr:latest
@@ -176,6 +178,8 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           pull: true
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: |
             cloudb0x/nabarr:${{ steps.dockertag.outputs.replaced }}
 
