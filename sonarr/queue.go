@@ -3,11 +3,12 @@ package sonarr
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/lefelys/state"
-	"strings"
 )
 
 func (c *Client) QueueFeedItem(item *media.FeedItem) {

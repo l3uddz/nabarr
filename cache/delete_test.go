@@ -1,8 +1,9 @@
 package cache
 
 import (
-	"github.com/rs/zerolog"
 	"testing"
+
+	"github.com/rs/zerolog"
 )
 
 func TestClient_Delete(t *testing.T) {

@@ -2,15 +2,16 @@ package sonarr
 
 import (
 	"fmt"
+	"net/http"
+	"strings"
+	"time"
+
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/logger"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/rs/zerolog"
-	"net/http"
-	"strings"
-	"time"
 )
 
 type Client struct {

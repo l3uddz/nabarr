@@ -1,12 +1,13 @@
 package rss
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog"
-	"net/http"
-	"time"
 )
 
 type feedItem struct {

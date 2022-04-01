@@ -3,11 +3,12 @@ package rss
 import (
 	"encoding/xml"
 	"fmt"
+	"sort"
+	"strings"
+
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
-	"sort"
-	"strings"
 )
 
 func (j *rssJob) process() error {

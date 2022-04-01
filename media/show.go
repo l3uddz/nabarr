@@ -3,8 +3,9 @@ package media
 import (
 	"errors"
 	"fmt"
-	"github.com/l3uddz/nabarr/media/trakt"
 	"strconv"
+
+	"github.com/l3uddz/nabarr/media/trakt"
 )
 
 func (c *Client) GetShowInfo(item *FeedItem) (*Item, error) {

@@ -1,9 +1,10 @@
 package nabarr
 
 import (
+	"time"
+
 	"github.com/antonmedv/expr/vm"
 	"github.com/l3uddz/nabarr/media"
-	"time"
 )
 
 type ExprProgram struct {

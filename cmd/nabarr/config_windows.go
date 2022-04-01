@@ -3,9 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/kirsle/configdir"
 	"os"
 	"path/filepath"
+
+	"github.com/kirsle/configdir"
 )
 
 func defaultConfigPath() string {

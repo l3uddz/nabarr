@@ -2,12 +2,13 @@ package media
 
 import (
 	"encoding/xml"
+	"strings"
+	"time"
+
 	"github.com/l3uddz/nabarr/media/omdb"
 	"github.com/l3uddz/nabarr/media/tvdb"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/pkg/errors"
-	"strings"
-	"time"
 )
 
 /* Media Item(s) */

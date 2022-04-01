@@ -3,6 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
 	"github.com/alecthomas/kong"
 	"github.com/goccy/go-yaml"
 	"github.com/l3uddz/nabarr"
@@ -15,11 +21,6 @@ import (
 	"github.com/natefinch/lumberjack"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"io"
-	"os"
-	"path/filepath"
-	"strings"
-	"time"
 )
 
 type config struct {

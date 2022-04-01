@@ -2,10 +2,11 @@ package rss
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/robfig/cron/v3"
-	"time"
 )
 
 func (c *Client) AddJob(feed feedItem) error {

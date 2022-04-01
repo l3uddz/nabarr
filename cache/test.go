@@ -1,8 +1,9 @@
 package cache
 
 import (
-	"github.com/dgraph-io/badger/v3"
 	"testing"
+
+	"github.com/dgraph-io/badger/v3"
 )
 
 func newDb(t *testing.T) *badger.DB {

@@ -2,6 +2,7 @@ package radarr
 
 import (
 	"fmt"
+
 	"github.com/antonmedv/expr"
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"

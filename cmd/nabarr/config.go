@@ -3,10 +3,11 @@
 package main
 
 import (
-	"github.com/kirsle/configdir"
-	"golang.org/x/sys/unix"
 	"os"
 	"path/filepath"
+
+	"github.com/kirsle/configdir"
+	"golang.org/x/sys/unix"
 )
 
 func defaultConfigPath() string {

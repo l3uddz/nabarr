@@ -2,6 +2,7 @@ package media
 
 import (
 	"fmt"
+
 	"github.com/l3uddz/nabarr/logger"
 	"github.com/l3uddz/nabarr/media/omdb"
 	"github.com/l3uddz/nabarr/media/trakt"

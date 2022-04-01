@@ -3,9 +3,10 @@ package media
 import (
 	"errors"
 	"fmt"
-	"github.com/l3uddz/nabarr/media/trakt"
 	"strconv"
 	"time"
+
+	"github.com/l3uddz/nabarr/media/trakt"
 )
 
 func (c *Client) GetMovieInfo(item *FeedItem) (*Item, error) {

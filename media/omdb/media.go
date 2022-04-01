@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/l3uddz/nabarr/util"
-	"github.com/lucperkins/rek"
 	"net/url"
 	"strings"
+
+	"github.com/l3uddz/nabarr/util"
+	"github.com/lucperkins/rek"
 )
 
 var (

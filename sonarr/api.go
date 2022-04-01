@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
+	"strconv"
+	"strings"
+
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
-	"net/url"
-	"strconv"
-	"strings"
 )
 
 var (

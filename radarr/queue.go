@@ -3,6 +3,7 @@ package radarr
 import (
 	"errors"
 	"fmt"
+
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/lefelys/state"

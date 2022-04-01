@@ -2,8 +2,9 @@ package cache
 
 import (
 	"fmt"
-	"github.com/dgraph-io/badger/v3"
 	"time"
+
+	"github.com/dgraph-io/badger/v3"
 )
 
 func (c *Client) Put(bucket string, key string, val []byte, ttl time.Duration) error {

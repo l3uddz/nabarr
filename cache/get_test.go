@@ -1,10 +1,11 @@
 package cache
 
 import (
-	"github.com/rs/zerolog"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/rs/zerolog"
 )
 
 func TestClient_Get(t *testing.T) {

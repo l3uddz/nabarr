@@ -3,11 +3,12 @@ package cache
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/dgraph-io/badger/v3"
 	"github.com/l3uddz/nabarr/logger"
 	"github.com/lefelys/state"
 	"github.com/rs/zerolog"
-	"time"
 )
 
 type Client struct {

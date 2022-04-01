@@ -1,13 +1,14 @@
 package rss
 
 import (
+	"time"
+
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
 	"github.com/l3uddz/nabarr/logger"
 	"github.com/lefelys/state"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog"
-	"time"
 )
 
 type Client struct {

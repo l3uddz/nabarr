@@ -3,11 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"os"
+
 	"github.com/alecthomas/kong"
 	"github.com/blang/semver"
 	"github.com/l3uddz/nabarr/build"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
-	"os"
 )
 
 type updateFlag string

@@ -1,12 +1,13 @@
 package trakt
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/l3uddz/nabarr/logger"
 	"github.com/l3uddz/nabarr/util"
 	"github.com/rs/zerolog"
 	"go.uber.org/ratelimit"
-	"net/http"
-	"time"
 )
 
 type Client struct {
