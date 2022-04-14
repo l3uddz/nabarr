@@ -3,11 +3,12 @@ package media
 import (
 	"fmt"
 
+	"github.com/rs/zerolog"
+
 	"github.com/l3uddz/nabarr/logger"
 	"github.com/l3uddz/nabarr/media/omdb"
 	"github.com/l3uddz/nabarr/media/trakt"
 	"github.com/l3uddz/nabarr/media/tvdb"
-	"github.com/rs/zerolog"
 )
 
 type Client struct {
@@ -29,6 +30,6 @@ func New(cfg *Config) (*Client, error) {
 		omdb:  omdb.New(&cfg.Omdb),
 		tvdb:  tvdb.New(&cfg.Tvdb),
 
-		log: logger.New(cfg.Verbosity).With().Logger(),
+		log: logger.Child(logger.WithLevel(cfg.Verbosity)),
 	}, nil
 }

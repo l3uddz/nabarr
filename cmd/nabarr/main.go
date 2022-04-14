@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,16 +10,15 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/goccy/go-yaml"
+	"github.com/lefelys/state"
+
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/build"
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
+	"github.com/l3uddz/nabarr/logger"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/rss"
-	"github.com/lefelys/state"
-	"github.com/natefinch/lumberjack"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 )
 
 type config struct {
@@ -84,28 +82,11 @@ func main() {
 	}
 
 	// logger
-	logger := log.Output(io.MultiWriter(zerolog.ConsoleWriter{
-		TimeFormat: time.Stamp,
-		Out:        os.Stderr,
-	}, zerolog.ConsoleWriter{
-		TimeFormat: time.Stamp,
-		Out: &lumberjack.Logger{
-			Filename:   cli.Log,
-			MaxSize:    5,
-			MaxAge:     14,
-			MaxBackups: 5,
-		},
-		NoColor: true,
-	}))
-
-	switch {
-	case cli.Verbosity == 1:
-		log.Logger = logger.Level(zerolog.DebugLevel)
-	case cli.Verbosity > 1:
-		log.Logger = logger.Level(zerolog.TraceLevel)
-	default:
-		log.Logger = logger.Level(zerolog.InfoLevel)
-	}
+	log := logger.Init(
+		logger.WithConsole(),
+		logger.WithFile(cli.Log),
+		logger.WithVerbosity(cli.Verbosity),
+	)
 
 	// config
 	log.Trace().Msg("Initialising config")

@@ -3,12 +3,13 @@ package rss
 import (
 	"time"
 
-	"github.com/l3uddz/nabarr/cache"
-	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
-	"github.com/l3uddz/nabarr/logger"
 	"github.com/lefelys/state"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog"
+
+	"github.com/l3uddz/nabarr/cache"
+	"github.com/l3uddz/nabarr/cmd/nabarr/pvr"
+	"github.com/l3uddz/nabarr/logger"
 )
 
 type Client struct {
@@ -27,7 +28,7 @@ func New(c Config, cc *cache.Client, pvrs map[string]pvr.PVR) *Client {
 		cache: cc,
 		pvrs:  pvrs,
 
-		log: logger.New(c.Verbosity).With().Logger(),
+		log: logger.Child(logger.WithLevel(c.Verbosity)),
 	}
 }
 

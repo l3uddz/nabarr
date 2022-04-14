@@ -5,10 +5,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pkg/errors"
+
 	"github.com/l3uddz/nabarr/media/omdb"
 	"github.com/l3uddz/nabarr/media/tvdb"
 	"github.com/l3uddz/nabarr/util"
-	"github.com/pkg/errors"
 )
 
 /* Media Item(s) */

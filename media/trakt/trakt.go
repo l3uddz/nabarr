@@ -4,10 +4,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/l3uddz/nabarr/logger"
-	"github.com/l3uddz/nabarr/util"
 	"github.com/rs/zerolog"
 	"go.uber.org/ratelimit"
+
+	"github.com/l3uddz/nabarr/logger"
+	"github.com/l3uddz/nabarr/util"
 )
 
 type Client struct {
@@ -19,9 +20,8 @@ type Client struct {
 }
 
 func New(cfg *Config) *Client {
-	l := logger.New(cfg.Verbosity).With().
-		Str("media", "trakt").
-		Logger()
+	l := logger.Child(logger.WithLevel(cfg.Verbosity)).With().
+		Str("media", "trakt").Logger()
 
 	return &Client{
 		log:  l,

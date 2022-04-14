@@ -6,9 +6,10 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/lucperkins/rek"
+
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
-	"github.com/lucperkins/rek"
 )
 
 func (j *rssJob) process() error {

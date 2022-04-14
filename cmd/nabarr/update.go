@@ -7,8 +7,9 @@ import (
 
 	"github.com/alecthomas/kong"
 	"github.com/blang/semver"
-	"github.com/l3uddz/nabarr/build"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
+
+	"github.com/l3uddz/nabarr/build"
 )
 
 type updateFlag string

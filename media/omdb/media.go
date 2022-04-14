@@ -7,8 +7,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
+
+	"github.com/l3uddz/nabarr/util"
 )
 
 var (

@@ -9,6 +9,12 @@ type qualityProfile struct {
 	Id   int
 }
 
+type exclusion struct {
+	TvdbId int    `json:"tvdbId"`
+	Title  string `json:"title"`
+	Id     int    `json:"id"`
+}
+
 type languageProfile struct {
 	Name string
 	Id   int

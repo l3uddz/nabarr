@@ -8,10 +8,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/lucperkins/rek"
+
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
-	"github.com/lucperkins/rek"
 )
 
 var (
@@ -138,6 +139,35 @@ func (c *Client) lookupMediaItem(item *media.Item) (*lookupRequest, error) {
 	}
 
 	return nil, fmt.Errorf("series lookup %sId: %v: %w", mdp, mdi, ErrItemNotFound)
+}
+
+func (c *Client) getExclusions() (map[int]exclusion, error) {
+	// send request
+	resp, err := rek.Get(util.JoinURL(c.apiURL, "importlistexclusion"), rek.Client(c.http), rek.Headers(c.apiHeaders))
+	if err != nil {
+		return nil, fmt.Errorf("request exclusions: %w", err)
+	}
+	defer resp.Body().Close()
+
+	// validate response
+	if resp.StatusCode() != 200 {
+		return nil, fmt.Errorf("validate exclusions response: %s", resp.Status())
+	}
+
+	// decode response
+	b := new([]exclusion)
+	if err := json.NewDecoder(resp.Body()).Decode(b); err != nil {
+		return nil, fmt.Errorf("decode exclusions response: %w", err)
+	}
+
+	// generate exclusion map
+	exclusions := make(map[int]exclusion)
+	for n := range *b {
+		e := (*b)[n]
+		exclusions[e.TvdbId] = e
+	}
+
+	return exclusions, nil
 }
 
 func (c *Client) AddMediaItem(item *media.Item, opts ...nabarr.PvrOption) error {
