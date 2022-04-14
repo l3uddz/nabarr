@@ -16,7 +16,7 @@ require (
 	github.com/google/flatbuffers v2.0.6+incompatible // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
-	github.com/hashicorp/go-retryablehttp v0.7.0
+	github.com/hashicorp/go-retryablehttp v0.7.1
 	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
 	github.com/klauspost/compress v1.15.1 // indirect
 	github.com/lefelys/state v1.1.0
@@ -30,10 +30,10 @@ require (
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/ratelimit v0.2.0
-	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29 // indirect
-	golang.org/x/net v0.0.0-20220401154927-543a649e0bdd // indirect
-	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a // indirect
-	golang.org/x/sys v0.0.0-20220330033206-e17cdc41300f
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
+	golang.org/x/net v0.0.0-20220412020605-290c469a71a5 // indirect
+	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
+	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
@@ -51,5 +51,5 @@ require (
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/tcnksm/go-gitconfig v0.1.2 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
+	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 )

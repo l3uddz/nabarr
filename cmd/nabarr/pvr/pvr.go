@@ -4,12 +4,13 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/lefelys/state"
+
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/radarr"
 	"github.com/l3uddz/nabarr/sonarr"
-	"github.com/lefelys/state"
 )
 
 type PVR interface {

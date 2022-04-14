@@ -9,6 +9,13 @@ type qualityProfile struct {
 	Id   int
 }
 
+type exclusion struct {
+	TmdbId     int    `json:"tmdbId"`
+	MovieTitle string `json:"movieTitle"`
+	MovieYear  int    `json:"movieYear"`
+	Id         int    `json:"id"`
+}
+
 type lookupRequest struct {
 	Id        int    `json:"id,omitempty"`
 	Title     string `json:"title"`

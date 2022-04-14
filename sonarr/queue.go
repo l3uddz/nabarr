@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/lefelys/state"
+
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
-	"github.com/lefelys/state"
 )
 
 func (c *Client) QueueFeedItem(item *media.FeedItem) {
@@ -159,6 +160,26 @@ func (c *Client) queueProcessor(tail state.ShutdownTail) {
 							Msg("Failed storing item in perm cache")
 					}
 				}
+				continue
+			}
+
+			// lookup pvr exclusions
+			exclusions, err := c.getExclusions()
+			if err != nil {
+				c.log.Error().
+					Err(err).
+					Msg("Failed retrieving pvr exclusions")
+				continue
+			}
+
+			if _, ok := exclusions[s.TvdbId]; ok {
+				// item was in pvr exclusions
+				c.log.Debug().
+					Str("pvr_title", s.Title).
+					Int("pvr_year", s.Year).
+					Int("pvr_tvdb_id", s.TvdbId).
+					Str("feed_name", feedItem.Feed).
+					Msg("Item found in pvr exclusions")
 				continue
 			}
 

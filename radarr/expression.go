@@ -4,9 +4,10 @@ import (
 	"fmt"
 
 	"github.com/antonmedv/expr"
+	"github.com/pkg/errors"
+
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/media"
-	"github.com/pkg/errors"
 )
 
 func (c *Client) compileExpressions(filters nabarr.PvrFilters) error {

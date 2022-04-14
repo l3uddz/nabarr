@@ -6,9 +6,10 @@ import (
 	"time"
 
 	"github.com/dgraph-io/badger/v3"
-	"github.com/l3uddz/nabarr/logger"
 	"github.com/lefelys/state"
 	"github.com/rs/zerolog"
+
+	"github.com/l3uddz/nabarr/logger"
 )
 
 type Client struct {
@@ -26,7 +27,7 @@ func New(path string) (*Client, error) {
 		return nil, fmt.Errorf("open: %w", err)
 	}
 
-	log := logger.New("").With().Logger()
+	log := logger.Child()
 
 	// start cleaner
 	st, tail := state.WithShutdown()

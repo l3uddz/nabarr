@@ -5,9 +5,10 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-retryablehttp"
-	"github.com/l3uddz/nabarr/build"
 	"github.com/rs/zerolog"
 	"go.uber.org/ratelimit"
+
+	"github.com/l3uddz/nabarr/build"
 )
 
 func NewRetryableHttpClient(timeout time.Duration, rl ratelimit.Limiter, log *zerolog.Logger) *http.Client {

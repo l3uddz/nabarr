@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/l3uddz/nabarr/util"
 	"github.com/lucperkins/rek"
+
+	"github.com/l3uddz/nabarr/util"
 )
 
 var (

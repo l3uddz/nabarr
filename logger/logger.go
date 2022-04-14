@@ -1,19 +1,55 @@
 package logger
 
 import (
+	"io"
+
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
-func New(verbosity string) zerolog.Logger {
-	if verbosity == "" {
-		return log.Logger
+type logger struct {
+	log       zerolog.Logger
+	writers   []io.Writer
+	verbosity int
+}
+
+func Init(opts ...InitOption) zerolog.Logger {
+	// prepare logger
+	l := &logger{
+		writers:   make([]io.Writer, 0),
+		verbosity: 0,
 	}
 
-	level, err := zerolog.ParseLevel(verbosity)
-	if err != nil {
-		return log.Logger
+	// loop options
+	for _, opt := range opts {
+		opt(l)
 	}
 
-	return log.Level(level)
+	// set logger
+	l.log = log.Output(io.MultiWriter(l.writers...))
+
+	// set global logger
+	switch {
+	case l.verbosity == 1:
+		log.Logger = l.log.Level(zerolog.DebugLevel)
+	case l.verbosity > 1:
+		log.Logger = l.log.Level(zerolog.TraceLevel)
+	default:
+		log.Logger = l.log.Level(zerolog.InfoLevel)
+	}
+
+	return log.Logger
+}
+
+func Child(opts ...ChildOption) zerolog.Logger {
+	// default
+	l := log.With().
+		Logger()
+
+	// loop options
+	for _, opt := range opts {
+		opt(&l)
+	}
+
+	return l
 }

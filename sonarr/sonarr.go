@@ -6,12 +6,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	"github.com/l3uddz/nabarr"
 	"github.com/l3uddz/nabarr/cache"
 	"github.com/l3uddz/nabarr/logger"
 	"github.com/l3uddz/nabarr/media"
 	"github.com/l3uddz/nabarr/util"
-	"github.com/rs/zerolog"
 )
 
 type Client struct {
@@ -45,7 +46,7 @@ type Client struct {
 }
 
 func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*Client, error) {
-	l := logger.New(c.Verbosity).With().
+	l := logger.Child(logger.WithLevel(c.Verbosity)).With().
 		Str("pvr_name", c.Name).
 		Str("pvr_type", c.Type).
 		Logger()
