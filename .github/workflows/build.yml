@@ -154,7 +154,7 @@ jobs:
 
       - name: docker tag
         if: startsWith(github.ref, 'refs/tags/') == false
-        uses: frabert/replace-string-action@v2.2
+        uses: frabert/replace-string-action@v2.3
         id: dockertag
         with:
           pattern: '[:\.\/]+'
