@@ -34,7 +34,7 @@ type addRequest struct {
 	TitleSlug         string     `json:"titleSlug"`
 	Year              int        `json:"year"`
 	QualityProfileId  int        `json:"qualityProfileId"`
-	LanguageProfileId int        `json:"languageProfileId"`
+	LanguageProfileId int        `json:"languageProfileId,omitempty"`
 	Images            []string   `json:"images"`
 	Tags              []string   `json:"tags"`
 	Monitored         bool       `json:"monitored"`

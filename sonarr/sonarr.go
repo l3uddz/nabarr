@@ -115,10 +115,12 @@ func New(c nabarr.PvrConfig, mode string, m *media.Client, cc *cache.Client) (*C
 	}
 
 	// get language profile
-	if lid, err := cl.getLanguageProfileId(c.LanguageProfile); err != nil {
-		return nil, fmt.Errorf("get language profile: %v: %w", c.LanguageProfile, err)
-	} else {
-		cl.languageProfileId = lid
+	if !strings.HasPrefix(ss.Version, "4.") {
+		if lid, err := cl.getLanguageProfileId(c.LanguageProfile); err != nil {
+			return nil, fmt.Errorf("get language profile: %v: %w", c.LanguageProfile, err)
+		} else {
+			cl.languageProfileId = lid
+		}
 	}
 
 	cl.log.Info().
